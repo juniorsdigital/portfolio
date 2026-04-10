@@ -162,6 +162,14 @@ p,li { text-wrap: pretty; }
 }
 .nav-links a:hover { color: var(--color-text); }
 .nav-right { display: flex; align-items: center; gap: var(--space-4); }
+.nav-portfolio {
+  font-size: var(--text-sm); font-weight: 500; color: var(--color-text-muted);
+  transition: color var(--transition);
+  letter-spacing: 0.02em; text-transform: uppercase;
+  white-space: nowrap; padding: var(--space-2) var(--space-1);
+}
+.nav-portfolio:hover { color: var(--color-text); }
+.mobile-menu-portfolio { margin-top: var(--space-2); padding-top: var(--space-4); border-top: 1px solid oklch(from var(--color-text) l c h / 0.1); }
 .nav-cta {
   background: var(--color-accent); color: var(--color-text-inverse);
   padding: var(--space-2) var(--space-5); border-radius: var(--radius-full);
@@ -427,13 +435,19 @@ p,li { text-wrap: pretty; }
 .work-card:nth-child(5) { grid-column: span 4; }
 .work-card:nth-child(6) { grid-column: span 12; }
 
-.work-thumb {
-  width: 100%; aspect-ratio: 16/10; object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+.work-thumb-wrap {
+  overflow: hidden;
   background: var(--color-surface-offset);
+  aspect-ratio: 16/10;
+}
+.work-thumb {
+  width: 100%; height: 100%; display: block;
+  object-fit: cover; object-position: center;
+  transform: scale(1.14);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   filter: contrast(1.03) saturate(0.96);
 }
-.work-card:hover .work-thumb { transform: scale(1.03); }
+.work-card:hover .work-thumb-wrap .work-thumb { transform: scale(1.22); }
 .work-info { padding: var(--space-6); }
 .work-client { font-size: var(--text-xs); font-weight: 700; color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: var(--space-2); }
 .work-title { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 800; letter-spacing: -0.02em; margin-bottom: var(--space-2); }
@@ -452,13 +466,20 @@ p,li { text-wrap: pretty; }
 }
 
 /* Wide card — horizontal layout */
-.work-card:nth-child(6) .work-inner { display: grid; grid-template-columns: 1fr 1.2fr; }
-.work-card:nth-child(6) .work-thumb { aspect-ratio: 4/3; height: 100%; }
+.work-card:nth-child(6) .work-inner { display: grid; grid-template-columns: 1fr 1.2fr; align-items: stretch; min-height: 0; }
+.work-card:nth-child(6) .work-thumb-wrap {
+  aspect-ratio: unset;
+  height: 100%;
+  min-height: 280px;
+}
+.work-card:nth-child(6) .work-thumb { min-height: 280px; height: 100%; transform: scale(1.1); }
+.work-card:nth-child(6):hover .work-thumb-wrap .work-thumb { transform: scale(1.18); }
 
 @media (max-width: 900px) {
   .work-card { grid-column: span 12 !important; }
   .work-card:nth-child(6) .work-inner { grid-template-columns: 1fr; }
-  .work-card:nth-child(6) .work-thumb { aspect-ratio: 16/9; height: auto; }
+  .work-card:nth-child(6) .work-thumb-wrap { aspect-ratio: 16/9; height: auto; min-height: unset; }
+  .work-card:nth-child(6) .work-thumb { aspect-ratio: unset; min-height: unset; height: 100%; }
 }
 
 /* ===== ABOUT ===== */
@@ -572,12 +593,12 @@ footer {
     </a>
     <nav class="nav-links">
       <a href="#work">Work</a>
-      <a href="portfolio.html">Portfolio</a>
       <a href="#services">Services</a>
       <a href="#about">About</a>
       <a href="#process">Process</a>
     </nav>
     <div class="nav-right">
+      <a href="portfolio.html" class="nav-portfolio">Portfolio</a>
       <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       </button>
@@ -592,10 +613,10 @@ footer {
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
   <a href="#work" onclick="closeMobile()">Work</a>
-  <a href="portfolio.html" onclick="closeMobile()">Portfolio</a>
   <a href="#services" onclick="closeMobile()">Services</a>
   <a href="#about" onclick="closeMobile()">About</a>
   <a href="#process" onclick="closeMobile()">Process</a>
+  <a href="portfolio.html" class="mobile-menu-portfolio" onclick="closeMobile()">Portfolio</a>
   <a href="get-a-quote.html" target="_blank" style="color:var(--color-accent);">Get a Quote →</a>
 </div>
 
@@ -762,7 +783,9 @@ footer {
 
       <!-- RyzaGrow — LARGE -->
       <article class="work-card" data-category="design">
+        <div class="work-thumb-wrap">
         <img class="work-thumb" src="images/work-ryzagrow.png" alt="RyzaGrow campaign — split product panels with terracotta and cream backgrounds, JRS portfolio frame" width="800" height="500" loading="lazy">
+        </div>
         <div class="work-info">
           <div class="work-client">Ryza, LLC.</div>
           <h3 class="work-title">RyzaGrow — DTC Campaign</h3>
@@ -778,7 +801,9 @@ footer {
 
       <!-- Ovani Sound -->
       <article class="work-card" data-category="design">
+        <div class="work-thumb-wrap">
         <img class="work-thumb" src="images/work-ovani.png" alt="Ovani Sound — e-commerce product covers, 2D stickers and 3D pack renders" width="600" height="375" loading="lazy">
+        </div>
         <div class="work-info">
           <div class="work-client">OvaniSound</div>
           <h3 class="work-title">60+ E-Commerce Product Covers</h3>
@@ -793,7 +818,9 @@ footer {
 
       <!-- She Who Flies -->
       <article class="work-card" data-category="video">
+        <div class="work-thumb-wrap">
         <img class="work-thumb" src="images/work-she-who-flies.png" alt="She Who Flies — mock documentary trailer graphic with script title and mountain imagery" width="600" height="375" loading="lazy">
+        </div>
         <div class="work-info">
           <div class="work-client">Red Bull (Mock)</div>
           <h3 class="work-title">She Who Flies — Documentary</h3>
@@ -807,7 +834,9 @@ footer {
 
       <!-- Boys & Girls Club -->
       <article class="work-card" data-category="design">
+        <div class="work-thumb-wrap">
         <img class="work-thumb" src="images/work-bgcb.png" alt="Boys &amp; Girls Club of Boston — teen registration OOH campaign mockup" width="600" height="375" loading="lazy">
+        </div>
         <div class="work-info">
           <div class="work-client">Boys &amp; Girls Club of Boston</div>
           <h3 class="work-title">Teen Registration Campaign</h3>
@@ -821,7 +850,9 @@ footer {
 
       <!-- LanceCRM -->
       <article class="work-card" data-category="web">
+        <div class="work-thumb-wrap">
         <img class="work-thumb" src="images/work-lancecrm.png" alt="LanceCRM — freelancer CRM and project dashboard UI mockup" width="600" height="375" loading="lazy">
+        </div>
         <div class="work-info">
           <div class="work-client">LanceCRM</div>
           <h3 class="work-title">Freelancer CRM UI</h3>
@@ -836,7 +867,9 @@ footer {
       <!-- Red Bull Winter Heroes — WIDE -->
       <article class="work-card" data-category="video">
         <div class="work-inner">
+          <div class="work-thumb-wrap">
           <img class="work-thumb" src="images/work-winter-heroes.png" alt="Winter sports — four-panel collage of snowboarding and mountain photography" width="800" height="600" loading="lazy">
+          </div>
           <div class="work-info">
             <div class="work-client">Red Bull (Mock)</div>
             <h3 class="work-title">Winter Heroes — Multi-Format Video</h3>
