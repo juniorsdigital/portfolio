@@ -384,7 +384,11 @@ p,li { text-wrap: pretty; }
   border-radius: var(--radius-full); background: var(--color-surface-offset); color: var(--color-text-muted);
   letter-spacing: 0.03em;
 }
-.service-card.featured .service-tag { background: oklch(from #fff l c h / 0.1); color: oklch(from #fff l c h / 0.8); }
+.service-card.featured .service-tag {
+  background: oklch(from var(--color-text-inverse) l c h / 0.14);
+  color: var(--color-text-inverse);
+  border: 1px solid oklch(from var(--color-text-inverse) l c h / 0.28);
+}
 
 @media (max-width: 900px) { .services-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; } }
@@ -427,6 +431,7 @@ p,li { text-wrap: pretty; }
   width: 100%; aspect-ratio: 16/10; object-fit: cover;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   background: var(--color-surface-offset);
+  filter: contrast(1.03) saturate(0.96);
 }
 .work-card:hover .work-thumb { transform: scale(1.03); }
 .work-info { padding: var(--space-6); }
@@ -557,7 +562,7 @@ footer {
 <!-- NAV -->
 <nav class="nav" aria-label="Main navigation">
   <div class="nav-inner">
-    <a href="#" class="nav-logo" aria-label="Juniors Digital home">
+    <a href="juniors-digital.html" class="nav-logo" aria-label="Juniors Digital home">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <rect width="28" height="28" rx="6" fill="var(--color-accent)"/>
         <path d="M9 8h4v8c0 2.2-1.8 4-4 4H8v-3h1c.55 0 1-.45 1-1V8z" fill="white"/>
@@ -567,6 +572,7 @@ footer {
     </a>
     <nav class="nav-links">
       <a href="#work">Work</a>
+      <a href="portfolio.html">Portfolio</a>
       <a href="#services">Services</a>
       <a href="#about">About</a>
       <a href="#process">Process</a>
@@ -586,6 +592,7 @@ footer {
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
   <a href="#work" onclick="closeMobile()">Work</a>
+  <a href="portfolio.html" onclick="closeMobile()">Portfolio</a>
   <a href="#services" onclick="closeMobile()">Services</a>
   <a href="#about" onclick="closeMobile()">About</a>
   <a href="#process" onclick="closeMobile()">Process</a>
@@ -755,7 +762,7 @@ footer {
 
       <!-- RyzaGrow — LARGE -->
       <article class="work-card" data-category="design">
-        <img class="work-thumb" src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/79843d5b-ca07-4cba-90de-263985471059.png" alt="RyzaGrow product campaign mockup showing mushroom grow kit products" width="800" height="500" loading="lazy">
+        <img class="work-thumb" src="images/work-ryzagrow.png" alt="RyzaGrow campaign — split product panels with terracotta and cream backgrounds, JRS portfolio frame" width="800" height="500" loading="lazy">
         <div class="work-info">
           <div class="work-client">Ryza, LLC.</div>
           <h3 class="work-title">RyzaGrow — DTC Campaign</h3>
@@ -771,7 +778,7 @@ footer {
 
       <!-- Ovani Sound -->
       <article class="work-card" data-category="design">
-        <img class="work-thumb" src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/79843d5b-ca07-4cba-90de-263985471059.png" alt="Ovani Sound holographic product covers with 3D mockups" width="600" height="375" loading="lazy">
+        <img class="work-thumb" src="images/work-ovani.png" alt="Ovani Sound — e-commerce product covers, 2D stickers and 3D pack renders" width="600" height="375" loading="lazy">
         <div class="work-info">
           <div class="work-client">OvaniSound</div>
           <h3 class="work-title">60+ E-Commerce Product Covers</h3>
@@ -786,7 +793,7 @@ footer {
 
       <!-- She Who Flies -->
       <article class="work-card" data-category="video">
-        <img class="work-thumb" src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/79843d5b-ca07-4cba-90de-263985471059.png" alt="She Who Flies Red Bull documentary trailer billboard mockup" width="600" height="375" loading="lazy">
+        <img class="work-thumb" src="images/work-she-who-flies.png" alt="She Who Flies — mock documentary trailer graphic with script title and mountain imagery" width="600" height="375" loading="lazy">
         <div class="work-info">
           <div class="work-client">Red Bull (Mock)</div>
           <h3 class="work-title">She Who Flies — Documentary</h3>
@@ -800,7 +807,7 @@ footer {
 
       <!-- Boys & Girls Club -->
       <article class="work-card" data-category="design">
-        <img class="work-thumb" src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/79843d5b-ca07-4cba-90de-263985471059.png" alt="Boys and Girls Club of Boston billboard campaign" width="600" height="375" loading="lazy">
+        <img class="work-thumb" src="images/work-bgcb.png" alt="Boys &amp; Girls Club of Boston — teen registration OOH campaign mockup" width="600" height="375" loading="lazy">
         <div class="work-info">
           <div class="work-client">Boys &amp; Girls Club of Boston</div>
           <h3 class="work-title">Teen Registration Campaign</h3>
@@ -814,7 +821,7 @@ footer {
 
       <!-- LanceCRM -->
       <article class="work-card" data-category="web">
-        <img class="work-thumb" src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/79843d5b-ca07-4cba-90de-263985471059.png" alt="LanceCRM dashboard UI design screenshot" width="600" height="375" loading="lazy">
+        <img class="work-thumb" src="images/work-lancecrm.png" alt="LanceCRM — freelancer CRM and project dashboard UI mockup" width="600" height="375" loading="lazy">
         <div class="work-info">
           <div class="work-client">LanceCRM</div>
           <h3 class="work-title">Freelancer CRM UI</h3>
@@ -829,7 +836,7 @@ footer {
       <!-- Red Bull Winter Heroes — WIDE -->
       <article class="work-card" data-category="video">
         <div class="work-inner">
-          <img class="work-thumb" src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/79843d5b-ca07-4cba-90de-263985471059.png" alt="Red Bull Winter Heroes snow sports video" width="800" height="600" loading="lazy">
+          <img class="work-thumb" src="images/work-winter-heroes.png" alt="Winter sports — four-panel collage of snowboarding and mountain photography" width="800" height="600" loading="lazy">
           <div class="work-info">
             <div class="work-client">Red Bull (Mock)</div>
             <h3 class="work-title">Winter Heroes — Multi-Format Video</h3>
@@ -942,9 +949,10 @@ footer {
   <div class="container">
     <div class="footer-inner">
       <div class="footer-logo">JRS — Juniors Digital</div>
-      <nav class="footer-links" aria-label="Footer links">
-        <a href="#work">Work</a>
-        <a href="#services">Services</a>
+        <nav class="footer-links" aria-label="Footer links">
+          <a href="#work">Work</a>
+          <a href="portfolio.html">Portfolio</a>
+          <a href="#services">Services</a>
         <a href="#about">About</a>
         <a href="start-a-project.html" target="_blank">Start a Project</a>
       </nav>
