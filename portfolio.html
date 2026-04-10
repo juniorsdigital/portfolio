@@ -502,7 +502,11 @@
     const revealEls=document.querySelectorAll('.reveal');const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});revealEls.forEach(el=>observer.observe(el));
     document.querySelectorAll('.filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;document.querySelectorAll('.work-card').forEach(c=>{c.style.display=f==='all'||c.dataset.category===f?'':'none'})})});
     function animateCount(el){const target=parseInt(el.dataset.count,10);if(!target)return;let current=0;const step=Math.ceil(target/40);const timer=setInterval(()=>{current=Math.min(current+step,target);el.textContent=current;if(current>=target)clearInterval(timer)},25)}
-    const countObserver=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animateCount(e.target);countObserver.unobserve(e.target)}})},{threshold:.5});document.querySelectorAll('[data-count]').forEach(el=>countObserver.observe(el));
+    const countObserver=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animateCount(e.target);countObserver.unobserve(e.target)}})},{threshold:.5});    document.querySelectorAll('[data-count]').forEach(el=>countObserver.observe(el));
   </script>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
