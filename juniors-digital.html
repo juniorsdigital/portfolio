@@ -361,7 +361,7 @@ p,li { text-wrap: pretty; }
 .ticker-sep { color: var(--color-accent); font-size: 1.2em; }
 @keyframes ticker {
   from { transform: translateX(0); }
-  to   { transform: translateX(calc(-1 * var(--ticker-half, 50%))); }
+  to   { transform: translateX(-50%); }
 }
 
 /* ===== SERVICES ===== */
@@ -682,6 +682,15 @@ footer {
 <!-- TICKER -->
 <div class="ticker-wrap" aria-hidden="true">
   <div class="ticker-inner" id="tickerInner">
+    <span class="ticker-item"><span class="ticker-sep">✦</span> Graphic Design</span>
+    <span class="ticker-item"><span class="ticker-sep">✦</span> Website Design</span>
+    <span class="ticker-item"><span class="ticker-sep">✦</span> Video Editing</span>
+    <span class="ticker-item"><span class="ticker-sep">✦</span> Social Media</span>
+    <span class="ticker-item"><span class="ticker-sep">✦</span> Brand Identity</span>
+    <span class="ticker-item"><span class="ticker-sep">✦</span> E-Commerce Design</span>
+    <span class="ticker-item"><span class="ticker-sep">✦</span> Campaign Strategy</span>
+    <span class="ticker-item"><span class="ticker-sep">✦</span> Product Covers</span>
+    <!-- Duplicate set -->
     <span class="ticker-item"><span class="ticker-sep">✦</span> Graphic Design</span>
     <span class="ticker-item"><span class="ticker-sep">✦</span> Website Design</span>
     <span class="ticker-item"><span class="ticker-sep">✦</span> Video Editing</span>
@@ -1016,20 +1025,22 @@ footer {
   });
 })();
 
-// Scroller
+// Scroller - DEPRECATED
 // FIXED — Set duplication was happening before page load. Now measure after layout is complete.
-const ticker = document.getElementById('tickerInner');
-if (ticker) {
-  const clone = ticker.innerHTML;
-  ticker.innerHTML = clone + clone; // Duplicate sets
+/*
+    const ticker = document.getElementById('tickerInner');
+    if (ticker) {
+      const clone = ticker.innerHTML;
+      ticker.innerHTML = clone + clone; // Duplicate sets
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const halfWidth = ticker.scrollWidth / 2;
-      ticker.style.setProperty('--ticker-half', halfWidth + 'px');
-    });
-  });
-}
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const halfWidth = ticker.scrollWidth / 2;
+          ticker.style.setProperty('--ticker-half', halfWidth + 'px');
+        });
+      });
+    }
+*/
 
 // Mobile menu
 const hamburger=document.getElementById('hamburger');
