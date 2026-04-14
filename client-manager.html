@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta name="robots" content="noindex, nofollow">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>jrs. clients</title>
-<link rel="icon" type="image/png" sizes="32x32" href="/images/jrs-fav-32x32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ============ DESIGN TOKENS ============ */
 :root, [data-theme="light"] {
@@ -53,11 +52,11 @@
   --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
   --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
-  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
-  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
-  --space-12: 3rem; --space-16: 4rem;
-  --font-body: 'Geist', 'Inter', system-ui, sans-serif;
-  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem;
+  --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
   --sidebar-width: 240px;
   --header-height: 56px;
 }
@@ -93,8 +92,19 @@
   --shadow-md: 0 4px 12px oklch(0 0 0 / 0.4);
   --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.5);
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme]) { --color-bg: #0e0d0c; --color-surface: #141312; --color-surface-2: #1a1916; --color-surface-offset: #1f1e1b; --color-surface-dynamic: #272523; --color-divider: #2a2825; --color-border: #333028; --color-text: #e0ddd8; --color-text-muted: #7a7870; --color-text-faint: #504e48; --color-primary: #4898d8; --color-primary-hover: #2278b8; --color-primary-highlight: #1e3048; --color-success: #58a030; --color-success-highlight: #203818; --color-warning: #e08830; --color-warning-highlight: #483010; --color-error: #d84860; --color-error-highlight: #481820; } }
-
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg:#0e0d0c;--color-surface:#141312;--color-surface-2:#1a1916;
+    --color-surface-offset:#1f1e1b;--color-surface-dynamic:#272523;
+    --color-divider:#2a2825;--color-border:#333028;--color-text:#e0ddd8;
+    --color-text-muted:#7a7870;--color-text-faint:#504e48;
+    --color-primary:#4898d8;--color-primary-hover:#2278b8;
+    --color-primary-highlight:#1e3048;--color-success:#58a030;
+    --color-success-highlight:#203818;--color-warning:#e08830;
+    --color-warning-highlight:#483010;--color-error:#d84860;
+    --color-error-highlight:#481820;
+  }
+}
 /* ============ BASE ============ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
@@ -105,11 +115,9 @@ input, select, textarea { font: inherit; color: inherit; }
 a, button, [role="button"], input, select, textarea { transition: color var(--transition-interactive), background var(--transition-interactive), border-color var(--transition-interactive), box-shadow var(--transition-interactive); }
 :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
-
 /* ============ LAYOUT ============ */
 #app { display: grid; grid-template-columns: var(--sidebar-width) 1fr; grid-template-rows: var(--header-height) 1fr; min-height: 100dvh; }
 #app.sidebar-collapsed { --sidebar-width: 56px; }
-
 /* ============ HEADER ============ */
 .header { grid-column: 1 / -1; grid-row: 1; display: flex; align-items: center; gap: var(--space-4); padding-inline: var(--space-4); background: var(--color-surface); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 100; height: var(--header-height); }
 .header-logo { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; color: var(--color-text); flex-shrink: 0; width: calc(var(--sidebar-width) - var(--space-8)); }
@@ -124,7 +132,6 @@ a, button, [role="button"], input, select, textarea { transition: color var(--tr
 .btn-icon:hover { background: var(--color-surface-offset); color: var(--color-text); }
 .btn-icon:active { background: var(--color-surface-dynamic); }
 .avatar { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--color-primary); display: grid; place-items: center; font-size: var(--text-xs); font-weight: 600; color: white; flex-shrink: 0; }
-
 /* ============ SIDEBAR ============ */
 .sidebar { grid-row: 2; grid-column: 1; background: var(--color-surface); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; position: sticky; top: var(--header-height); height: calc(100dvh - var(--header-height)); overflow-y: auto; overflow-x: hidden; padding: var(--space-3) 0; }
 .nav-section { padding: 0 var(--space-3) var(--space-4); }
@@ -139,16 +146,13 @@ a, button, [role="button"], input, select, textarea { transition: color var(--tr
 .nav-badge { margin-left: auto; background: var(--color-primary); color: white; font-size: var(--text-xs); font-weight: 600; padding: 1px 7px; border-radius: var(--radius-full); min-width: 20px; text-align: center; transition: opacity 0.2s; }
 #app.sidebar-collapsed .nav-badge { opacity: 0; }
 .sidebar-footer { margin-top: auto; padding: var(--space-3); border-top: 1px solid var(--color-border); }
-
 /* ============ MAIN CONTENT ============ */
 .main { grid-row: 2; grid-column: 2; overflow-y: auto; overflow-x: hidden; padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); }
-
 /* ============ PAGE HEADER ============ */
 .page-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
 .page-title { font-size: var(--text-xl); font-weight: 700; letter-spacing: -0.03em; color: var(--color-text); }
 .page-subtitle { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-1); }
 .page-header-actions { display: flex; gap: var(--space-2); }
-
 /* ============ BUTTONS ============ */
 .btn { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 500; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
 .btn-primary { background: var(--color-primary); color: white; border-color: var(--color-primary); }
@@ -160,7 +164,6 @@ a, button, [role="button"], input, select, textarea { transition: color var(--tr
 .btn-sm { padding: var(--space-1) var(--space-3); font-size: var(--text-xs); }
 .btn-danger { background: var(--color-error-highlight); color: var(--color-error); border-color: color-mix(in oklch, var(--color-error) 25%, transparent); }
 .btn-danger:hover { background: var(--color-error); color: white; }
-
 /* ============ KPI CARDS ============ */
 .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
 .kpi-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); box-shadow: var(--shadow-sm); }
@@ -169,14 +172,12 @@ a, button, [role="button"], input, select, textarea { transition: color var(--tr
 .kpi-trend { font-size: var(--text-xs); color: var(--color-text-muted); display: flex; align-items: center; gap: var(--space-1); }
 .kpi-trend.up { color: var(--color-success); }
 .kpi-trend.neutral { color: var(--color-text-muted); }
-
 /* ============ SECTION CARD ============ */
 .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
 .card-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--color-divider); }
 .card-title { font-size: var(--text-base); font-weight: 600; }
 .card-actions { display: flex; gap: var(--space-2); align-items: center; }
 .card-body { padding: var(--space-5); }
-
 /* ============ TABLE ============ */
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
@@ -189,7 +190,6 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .td-name { font-weight: 500; }
 .td-email { color: var(--color-text-muted); font-size: var(--text-xs); font-family: var(--font-mono); }
 .td-actions { display: flex; gap: var(--space-1); justify-content: flex-end; }
-
 /* ============ BADGES ============ */
 .badge { display: inline-flex; align-items: center; gap: var(--space-1); padding: 2px 10px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; }
 .badge-new { background: var(--color-primary-highlight); color: var(--color-primary); }
@@ -201,7 +201,6 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .badge-declined { background: var(--color-error-highlight); color: var(--color-error); }
 .badge-archived { background: color-mix(in oklch, var(--color-text-muted) 15%, transparent); color: var(--color-text-muted); }
 .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-
 /* ============ FILTERS & SEARCH ============ */
 .filters-bar { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
 .search-input { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
@@ -216,13 +215,11 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .tab-btn:hover { color: var(--color-text); }
 .tab-btn.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
 .tab-count { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 16px; font-size: var(--text-xs); font-weight: 700; background: var(--color-primary-highlight); color: var(--color-primary); border-radius: var(--radius-full); margin-left: var(--space-1); }
-
 /* ============ EMPTY STATE ============ */
 .empty-state { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-16) var(--space-8); color: var(--color-text-muted); }
 .empty-state-icon { width: 48px; height: 48px; margin-bottom: var(--space-4); color: var(--color-text-faint); }
 .empty-state h3 { color: var(--color-text); margin-bottom: var(--space-2); font-size: var(--text-base); font-weight: 600; }
 .empty-state p { max-width: 36ch; margin-bottom: var(--space-6); font-size: var(--text-sm); }
-
 /* ============ MODAL ============ */
 .modal-backdrop { position: fixed; inset: 0; background: oklch(0.1 0 0 / 0.6); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: var(--space-4); opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .modal-backdrop.open { opacity: 1; pointer-events: all; }
@@ -232,7 +229,15 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .modal-title { font-size: var(--text-lg); font-weight: 600; letter-spacing: -0.02em; }
 .modal-body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5); }
 .modal-footer { display: flex; justify-content: flex-end; gap: var(--space-3); padding: var(--space-4) var(--space-6); border-top: 1px solid var(--color-divider); }
-
+/* ============ COMPOSE MODAL ============ */
+.compose-modal { max-width: 560px; }
+.compose-field { display: flex; flex-direction: column; gap: var(--space-2); }
+.compose-label { font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-muted); }
+.compose-input { padding: var(--space-3) var(--space-4); background: var(--color-surface-offset); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--color-text); width: 100%; }
+.compose-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary) 20%, transparent); }
+.compose-input::placeholder { color: var(--color-text-faint); }
+textarea.compose-input { resize: vertical; min-height: 160px; line-height: 1.6; }
+.compose-sending { opacity: 0.6; pointer-events: none; }
 /* ============ DETAIL GRID ============ */
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
 .detail-item { display: flex; flex-direction: column; gap: var(--space-1); }
@@ -240,13 +245,11 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .detail-value { font-size: var(--text-sm); color: var(--color-text); }
 .detail-value.mono { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
 .detail-full { grid-column: 1 / -1; }
-
 /* ============ STATUS SELECT ============ */
 .status-select-group { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 .status-option { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; border: 1px solid var(--color-border); cursor: pointer; transition: all var(--transition-interactive); }
 .status-option:hover { opacity: 0.8; }
 .status-option.selected { box-shadow: 0 0 0 2px var(--color-primary); }
-
 /* ============ GOAL METER ============ */
 .goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 .goal-item { display: flex; flex-direction: column; gap: var(--space-1); }
@@ -254,14 +257,12 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .goal-bar { height: 6px; background: var(--color-surface-dynamic); border-radius: var(--radius-full); overflow: hidden; }
 .goal-fill { height: 100%; background: var(--color-primary); border-radius: var(--radius-full); }
 .goal-score { font-size: var(--text-xs); font-weight: 700; font-variant-numeric: tabular-nums; }
-
 /* ============ TOAST ============ */
 .toast-container { position: fixed; bottom: var(--space-6); right: var(--space-6); z-index: 300; display: flex; flex-direction: column; gap: var(--space-2); }
 .toast { background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4); font-size: var(--text-sm); box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: var(--space-3); max-width: 360px; animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 .toast.success { border-left: 3px solid var(--color-success); }
 .toast.error { border-left: 3px solid var(--color-error); }
 @keyframes slideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
 /* ============ AUTH SCREEN ============ */
 .auth-screen { position: fixed; inset: 0; background: var(--color-bg); z-index: 500; display: flex; align-items: center; justify-content: center; }
 .auth-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-8); width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); }
@@ -273,13 +274,11 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .form-input { padding: var(--space-3) var(--space-4); background: var(--color-surface-offset); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--color-text); width: 100%; }
 .form-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary) 20%, transparent); }
 .form-input::placeholder { color: var(--color-text-faint); }
-.auth-error { display:none; align-items:center; gap:var(--space-2); font-size:var(--text-xs); color:var(--color-error); background:var(--color-error-highlight); border:1px solid oklch(from var(--color-error) l c h / 0.25); border-radius:var(--radius-md); padding:var(--space-2) var(--space-3); margin-top:var(--space-3); } .auth-error.visible { display:flex; animation:authShake 0.35s ease; } @keyframes authShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
-
+.auth-error { display:none; align-items:center; gap:var(--space-2); font-size:var(--text-xs); color:var(--color-error); background:var(--color-error-highlight); border:1px solid oklch(from var(--color-error) l c h / 0.25); border-radius:var(--radius-md); padding:var(--space-2) var(--space-3); margin-top:var(--space-3); }
+.auth-error.visible { display:flex; animation:authShake 0.35s ease; }
+@keyframes authShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 /* ============ RESPONSIVE ============ */
-@media (max-width: 1024px) {
-  :root { --sidebar-width: 56px; }
-  #app { --sidebar-width: 56px; }
-}
+@media (max-width: 1024px) { :root { --sidebar-width: 56px; } #app { --sidebar-width: 56px; } }
 @media (max-width: 768px) {
   #app { grid-template-columns: 1fr; grid-template-rows: var(--header-height) 1fr; }
   .sidebar { display: none; }
@@ -293,41 +292,23 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
   .page-header { flex-direction: column; align-items: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
-
-/* ── Logo wordmark ── */
-.nav-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  text-decoration: none;
-  color: var(--color-text);
-}
-.nav-logo .logo-text {
-  font-family: var(--font-display, var(--font-body, sans-serif));
-  font-size: var(--text-sm);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  white-space: nowrap;
-}
-
+.nav-logo { display: inline-flex; align-items: center; gap: 0.65rem; text-decoration: none; color: var(--color-text); }
+.nav-logo .logo-text { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 700; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- ============ AUTH SCREEN ============ -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-card">
     <div class="auth-logo">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="juniors.digital logo">
-        <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
-        <path d="M8 8h6v12c0 2.2-1.8 4-4 4H8v-4h2V8z" fill="currentColor" opacity="0.6"/>
-        <path d="M16 8h8l-4 8 4 8h-8V8z" fill="currentColor"/>
-      </svg>
-      <span style="font-size:var(--text-base);font-weight:700;letter-spacing:-0.02em;">juniors.digital</span>
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#0069b0"/><path d="M9 10h14M9 16h10M9 22h12" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <div>
+        <div class="auth-title">juniors.digital</div>
+        <div class="auth-subtitle" style="margin:0">Admin Access</div>
+      </div>
     </div>
-    <div class="auth-title">Admin Access</div>
-    <div class="auth-subtitle">Secure client management portal</div>
+    <p class="auth-subtitle">Secure client management portal</p>
     <div class="form-group">
       <label class="form-label" for="authEmail">Email</label>
       <input class="form-input" type="email" id="authEmail" placeholder="you@juniors.digital" autocomplete="email">
@@ -336,86 +317,80 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
       <label class="form-label" for="authPassword">Password</label>
       <input class="form-input" type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
     </div>
-    <div class="auth-error" id="authError" role="alert"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="authErrorText"></span></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:var(--space-2);" id="loginBtn" onclick="handleLogin()">
-      Sign in
-    </button>
+    <button class="btn btn-primary" style="width:100%" id="loginBtn" onclick="handleLogin()">Sign in</button>
+    <div class="auth-error" id="authError">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="authErrorText"></span>
+    </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ============ APP SHELL ============ -->
 <div id="app">
-
-  <!-- HEADER -->
   <header class="header">
-    <a href="#" class="header-logo">
-      <img src="images/jrs-fav-32x32.png" alt="JRS logo" width="32" height="32" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;" />
+    <a href="/" class="header-logo">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0069b0"/><path d="M9 10h14M9 16h10M9 22h12" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
       <span class="logo-text">Juniors.Digital</span>
     </a>
     <div class="header-divider"></div>
-    <nav class="header-breadcrumb" id="breadcrumb">
+    <nav class="header-breadcrumb" aria-label="breadcrumb">
+      <span>Dashboard</span>
+      <span>›</span>
       <span class="current" id="breadcrumbCurrent">Dashboard</span>
     </nav>
     <div class="header-actions">
-      <button class="btn-icon" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-      </button>
-      <button class="btn-icon" data-theme-toggle aria-label="Toggle theme">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <button class="btn-icon" onclick="toggleSidebar()" title="Toggle sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <div class="avatar" id="userAvatar">JD</div>
     </div>
   </header>
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <nav class="nav-section">
       <div class="nav-section-label">Overview</div>
-      <a class="nav-item active" onclick="navigate('dashboard')" href="#">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <div class="nav-item active" onclick="navigate('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         <span class="nav-item-label">Dashboard</span>
-      </a>
+      </div>
     </nav>
     <nav class="nav-section">
       <div class="nav-section-label">Clients</div>
-      <a class="nav-item" onclick="navigate('quotes')" href="#">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <div class="nav-item" onclick="navigate('quotes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         <span class="nav-item-label">Quote Requests</span>
-        <span class="nav-badge" id="quotesBadge">0</span>
-      </a>
-      <a class="nav-item" onclick="navigate('projects')" href="#">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span class="nav-badge" id="quotesBadge" style="display:none">0</span>
+      </div>
+      <div class="nav-item" onclick="navigate('projects')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
         <span class="nav-item-label">Project Submissions</span>
-        <span class="nav-badge" id="projectsBadge">0</span>
-      </a>
+        <span class="nav-badge" id="projectsBadge" style="display:none">0</span>
+      </div>
     </nav>
     <nav class="nav-section">
       <div class="nav-section-label">Settings</div>
-      <a class="nav-item" onclick="navigate('settings')" href="#">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <div class="nav-item" onclick="navigate('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span class="nav-item-label">Settings</span>
-      </a>
+      </div>
     </nav>
     <div class="sidebar-footer">
-      <div class="nav-item" onclick="handleLogout()" style="color:var(--color-text-muted)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <div class="nav-item" onclick="handleLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         <span class="nav-item-label">Sign out</span>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN -->
-  <main class="main" id="mainContent">
-    <!-- Content rendered by JS -->
-  </main>
+  <main class="main" id="mainContent"></main>
 </div>
 
-<!-- MODAL -->
-<div class="modal-backdrop" id="modal" onclick="closeModal(event)">
-  <div class="modal" id="modalInner">
+<!-- ============ DETAIL MODAL ============ -->
+<div class="modal-backdrop" id="detailModal" onclick="closeDetailModal(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-header">
-      <h2 class="modal-title" id="modalTitle">Detail</h2>
-      <button class="btn-icon" onclick="closeModal()" aria-label="Close">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <button class="btn-icon" onclick="closeModal('detailModal')" aria-label="Close">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
@@ -424,10 +399,43 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
+<!-- ============ COMPOSE MODAL ============ -->
+<div class="modal-backdrop" id="composeModal" onclick="closeDetailModal(event)">
+  <div class="modal compose-modal" role="dialog" aria-modal="true" aria-labelledby="composeTitle">
+    <div class="modal-header">
+      <h2 class="modal-title" id="composeTitle">New Message</h2>
+      <button class="btn-icon" onclick="closeModal('composeModal')" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="composeBody">
+      <div class="compose-field">
+        <label class="compose-label" for="composeTo">To</label>
+        <input class="compose-input" type="email" id="composeTo" placeholder="client@email.com" autocomplete="off">
+      </div>
+      <div class="compose-field">
+        <label class="compose-label" for="composeSubject">Subject</label>
+        <input class="compose-input" type="text" id="composeSubject" placeholder="Re: Your quote request…">
+      </div>
+      <div class="compose-field">
+        <label class="compose-label" for="composeBody">Message</label>
+        <textarea class="compose-input" id="composeBody" placeholder="Write your message here…"></textarea>
+      </div>
+      <div id="composeError" style="display:none;font-size:var(--text-xs);color:var(--color-error);background:var(--color-error-highlight);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('composeModal')">Cancel</button>
+      <button class="btn btn-primary" id="composeSendBtn" onclick="sendMessage()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Send Message
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOAST CONTAINER ============ -->
 <div class="toast-container" id="toastContainer"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ============ STATE ============
 let currentView = 'dashboard';
@@ -439,18 +447,15 @@ let activeQuoteFilter = 'all';
 let activeProjectFilter = 'all';
 let quoteSearch = '';
 let projectSearch = '';
+let _composeClientName = '';
 
-// ============ MOCK DATA ============
-const MOCK_QUOTES = [];
-
-const MOCK_PROJECTS = [];
-
-// ============ SUPABASE AUTH ============
+// ============ SUPABASE ============
 const SUPABASE_URL = 'https://ivnwmvezbmyenwpczdcw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2bndtdmV6Ym15ZW53cGN6ZGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzODExMTQsImV4cCI6MjA4Nzk1NzExNH0.y9wYDEe5bWMtYtc2v514GM_5B-pJ55uVpaoq3kRmiO4';
 const ALLOWED_USER_ID = 'e49efb48-9761-4c6d-bc35-e2b714110a22';
 const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ============ AUTH ============
 function showAuthError(msg) {
   const el = document.getElementById('authError');
   document.getElementById('authErrorText').textContent = msg;
@@ -458,20 +463,17 @@ function showAuthError(msg) {
   void el.offsetWidth;
   el.classList.add('visible');
 }
-function hideAuthError() {
-  document.getElementById('authError').classList.remove('visible');
-}
+function hideAuthError() { document.getElementById('authError').classList.remove('visible'); }
+
 async function handleLogin() {
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value;
   const loginBtn = document.getElementById('loginBtn');
   hideAuthError();
   if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
-  loginBtn.disabled = true;
-  loginBtn.textContent = 'Signing in…';
+  loginBtn.disabled = true; loginBtn.textContent = 'Signing in…';
   const { data, error } = await _sb.auth.signInWithPassword({ email, password });
-  loginBtn.disabled = false;
-  loginBtn.textContent = 'Sign in';
+  loginBtn.disabled = false; loginBtn.textContent = 'Sign in';
   if (error) { showAuthError('Incorrect credentials. Please try again.'); return; }
   if (data.user.id !== ALLOWED_USER_ID) {
     await _sb.auth.signOut();
@@ -485,11 +487,13 @@ async function handleLogin() {
   loadData();
   navigate('dashboard');
 }
+
 async function handleLogout() {
   await _sb.auth.signOut();
   currentUser = null;
   document.getElementById('authScreen').style.display = 'flex';
 }
+
 (async () => {
   const { data: { session } } = await _sb.auth.getSession();
   if (session && session.user.id === ALLOWED_USER_ID) {
@@ -501,15 +505,17 @@ async function handleLogout() {
     navigate('dashboard');
   }
 })();
+
 document.getElementById('authPassword').addEventListener('keydown', e => { if (e.key==='Enter') handleLogin(); });
 document.getElementById('authEmail').addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('authPassword').focus(); });
 
 // ============ DATA ============
 function loadData() {
-  allQuotes = [...MOCK_QUOTES];
-  allProjects = [...MOCK_PROJECTS];
+  allQuotes = [];
+  allProjects = [];
   updateBadges();
 }
+
 function updateBadges() {
   const newQ = allQuotes.filter(q=>q.status==='new').length;
   const newP = allProjects.filter(p=>p.status==='new').length;
@@ -530,6 +536,7 @@ function navigate(view) {
   document.getElementById('breadcrumbCurrent').textContent = titles[view] || view;
   renderView(view);
 }
+
 function toggleSidebar() {
   sidebarCollapsed = !sidebarCollapsed;
   document.getElementById('app').classList.toggle('sidebar-collapsed', sidebarCollapsed);
@@ -596,7 +603,7 @@ function renderDashboard() {
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Client</th><th>Type</th><th>Project</th><th>Date</th><th>Status</th></tr></thead>
+          <thead><tr><th>Client</th><th>Type</th><th>Project</th><th>Date</th><th>Status</th><th></th></tr></thead>
           <tbody>${recentActivity.map(item => `
             <tr onclick="${item._type==='quote'?`openQuoteModal('${item.id}')`:`openProjectModal('${item.id}')`}">
               <td><div class="td-name">${item.name}</div><div class="td-email">${item.email}</div></td>
@@ -604,6 +611,7 @@ function renderDashboard() {
               <td>${item.project_name||item.project_type||'—'}</td>
               <td class="td-muted">${fmtDate(item.created_at)}</td>
               <td>${statusBadge(item.status)}</td>
+              <td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openCompose('${item.email}','${item.name}','')" title="Message client"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></td>
             </tr>`).join('')}
           </tbody>
         </table>
@@ -618,7 +626,10 @@ function renderQuotes() {
   statuses.forEach(s => counts[s] = s==='all' ? allQuotes.length : allQuotes.filter(q=>q.status===s).length);
   const filtered = allQuotes
     .filter(q => activeQuoteFilter==='all' || q.status===activeQuoteFilter)
-    .filter(q => !quoteSearch || q.name.toLowerCase().includes(quoteSearch.toLowerCase()) || q.email.toLowerCase().includes(quoteSearch.toLowerCase()) || q.project_name.toLowerCase().includes(quoteSearch.toLowerCase()) || q.service.toLowerCase().includes(quoteSearch.toLowerCase()));
+    .filter(q => !quoteSearch || q.name.toLowerCase().includes(quoteSearch.toLowerCase()) ||
+      q.email.toLowerCase().includes(quoteSearch.toLowerCase()) ||
+      q.project_name.toLowerCase().includes(quoteSearch.toLowerCase()) ||
+      q.service.toLowerCase().includes(quoteSearch.toLowerCase()));
   return `
     <div class="page-header">
       <div>
@@ -657,6 +668,9 @@ function renderQuotes() {
               <td>${statusBadge(q.status)}</td>
               <td class="td-actions">
                 <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openQuoteModal('${q.id}')">View</button>
+                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openCompose('${q.email}','${q.name}','Re: Your quote request — ${q.project_name}')" title="Message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
               </td>
             </tr>`).join('')}
           </tbody>
@@ -680,7 +694,9 @@ function renderProjects() {
   statuses.forEach(s => counts[s] = s==='all' ? allProjects.length : allProjects.filter(p=>p.status===s).length);
   const filtered = allProjects
     .filter(p => activeProjectFilter==='all' || p.status===activeProjectFilter)
-    .filter(p => !projectSearch || p.name.toLowerCase().includes(projectSearch.toLowerCase()) || p.email.toLowerCase().includes(projectSearch.toLowerCase()) || p.project_type.toLowerCase().includes(projectSearch.toLowerCase()));
+    .filter(p => !projectSearch || p.name.toLowerCase().includes(projectSearch.toLowerCase()) ||
+      p.email.toLowerCase().includes(projectSearch.toLowerCase()) ||
+      p.project_type.toLowerCase().includes(projectSearch.toLowerCase()));
   return `
     <div class="page-header">
       <div>
@@ -719,6 +735,9 @@ function renderProjects() {
               <td>${statusBadge(p.status)}</td>
               <td class="td-actions">
                 <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openProjectModal('${p.id}')">View</button>
+                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openCompose('${p.email}','${p.name}','Re: Your project brief — ${p.project_type}')" title="Message">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
               </td>
             </tr>`).join('')}
           </tbody>
@@ -761,6 +780,16 @@ function renderSettings() {
       </div>
     </div>
     <div class="card">
+      <div class="card-header"><span class="card-title">Email / Resend</span></div>
+      <div class="card-body">
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-label">From Address</div><div class="detail-value mono">hello@juniors.digital</div></div>
+          <div class="detail-item"><div class="detail-label">API Route</div><div class="detail-value mono">/api/send-message</div></div>
+          <div class="detail-item detail-full"><div class="detail-label">MX Status</div><div class="detail-value"><span class="badge badge-reviewing">● Pending Verification</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
       <div class="card-header"><span class="card-title">Appearance</span></div>
       <div class="card-body" style="display:flex;gap:var(--space-4);align-items:center">
         <button class="btn btn-secondary" onclick="document.documentElement.setAttribute('data-theme','light')">☀️ Light Mode</button>
@@ -771,198 +800,212 @@ function renderSettings() {
 
 // ============ QUOTE MODAL ============
 function openQuoteModal(id) {
-  const q = allQuotes.find(x=>x.id===id); if(!q) return;
+  const q = allQuotes.find(x=>x.id===id);
+  if(!q) return;
   document.getElementById('modalTitle').textContent = q.project_name;
   document.getElementById('modalBody').innerHTML = `
     <div class="detail-grid">
-      <div class="detail-item"><div class="detail-label">Client</div><div class="detail-value">${q.name}</div></div>
+      <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${q.name}</div></div>
       <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value mono">${q.email}</div></div>
       <div class="detail-item"><div class="detail-label">Service</div><div class="detail-value">${q.service}</div></div>
-      <div class="detail-item"><div class="detail-label">Budget</div><div class="detail-value">${q.budget||'Not specified'}</div></div>
-      <div class="detail-item"><div class="detail-label">Timeline</div><div class="detail-value">${q.timeline||'Not specified'}</div></div>
-      <div class="detail-item"><div class="detail-label">Referral</div><div class="detail-value">${q.referral||'Not specified'}</div></div>
-      <div class="detail-item detail-full"><div class="detail-label">Project Description</div><div class="detail-value" style="white-space:pre-wrap;line-height:1.6">${q.project_description}</div></div>
-      <div class="detail-item detail-full"><div class="detail-label">Submitted</div><div class="detail-value td-muted">${fmtDateTime(q.created_at)}</div></div>
-      <div class="detail-item detail-full">
-        <div class="detail-label">Status</div>
-        <div class="status-select-group">
-          ${['new','reviewing','quoted','accepted','declined','archived'].map(s=>`
-            <button class="status-option ${badgeClass(s)} ${q.status===s?'selected':''}" onclick="updateQuoteStatus('${q.id}','${s}')">${capitalize(s)}</button>`).join('')}
-        </div>
+      <div class="detail-item"><div class="detail-label">Budget</div><div class="detail-value">${q.budget||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Timeline</div><div class="detail-value">${q.timeline||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Submitted</div><div class="detail-value">${fmtDate(q.created_at)}</div></div>
+      <div class="detail-item detail-full"><div class="detail-label">Description</div><div class="detail-value" style="white-space:pre-wrap">${q.description||'—'}</div></div>
+    </div>
+    <div>
+      <div class="detail-label" style="margin-bottom:var(--space-2)">Status</div>
+      <div class="status-select-group">
+        ${['new','reviewing','quoted','accepted','declined','archived'].map(s=>`
+          <button class="status-option ${statusBadgeClass(s)} ${q.status===s?'selected':''}" onclick="updateQuoteStatus('${q.id}','${s}')">${capitalize(s)}</button>
+        `).join('')}
       </div>
     </div>`;
   document.getElementById('modalFooter').innerHTML = `
-    ${q.status === 'archived' ? `<button class="btn btn-danger btn-sm" onclick="deleteQuote('${q.id}')">Delete Permanently</button>` : ''}
-    <button class="btn btn-secondary" onclick="closeModal()">Close</button>
-    <button class="btn btn-primary" onclick="copyEmail('${q.email}')">Copy Email</button>`;
-  document.getElementById('modal').classList.add('open');
+    <button class="btn btn-ghost" onclick="closeModal('detailModal')">Close</button>
+    <button class="btn btn-secondary" onclick="openCompose('${q.email}','${q.name}','Re: Your quote request — ${q.project_name}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Message Client
+    </button>`;
+  openModal('detailModal');
+}
+
+function updateQuoteStatus(id, status) {
+  const q = allQuotes.find(x=>x.id===id);
+  if(q) {
+    q.status = status;
+    updateBadges();
+    document.querySelectorAll('.status-option').forEach(btn => {
+      btn.classList.toggle('selected', btn.textContent.trim().toLowerCase() === status);
+    });
+    toast('Status updated to ' + capitalize(status), 'success');
+  }
 }
 
 // ============ PROJECT MODAL ============
 function openProjectModal(id) {
-  const p = allProjects.find(x=>x.id===id); if(!p) return;
-  document.getElementById('modalTitle').textContent = `${p.project_type} — ${p.name}`;
+  const p = allProjects.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('modalTitle').textContent = p.project_type + ' — ' + p.name;
   document.getElementById('modalBody').innerHTML = `
     <div class="detail-grid">
-      <div class="detail-item"><div class="detail-label">Client</div><div class="detail-value">${p.name}</div></div>
+      <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${p.name}</div></div>
       <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value mono">${p.email}</div></div>
       <div class="detail-item"><div class="detail-label">Project Type</div><div class="detail-value">${p.project_type}</div></div>
-      <div class="detail-item"><div class="detail-label">Deadline</div><div class="detail-value">${p.deadline||'Flexible'}</div></div>
-      <div class="detail-item detail-full"><div class="detail-label">Deliverables</div><div style="display:flex;flex-wrap:wrap;gap:var(--space-1);margin-top:var(--space-1)">${(p.deliverables||[]).map(d=>`<span class="badge badge-reviewing">${d}</span>`).join('')}</div></div>
-      <div class="detail-item detail-full">
-        <div class="detail-label">Goals (1=low, 3=high)</div>
-        <div class="goal-grid" style="margin-top:var(--space-2)">
-          ${[['Sales Growth','goal_sales'],['Brand Awareness','goal_brand'],['Social Presence','goal_social'],['Launch Speed','goal_launch']].map(([label,key])=>`
-            <div class="goal-item">
-              <div class="goal-label">${label} <span class="goal-score">${p[key]||0}/3</span></div>
-              <div class="goal-bar"><div class="goal-fill" style="width:${((p[key]||0)/3)*100}%"></div></div>
-            </div>`).join('')}
-        </div>
-      </div>
-      ${p.brand_description ? `<div class="detail-item detail-full"><div class="detail-label">Brand Description</div><div class="detail-value" style="white-space:pre-wrap;line-height:1.6">${p.brand_description}</div></div>` : ''}
-      ${p.extra_notes ? `<div class="detail-item detail-full"><div class="detail-label">Extra Notes</div><div class="detail-value" style="white-space:pre-wrap;line-height:1.6">${p.extra_notes}</div></div>` : ''}
-      <div class="detail-item detail-full"><div class="detail-label">Submitted</div><div class="detail-value td-muted">${fmtDateTime(p.created_at)}</div></div>
-      <div class="detail-item detail-full">
-        <div class="detail-label">Status</div>
-        <div class="status-select-group">
-          ${['new','reviewing','in-progress','completed','archived'].map(s=>`
-            <button class="status-option ${badgeClass(s)} ${p.status===s?'selected':''}" onclick="updateProjectStatus('${p.id}','${s}')">${capitalize(s==='in-progress'?'In Progress':s)}</button>`).join('')}
-        </div>
+      <div class="detail-item"><div class="detail-label">Deadline</div><div class="detail-value">${p.deadline||'—'}</div></div>
+      <div class="detail-item detail-full"><div class="detail-label">Deliverables</div><div class="detail-value">${(p.deliverables||[]).join(', ')||'—'}</div></div>
+      <div class="detail-item detail-full"><div class="detail-label">Description</div><div class="detail-value" style="white-space:pre-wrap">${p.description||'—'}</div></div>
+    </div>
+    <div>
+      <div class="detail-label" style="margin-bottom:var(--space-2)">Status</div>
+      <div class="status-select-group">
+        ${['new','reviewing','in-progress','completed','archived'].map(s=>`
+          <button class="status-option ${statusBadgeClass(s)} ${p.status===s?'selected':''}" onclick="updateProjectStatus('${p.id}','${s}')">${capitalize(s==='in-progress'?'In Progress':s)}</button>
+        `).join('')}
       </div>
     </div>`;
   document.getElementById('modalFooter').innerHTML = `
-    ${p.status === 'archived' ? `<button class="btn btn-danger btn-sm" onclick="deleteProject('${p.id}')">Delete Permanently</button>` : ''}
-    <button class="btn btn-secondary" onclick="closeModal()">Close</button>
-    <button class="btn btn-primary" onclick="copyEmail('${p.email}')">Copy Email</button>`;
-  document.getElementById('modal').classList.add('open');
+    <button class="btn btn-ghost" onclick="closeModal('detailModal')">Close</button>
+    <button class="btn btn-secondary" onclick="openCompose('${p.email}','${p.name}','Re: Your project brief — ${p.project_type}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Message Client
+    </button>`;
+  openModal('detailModal');
 }
 
-// ============ STATUS UPDATES ============
-function updateQuoteStatus(id, newStatus) {
-  const q = allQuotes.find(x=>x.id===id); if(!q) return;
-  q.status = newStatus;
-  updateBadges();
-  // Re-render status buttons in modal
-  document.querySelectorAll('.status-option').forEach(btn => {
-    const s = btn.getAttribute('onclick').match(/'([^']+)'$/)?.[1];
-    btn.classList.toggle('selected', s === newStatus);
-  });
-  // Refresh delete button visibility in footer
-  const footer = document.getElementById('modalFooter');
-  if (footer) {
-    const existingDel = footer.querySelector('.btn-danger');
-    if (newStatus === 'archived' && !existingDel) {
-      const delBtn = document.createElement('button');
-      delBtn.className = 'btn btn-danger btn-sm';
-      delBtn.textContent = 'Delete Permanently';
-      delBtn.onclick = () => deleteQuote(id);
-      footer.insertBefore(delBtn, footer.firstChild);
-    } else if (newStatus !== 'archived' && existingDel) {
-      existingDel.remove();
-    }
+function updateProjectStatus(id, status) {
+  const p = allProjects.find(x=>x.id===id);
+  if(p) {
+    p.status = status;
+    updateBadges();
+    document.querySelectorAll('.status-option').forEach(btn => {
+      btn.classList.toggle('selected', btn.textContent.trim().toLowerCase().replace(' ','-') === status);
+    });
+    toast('Status updated to ' + capitalize(status), 'success');
   }
-  showToast(`Status updated to "${capitalize(newStatus)}"`, 'success');
-  if (currentView === 'quotes') renderView('quotes');
-  if (currentView === 'dashboard') renderView('dashboard');
 }
-function updateProjectStatus(id, newStatus) {
-  const p = allProjects.find(x=>x.id===id); if(!p) return;
-  p.status = newStatus;
-  updateBadges();
-  document.querySelectorAll('.status-option').forEach(btn => {
-    const s = btn.getAttribute('onclick').match(/'([^']+)'$/)?.[1];
-    btn.classList.toggle('selected', s === newStatus);
-  });
-  // Refresh delete button visibility in footer
-  const footer = document.getElementById('modalFooter');
-  if (footer) {
-    const existingDel = footer.querySelector('.btn-danger');
-    if (newStatus === 'archived' && !existingDel) {
-      const delBtn = document.createElement('button');
-      delBtn.className = 'btn btn-danger btn-sm';
-      delBtn.textContent = 'Delete Permanently';
-      delBtn.onclick = () => deleteProject(id);
-      footer.insertBefore(delBtn, footer.firstChild);
-    } else if (newStatus !== 'archived' && existingDel) {
-      existingDel.remove();
-    }
+
+// ============ COMPOSE / MESSAGING ============
+function openCompose(toEmail, clientName, subject) {
+  _composeClientName = clientName || '';
+  document.getElementById('composeTo').value = toEmail || '';
+  document.getElementById('composeSubject').value = subject || '';
+  document.getElementById('composeBody').value = '';
+  document.getElementById('composeError').style.display = 'none';
+  document.getElementById('composeSendBtn').disabled = false;
+  document.getElementById('composeSendBtn').innerHTML = `
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    Send Message`;
+  // Close detail modal if open, then open compose
+  document.getElementById('detailModal').classList.remove('open');
+  setTimeout(() => openModal('composeModal'), 150);
+}
+
+async function sendMessage() {
+  const to = document.getElementById('composeTo').value.trim();
+  const subject = document.getElementById('composeSubject').value.trim();
+  const body = document.getElementById('composeBody').value.trim();
+  const errEl = document.getElementById('composeError');
+  const btn = document.getElementById('composeSendBtn');
+
+  errEl.style.display = 'none';
+
+  if (!to || !subject || !body) {
+    errEl.textContent = 'Please fill in all fields before sending.';
+    errEl.style.display = 'block';
+    return;
   }
-  showToast(`Status updated to "${capitalize(newStatus==='in-progress'?'In Progress':newStatus)}"`, 'success');
-  if (currentView === 'projects') renderView('projects');
-  if (currentView === 'dashboard') renderView('dashboard');
-}
-function copyEmail(email) {
-  navigator.clipboard?.writeText(email).then(()=>showToast('Email copied!','success')).catch(()=>showToast('Could not copy','error'));
+
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"/></svg> Sending…`;
+
+  try {
+    const res = await fetch('/api/send-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to, subject, body, clientName: _composeClientName })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to send');
+    closeModal('composeModal');
+    toast(`Message sent to ${to}`, 'success');
+  } catch(err) {
+    errEl.textContent = err.message || 'Failed to send message. Please try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message`;
+  }
 }
 
-
-// ============ DELETE (ARCHIVED ONLY) ============
-function deleteQuote(id) {
-  if (!confirm('Permanently delete this quote request? This cannot be undone.')) return;
-  allQuotes = allQuotes.filter(x => x.id !== id);
-  updateBadges();
-  closeModal();
-  showToast('Quote request deleted.', 'success');
-  if (currentView === 'quotes') renderView('quotes');
-  if (currentView === 'dashboard') renderView('dashboard');
+// ============ MODAL HELPERS ============
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
-function deleteProject(id) {
-  if (!confirm('Permanently delete this project submission? This cannot be undone.')) return;
-  allProjects = allProjects.filter(x => x.id !== id);
-  updateBadges();
-  closeModal();
-  showToast('Project submission deleted.', 'success');
-  if (currentView === 'projects') renderView('projects');
-  if (currentView === 'dashboard') renderView('dashboard');
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
 }
-// ============ MODAL ============
-function closeModal(e) {
-  if (e && e.target !== document.getElementById('modal')) return;
-  document.getElementById('modal').classList.remove('open');
+function closeDetailModal(e) {
+  if (e.target === e.currentTarget) closeModal(e.currentTarget.id);
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('modal').classList.remove('open'); });
 
 // ============ TOAST ============
-function showToast(message, type='success') {
-  const tc = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">${type==='success'?'<polyline points="20 6 9 17 4 12"/>':'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}</svg> ${message}`;
-  tc.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      ${type === 'success'
+        ? '<polyline points="20 6 9 17 4 12"/>'
+        : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+    </svg>
+    <span>${msg}</span>`;
+  const container = document.getElementById('toastContainer');
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 4000);
 }
 
 // ============ HELPERS ============
-function fmtDate(iso) { return new Date(iso).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}); }
-function fmtDateTime(iso) { return new Date(iso).toLocaleString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}); }
-function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function badgeClass(s) {
-  const map = {new:'badge-new',reviewing:'badge-reviewing',quoted:'badge-quoted',accepted:'badge-accepted','in-progress':'badge-in-progress',completed:'badge-completed',declined:'badge-declined',archived:'badge-archived'};
-  return map[s]||'badge-archived';
-}
-function statusBadge(s) { return `<span class="badge ${badgeClass(s)}"><span class="badge-dot"></span>${capitalize(s==='in-progress'?'In Progress':s)}</span>`; }
-function goalStars(p) {
-  const max = Math.max(p.goal_sales||0, p.goal_brand||0, p.goal_social||0, p.goal_launch||0);
-  const labels = {3:'High',2:'Med',1:'Low',0:'—'};
-  return `<span style="font-size:var(--text-xs);color:var(--color-text-muted)">${labels[max]}</span>`;
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-// ============ THEME TOGGLE ============
-(function(){
-  const btn = document.querySelector('[data-theme-toggle]');
-  const html = document.documentElement;
-  function setIcon(theme){
-    if(!btn) return;
-    btn.innerHTML = theme==='dark'
-      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
-      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  }
-  setIcon(html.getAttribute('data-theme'));
-  if(btn) btn.addEventListener('click', ()=>{
-    const d = html.getAttribute('data-theme')==='dark'?'light':'dark';
-    html.setAttribute('data-theme',d); setIcon(d);
-  });
-})();
+function statusBadge(status) {
+  const map = {
+    new: 'badge-new', reviewing: 'badge-reviewing', quoted: 'badge-quoted',
+    accepted: 'badge-accepted', 'in-progress': 'badge-in-progress',
+    completed: 'badge-completed', declined: 'badge-declined', archived: 'badge-archived'
+  };
+  const label = status === 'in-progress' ? 'In Progress' : capitalize(status);
+  return `<span class="badge ${map[status]||'badge-archived'}"><span class="badge-dot"></span>${label}</span>`;
+}
+
+function statusBadgeClass(status) {
+  const map = {
+    new: 'badge-new', reviewing: 'badge-reviewing', quoted: 'badge-quoted',
+    accepted: 'badge-accepted', 'in-progress': 'badge-in-progress',
+    completed: 'badge-completed', declined: 'badge-declined', archived: 'badge-archived'
+  };
+  return map[status] || 'badge-archived';
+}
+
+function capitalize(s) {
+  if (!s) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function goalStars(p) {
+  const goals = ['speed','quality','budget','creativity','communication'];
+  const stars = goals.filter(g => p[g] && p[g] >= 4).length;
+  return `<span style="letter-spacing:1px;color:var(--color-gold)">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</span>`;
+}
+
+// Spin keyframe for send loader
+const spinStyle = document.createElement('style');
+spinStyle.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+document.head.appendChild(spinStyle);
 </script>
 </body>
 </html>
