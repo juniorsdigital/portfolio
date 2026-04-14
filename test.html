@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>juniors.digital — Client Manager</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -272,9 +271,7 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 .form-input { padding: var(--space-3) var(--space-4); background: var(--color-surface-offset); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--color-text); width: 100%; }
 .form-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary) 20%, transparent); }
 .form-input::placeholder { color: var(--color-text-faint); }
-.auth-error { display:none; align-items:center; gap:var(--space-2); font-size:var(--text-xs); color:var(--color-error); background:var(--color-error-highlight); border:1px solid oklch(from var(--color-error) l c h / 0.25); border-radius:var(--radius-md); padding:var(--space-2) var(--space-3); margin-top:var(--space-3); animation:authShake 0.35s ease; }
-.auth-error.visible { display:flex; }
-@keyframes authShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.auth-error { display:none; align-items:center; gap:var(--space-2); font-size:var(--text-xs); color:var(--color-error); background:var(--color-error-highlight); border:1px solid oklch(from var(--color-error) l c h / 0.25); border-radius:var(--radius-md); padding:var(--space-2) var(--space-3); margin-top:var(--space-3); } .auth-error.visible { display:flex; animation:authShake 0.35s ease; } @keyframes authShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 1024px) {
@@ -319,11 +316,10 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
       <label class="form-label" for="authPassword">Password</label>
       <input class="form-input" type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
     </div>
-    <div class="auth-error" id="authError" role="alert" aria-live="polite"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="authErrorText"></span></div>
+    <div class="auth-error" id="authError" role="alert"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="authErrorText"></span></div>
     <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:var(--space-2);" id="loginBtn" onclick="handleLogin()">
       Sign in
     </button>
-    
   </div>
 </div>
 
@@ -415,6 +411,7 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ============ STATE ============
 let currentView = 'dashboard';
@@ -448,7 +445,7 @@ const MOCK_PROJECTS = [
 const SUPABASE_URL = 'https://ivnwmvezbmyenwpczdcw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2bndtdmV6Ym15ZW53cGN6ZGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzODExMTQsImV4cCI6MjA4Nzk1NzExNH0.y9wYDEe5bWMtYtc2v514GM_5B-pJ55uVpaoq3kRmiO4';
 const ALLOWED_USER_ID = 'e49efb48-9761-4c6d-bc35-e2b714110a22';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function showAuthError(msg) {
   const el = document.getElementById('authError');
@@ -460,7 +457,6 @@ function showAuthError(msg) {
 function hideAuthError() {
   document.getElementById('authError').classList.remove('visible');
 }
-
 async function handleLogin() {
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value;
@@ -469,12 +465,12 @@ async function handleLogin() {
   if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
   loginBtn.disabled = true;
   loginBtn.textContent = 'Signing in…';
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await _sb.auth.signInWithPassword({ email, password });
   loginBtn.disabled = false;
   loginBtn.textContent = 'Sign in';
   if (error) { showAuthError('Incorrect credentials. Please try again.'); return; }
   if (data.user.id !== ALLOWED_USER_ID) {
-    await supabase.auth.signOut();
+    await _sb.auth.signOut();
     showAuthError('Access denied. Unauthorized account.');
     return;
   }
@@ -486,12 +482,12 @@ async function handleLogin() {
   navigate('dashboard');
 }
 async function handleLogout() {
-  await supabase.auth.signOut();
+  await _sb.auth.signOut();
   currentUser = null;
   document.getElementById('authScreen').style.display = 'flex';
 }
 (async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await _sb.auth.getSession();
   if (session && session.user.id === ALLOWED_USER_ID) {
     currentUser = session.user.email;
     const initials = (session.user.email || 'JD').split('@')[0].slice(0,2).toUpperCase();
