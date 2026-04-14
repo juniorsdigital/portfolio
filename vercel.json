@@ -1,5 +1,13 @@
 {
   "rewrites": [
     { "source": "/", "destination": "/juniors-digital.html" }
+  ],
+  "headers": [
+    {
+      "source": "/client-manager",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    }
   ]
 }

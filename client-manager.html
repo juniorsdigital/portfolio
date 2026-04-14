@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+<meta name="robots" content="noindex, nofollow">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>juniors.digital — Client Manager</title>
@@ -489,17 +490,10 @@ document.getElementById('authPassword').addEventListener('keydown', e => { if (e
 document.getElementById('authEmail').addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('authPassword').focus(); });
 
 // ============ DATA ============
-async function loadData() {
-  const [quotesRes, projectsRes] = await Promise.all([
-    _sb.from('quote_requests').select('*').order('created_at', { ascending: false }),
-    _sb.from('project_submissions').select('*').order('created_at', { ascending: false })
-  ]);
-  if (quotesRes.error) console.error('Error loading quotes:', quotesRes.error);
-  else allQuotes = quotesRes.data || [];
-  if (projectsRes.error) console.error('Error loading projects:', projectsRes.error);
-  else allProjects = projectsRes.data || [];
+function loadData() {
+  allQuotes = [...MOCK_QUOTES];
+  allProjects = [...MOCK_PROJECTS];
   updateBadges();
-  renderView(currentView);
 }
 function updateBadges() {
   const newQ = allQuotes.filter(q=>q.status==='new').length;
@@ -509,6 +503,8 @@ function updateBadges() {
   document.getElementById('projectsBadge').textContent = newP || '';
   document.getElementById('projectsBadge').style.display = newP ? '' : 'none';
 }
+
+// ============ NAVIGATION ============
 function navigate(view) {
   currentView = view;
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -826,18 +822,17 @@ function openProjectModal(id) {
   document.getElementById('modal').classList.add('open');
 }
 
-
 // ============ STATUS UPDATES ============
-async function updateQuoteStatus(id, newStatus) {
+function updateQuoteStatus(id, newStatus) {
   const q = allQuotes.find(x=>x.id===id); if(!q) return;
-  const { error } = await _sb.from('quote_requests').update({ status: newStatus }).eq('id', id);
-  if (error) { showToast('Failed to update status.', 'error'); console.error(error); return; }
   q.status = newStatus;
   updateBadges();
+  // Re-render status buttons in modal
   document.querySelectorAll('.status-option').forEach(btn => {
     const s = btn.getAttribute('onclick').match(/'([^']+)'$/)?.[1];
     btn.classList.toggle('selected', s === newStatus);
   });
+  // Refresh delete button visibility in footer
   const footer = document.getElementById('modalFooter');
   if (footer) {
     const existingDel = footer.querySelector('.btn-danger');
@@ -855,16 +850,15 @@ async function updateQuoteStatus(id, newStatus) {
   if (currentView === 'quotes') renderView('quotes');
   if (currentView === 'dashboard') renderView('dashboard');
 }
-async function updateProjectStatus(id, newStatus) {
+function updateProjectStatus(id, newStatus) {
   const p = allProjects.find(x=>x.id===id); if(!p) return;
-  const { error } = await _sb.from('project_submissions').update({ status: newStatus }).eq('id', id);
-  if (error) { showToast('Failed to update status.', 'error'); console.error(error); return; }
   p.status = newStatus;
   updateBadges();
   document.querySelectorAll('.status-option').forEach(btn => {
     const s = btn.getAttribute('onclick').match(/'([^']+)'$/)?.[1];
     btn.classList.toggle('selected', s === newStatus);
   });
+  // Refresh delete button visibility in footer
   const footer = document.getElementById('modalFooter');
   if (footer) {
     const existingDel = footer.querySelector('.btn-danger');
@@ -886,11 +880,10 @@ function copyEmail(email) {
   navigator.clipboard?.writeText(email).then(()=>showToast('Email copied!','success')).catch(()=>showToast('Could not copy','error'));
 }
 
+
 // ============ DELETE (ARCHIVED ONLY) ============
-async function deleteQuote(id) {
+function deleteQuote(id) {
   if (!confirm('Permanently delete this quote request? This cannot be undone.')) return;
-  const { error } = await _sb.from('quote_requests').delete().eq('id', id);
-  if (error) { showToast('Failed to delete.', 'error'); console.error(error); return; }
   allQuotes = allQuotes.filter(x => x.id !== id);
   updateBadges();
   closeModal();
@@ -898,10 +891,8 @@ async function deleteQuote(id) {
   if (currentView === 'quotes') renderView('quotes');
   if (currentView === 'dashboard') renderView('dashboard');
 }
-async function deleteProject(id) {
+function deleteProject(id) {
   if (!confirm('Permanently delete this project submission? This cannot be undone.')) return;
-  const { error } = await _sb.from('project_submissions').delete().eq('id', id);
-  if (error) { showToast('Failed to delete.', 'error'); console.error(error); return; }
   allProjects = allProjects.filter(x => x.id !== id);
   updateBadges();
   closeModal();
