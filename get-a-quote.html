@@ -168,6 +168,24 @@ textarea.field-input{resize:vertical;min-height:120px;line-height:1.6;}
 .error-msg{font-size:var(--text-xs);color:var(--color-error);margin-top:var(--space-1);display:none;}
 .field-group.has-error .field-input{border-color:var(--color-error);}
 .field-group.has-error .error-msg{display:block;}
+
+/* ── Logo wordmark ── */
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: var(--color-text);
+}
+.nav-logo .logo-text {
+  font-family: var(--font-display, var(--font-body, sans-serif));
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 </style>
 </head>
 <body>
@@ -177,7 +195,8 @@ textarea.field-input{resize:vertical;min-height:120px;line-height:1.6;}
     Back to Portfolio
   </a>
   <a href="juniors-digital.html" class="nav-logo">
-      <img src="images/jrs-fav-32x32.png" alt="JRS logo" width="32" height="32" style="width: 32px; height: 32px; object-fit: contain; flex-shrink: 0;" />
+      <img src="images/jrs-fav-32x32.png" alt="JRS logo" width="32" height="32" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;" />
+      <span class="logo-text">Juniors.Digital</span>
     </a>
   <div class="nav-right">
     <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
@@ -360,16 +379,16 @@ textarea.field-input{resize:vertical;min-height:120px;line-height:1.6;}
         </div>
       </div>
       <div class="sidebar-divider"></div>
-      <p class="sidebar-contact">Prefer email? Reach me directly at<br><a href="mailto:johnreidswanson@gmail.com">johnreidswanson@gmail.com</a></p>
+      <p class="sidebar-contact">Prefer email? Reach me directly at<br><a href="mailto:john@juniors.digital">john@juniors.digital</a></p>
     </div>
 
     <div class="sidebar-card">
       <h3>Recent Work</h3>
       <div class="work-preview" style="border:1px solid oklch(from var(--color-text) l c h/0.08);">
-        <img src="images/work-ovani.png" alt="OvaniSound Covers" width="380" height="160" loading="lazy">
+        <img src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/79843d5b-ca07-4cba-90de-263985471059.png" alt="RyzaGrow campaign" width="380" height="160" loading="lazy">
         <div class="work-preview-info">
-          <div class="work-preview-client">OvaniSound</div>
-          <div class="work-preview-title">OvaniSound — 60+ Product Covers Delivered</div>
+          <div class="work-preview-client">Ryza, LLC.</div>
+          <div class="work-preview-title">RyzaGrow — ↑ 2× Sales</div>
         </div>
       </div>
     </div>

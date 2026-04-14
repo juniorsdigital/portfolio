@@ -293,6 +293,24 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
   .page-header { flex-direction: column; align-items: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+/* ── Logo wordmark ── */
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: var(--color-text);
+}
+.nav-logo .logo-text {
+  font-family: var(--font-display, var(--font-body, sans-serif));
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 </style>
 </head>
 <body>
@@ -331,9 +349,8 @@ tbody td { padding: var(--space-3) var(--space-4); vertical-align: middle; color
   <!-- HEADER -->
   <header class="header">
     <a href="#" class="header-logo">
-      <img src="images/jrs-fav-32x32.png" alt="JRS logo" width="32" height="32" style="width: 32px; height: 32px; object-fit: contain; flex-shrink: 0;" />
-
-      <span class="logo-text">juniors.digital</span>
+      <img src="images/jrs-fav-32x32.png" alt="JRS logo" width="32" height="32" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;" />
+      <span class="logo-text">Juniors.Digital</span>
     </a>
     <div class="header-divider"></div>
     <nav class="header-breadcrumb" id="breadcrumb">
