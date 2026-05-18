@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/work-gallery.css">
 <style>
 /* ============================================
    A minimalist agency website with a portfolio
@@ -441,12 +442,6 @@ p,li { text-wrap: pretty; }
   transition: transform var(--transition), box-shadow var(--transition);
 }
 .work-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.work-card:nth-child(1) { grid-column: span 7; }
-.work-card:nth-child(2) { grid-column: span 5; }
-.work-card:nth-child(3) { grid-column: span 4; }
-.work-card:nth-child(4) { grid-column: span 4; }
-.work-card:nth-child(5) { grid-column: span 4; }
-.work-card:nth-child(6) { grid-column: span 12; }
 
 .work-thumb-wrap {
   overflow: hidden;
@@ -478,22 +473,6 @@ p,li { text-wrap: pretty; }
   border-radius: var(--radius-full); margin-left: var(--space-2);
 }
 
-/* Wide card — horizontal layout */
-.work-card:nth-child(6) .work-inner { display: grid; grid-template-columns: 1fr 1.2fr; align-items: stretch; min-height: 0; }
-.work-card:nth-child(6) .work-thumb-wrap {
-  aspect-ratio: unset;
-  height: 100%;
-  min-height: 280px;
-}
-.work-card:nth-child(6) .work-thumb { min-height: 280px; height: 100%; transform: scale(1.1); }
-.work-card:nth-child(6):hover .work-thumb-wrap .work-thumb { transform: scale(1.18); }
-
-@media (max-width: 900px) {
-  .work-card { grid-column: span 12 !important; }
-  .work-card:nth-child(6) .work-inner { grid-template-columns: 1fr; }
-  .work-card:nth-child(6) .work-thumb-wrap { aspect-ratio: 16/9; height: auto; min-height: unset; }
-  .work-card:nth-child(6) .work-thumb { aspect-ratio: unset; min-height: unset; height: 100%; }
-}
 
 /* ===== ABOUT ===== */
 .about-section { padding-block: clamp(var(--space-16), 8vw, var(--space-24)); }
@@ -813,111 +792,7 @@ footer {
       </div>
     </div>
 
-    <div class="work-grid" id="workGrid">
-
-      <!-- RyzaGrow — LARGE -->
-      <article class="work-card" data-category="design">
-        <div class="work-thumb-wrap">
-        <img class="work-thumb" src="images/work-ryzagrow.png" alt="RyzaGrow campaign — split product panels with terracotta and cream backgrounds, JRS portfolio frame" width="800" height="500" loading="lazy">
-        </div>
-        <div class="work-info">
-          <div class="work-client">Ryza, LLC.</div>
-          <h3 class="work-title">RyzaGrow — DTC Campaign</h3>
-          <p class="work-desc">Full campaign management, content creation, and social direction for a direct-to-consumer mushroom grow kit brand.</p>
-          <div class="work-tags">
-            <span class="work-tag">Graphic Design</span>
-            <span class="work-tag">Social Media</span>
-            <span class="work-tag">SEO</span>
-            <span class="work-result">↑ 2× Sales</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Ovani Sound -->
-      <article class="work-card" data-category="design">
-        <div class="work-thumb-wrap">
-        <img class="work-thumb" src="images/work-ovani.png" alt="Ovani Sound — e-commerce product covers, 2D stickers and 3D pack renders" width="600" height="375" loading="lazy">
-        </div>
-        <div class="work-info">
-          <div class="work-client">OvaniSound</div>
-          <h3 class="work-title">60+ E-Commerce Product Covers</h3>
-          <p class="work-desc">2D and 3D product cover designs for a sound design e-commerce catalog. 30 covers in one week.</p>
-          <div class="work-tags">
-            <span class="work-tag">Product Design</span>
-            <span class="work-tag">3D Render</span>
-            <span class="work-result">30 in 1 week</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- She Who Flies -->
-      <article class="work-card" data-category="video">
-        <div class="work-thumb-wrap">
-        <img class="work-thumb" src="images/work-she-who-flies.png" alt="She Who Flies — mock documentary trailer graphic with script title and mountain imagery" width="600" height="375" loading="lazy">
-        </div>
-        <div class="work-info">
-          <div class="work-client">Red Bull (Mock)</div>
-          <h3 class="work-title">She Who Flies — Documentary</h3>
-          <p class="work-desc">Re-edited documentary trailer with custom title treatment.</p>
-          <div class="work-tags">
-            <span class="work-tag">Video Edit</span>
-            <span class="work-result">7.7K Views</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Boys & Girls Club -->
-      <article class="work-card" data-category="design">
-        <div class="work-thumb-wrap">
-        <img class="work-thumb" src="images/work-bgcb.png" alt="Boys &amp; Girls Club of Boston — teen registration OOH campaign mockup" width="600" height="375" loading="lazy">
-        </div>
-        <div class="work-info">
-          <div class="work-client">Boys &amp; Girls Club of Boston</div>
-          <h3 class="work-title">Teen Registration Campaign</h3>
-          <p class="work-desc">Full-service campaign to drive teen registration.</p>
-          <div class="work-tags">
-            <span class="work-tag">Campaign</span>
-            <span class="work-tag">OOH</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- LanceCRM -->
-      <article class="work-card" data-category="web">
-        <div class="work-thumb-wrap">
-        <img class="work-thumb" src="images/work-lancecrm.png" alt="LanceCRM — freelancer CRM and project dashboard UI mockup" width="600" height="375" loading="lazy">
-        </div>
-        <div class="work-info">
-          <div class="work-client">LanceCRM</div>
-          <h3 class="work-title">Freelancer CRM UI</h3>
-          <p class="work-desc">Dashboard and UX design for a CRM and project management tool built for freelancers.</p>
-          <div class="work-tags">
-            <span class="work-tag">UI/UX</span>
-            <span class="work-tag">Web Design</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Red Bull Winter Heroes — WIDE -->
-      <article class="work-card" data-category="video">
-        <div class="work-inner">
-          <div class="work-thumb-wrap">
-          <img class="work-thumb" src="images/work-winter-heroes.png" alt="Winter Heroes — title treatment over snow-capped peaks above a cloud layer, Juniors Digital production" width="800" height="600" loading="lazy">
-          </div>
-          <div class="work-info">
-            <div class="work-client">Red Bull (Mock)</div>
-            <h3 class="work-title">Winter Heroes — Multi-Format Video</h3>
-            <p class="work-desc">Long-form documentary repurposed across short-form social cuts. Strategy and edit demonstrating the full content pipeline from single source to multi-channel distribution.</p>
-            <div class="work-tags">
-              <span class="work-tag">Video Editing</span>
-              <span class="work-tag">Content Strategy</span>
-              <span class="work-tag">Short-Form</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-    </div>
+    <div class="work-grid" id="workGrid"></div>
   </div>
 </section>
 
@@ -1079,21 +954,6 @@ const observer=new IntersectionObserver((entries)=>{
 },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 revealEls.forEach(el=>observer.observe(el));
 
-// Work filter
-const filterBtns=document.querySelectorAll('.filter-btn');
-const workCards=document.querySelectorAll('.work-card');
-filterBtns.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    filterBtns.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const filter=btn.dataset.filter;
-    workCards.forEach(card=>{
-      const show=filter==='all'||card.dataset.category===filter;
-      card.style.display=show?'':'none';
-    });
-  });
-});
-
 // Animated count-up
 function animateCount(el){
   const target=parseInt(el.dataset.count,10);
@@ -1113,6 +973,10 @@ const countObserver=new IntersectionObserver((entries)=>{
 },{threshold:0.5});
 countEls.forEach(el=>countObserver.observe(el));
 </script>
+  <script type="module">
+    import { initWorkGallery } from './js/work-gallery.js';
+    initWorkGallery('home');
+  </script>
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
