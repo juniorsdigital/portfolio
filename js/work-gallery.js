@@ -52,7 +52,8 @@ function getVideoEmbedSrc(item) {
   return url;
 }
 
-function renderMediaItem(item, loadVideo) {
+function renderMediaItem(item, loadVideo, options = {}) {
+  const { videoOnly = false } = options;
   if (item.type === 'image') {
     const featured = item.featured ? ' work-modal__media--featured' : '';
     return (
@@ -69,19 +70,61 @@ function renderMediaItem(item, loadVideo) {
   const src = getVideoEmbedSrc(item);
   if (!src) return '';
   const title = escapeHtml(item.title || 'Project video');
+  const soloClass = videoOnly ? ' work-modal__media--solo' : ' work-modal__media--featured';
   let html =
-    '<figure class="work-modal__media work-modal__media--video work-modal__media--featured">' +
-    '<div class="work-modal__video-wrap"><iframe src="' +
+    '<figure class="work-modal__media work-modal__media--video' +
+    soloClass +
+    '"><div class="work-modal__video-wrap"><iframe src="' +
     src +
     '" title="' +
     title +
     '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>';
-  if (item.title) {
+  if (item.title && !videoOnly) {
     html +=
       '<figcaption class="work-modal__video-label">' + title + '</figcaption>';
   }
   html += '</figure>';
   return html;
+}
+
+function isVideoProject(project) {
+  return project.category === 'video';
+}
+
+function buildModalGalleryHtml(project) {
+  if (isVideoProject(project)) {
+    return project.media
+      .filter((item) => item.type === 'video' && item.id)
+      .map((item) => renderMediaItem(item, true, { videoOnly: true }))
+      .join('');
+  }
+
+  let html = project.media
+    .map((item) => renderMediaItem(item, true))
+    .filter(Boolean)
+    .join('');
+  if (!html.trim()) {
+    html = renderMediaItem(
+      {
+        type: 'image',
+        src: project.thumbnail.src,
+        alt: project.thumbnail.alt,
+        featured: true,
+      },
+      false
+    );
+  }
+  return html;
+}
+
+function setModalVideoLayout(modal, isVideo) {
+  modal.classList.toggle('work-modal--video', isVideo);
+  modal
+    .querySelector('.work-modal__body')
+    .classList.toggle('work-modal__body--video-only', isVideo);
+  modal
+    .querySelector('.work-modal__gallery')
+    .classList.toggle('work-modal__gallery--video-only', isVideo);
 }
 
 function buildCardHtml(project, pageKey, index) {
@@ -225,23 +268,10 @@ export function openProjectModal(id) {
     tagsEl.appendChild(res);
   }
 
-  const gallery = modal.querySelector('.work-modal__gallery');
-  let galleryHtml = project.media
-    .map((item) => renderMediaItem(item, true))
-    .filter(Boolean)
-    .join('');
-  if (!galleryHtml.trim()) {
-    galleryHtml = renderMediaItem(
-      {
-        type: 'image',
-        src: project.thumbnail.src,
-        alt: project.thumbnail.alt,
-        featured: true,
-      },
-      false
-    );
-  }
-  gallery.innerHTML = galleryHtml;
+  const isVideo = isVideoProject(project);
+  setModalVideoLayout(modal, isVideo);
+  modal.querySelector('.work-modal__gallery').innerHTML =
+    buildModalGalleryHtml(project);
 
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
@@ -260,6 +290,7 @@ export function closeProjectModal() {
   document.removeEventListener('focusin', trapFocus);
   modalEl.querySelectorAll('iframe').forEach((frame) => frame.remove());
   modalEl.querySelector('.work-modal__gallery').innerHTML = '';
+  setModalVideoLayout(modalEl, false);
   if (lastFocusedCard) {
     lastFocusedCard.focus();
     lastFocusedCard = null;

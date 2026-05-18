@@ -128,12 +128,6 @@ export const WORK_PROJECTS = [
     },
     media: [
       {
-        type: 'image',
-        src: 'images/work-she-who-flies.png',
-        alt: 'She Who Flies — documentary trailer title treatment',
-        featured: true,
-      },
-      {
         type: 'video',
         provider: 'youtube',
         id: 'OAVv1vL3SaY',
@@ -213,12 +207,6 @@ export const WORK_PROJECTS = [
       portfolio: { span: 6, order: 5 },
     },
     media: [
-      {
-        type: 'image',
-        src: 'images/work-winter-heroes.png',
-        alt: 'Winter Heroes — cinematic title over mountains and clouds',
-        featured: true,
-      },
       {
         type: 'video',
         provider: 'youtube',

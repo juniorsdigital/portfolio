@@ -208,6 +208,29 @@
   gap: var(--space-4);
 }
 
+.work-modal__body--video-only {
+  padding: 0;
+  background: var(--color-surface-offset);
+}
+
+.work-modal__gallery--video-only {
+  display: block;
+}
+
+.work-modal__gallery--video-only .work-modal__media {
+  border: none;
+  border-radius: 0;
+}
+
+.work-modal__gallery--video-only .work-modal__media--video {
+  aspect-ratio: 16 / 9;
+  min-height: min(52vh, 480px);
+}
+
+.work-modal__gallery--video-only .work-modal__media--solo {
+  grid-column: unset;
+}
+
 .work-modal__media {
   border-radius: var(--radius-lg);
   overflow: hidden;
