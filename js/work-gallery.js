@@ -42,11 +42,14 @@ function getVideoEmbedSrc(item) {
       '?dnt=1'
     );
   }
-  return (
+  let url =
     'https://www.youtube-nocookie.com/embed/' +
     encodeURIComponent(item.id) +
-    '?rel=0'
-  );
+    '?rel=0';
+  if (item.start != null && item.start > 0) {
+    url += '&start=' + encodeURIComponent(String(Math.floor(item.start)));
+  }
+  return url;
 }
 
 function renderMediaItem(item, loadVideo) {

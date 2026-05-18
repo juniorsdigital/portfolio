@@ -133,11 +133,10 @@ export const WORK_PROJECTS = [
         alt: 'She Who Flies — documentary trailer title treatment',
         featured: true,
       },
-      // Add your public YouTube video id when ready, e.g. id: 'dQw4w9WgXcQ'
       {
         type: 'video',
         provider: 'youtube',
-        id: '',
+        id: 'OAVv1vL3SaY',
         title: 'She Who Flies — Trailer',
       },
     ],
@@ -223,7 +222,8 @@ export const WORK_PROJECTS = [
       {
         type: 'video',
         provider: 'youtube',
-        id: '',
+        id: 'Go_kBKhxUrc',
+        start: 7,
         title: 'Winter Heroes — Documentary',
       },
     ],
