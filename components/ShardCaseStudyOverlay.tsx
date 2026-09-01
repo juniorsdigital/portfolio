@@ -12,15 +12,13 @@ export type ShardOrigin = {
   width: number;
   height: number;
   clip: string;
+  openClip: string;
   snapshot: string;
 };
 
-const CLIP_CARD =
-  "polygon(0% 0%, 96.5% 0%, 100% 3.5%, 100% 100%, 3.5% 100%, 0% 96.5%)";
-
-function cardRect() {
-  const width = Math.min(768, window.innerWidth * 0.92);
-  const height = Math.min(window.innerHeight * 0.88, width * 0.98 + 72);
+function paneRect() {
+  const width = Math.min(820, window.innerWidth * 0.92);
+  const height = Math.min(window.innerHeight * 0.88, width * 1.02 + 48);
   return {
     left: (window.innerWidth - width) / 2,
     top: Math.max(20, (window.innerHeight - height) / 2),
@@ -43,7 +41,7 @@ export function ShardCaseStudyOverlay({
   const [phase, setPhase] = useState<"from" | "open" | "closing">(
     reduced ? "open" : "from",
   );
-  const [target] = useState(cardRect);
+  const [target] = useState(paneRect);
   const expanded = phase === "open";
 
   const beginClose = useCallback(() => {
@@ -108,7 +106,7 @@ export function ShardCaseStudyOverlay({
       <button
         type="button"
         aria-label="Close case study"
-        className={`absolute inset-0 bg-bg/75 backdrop-blur-[2px] transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-bg/80 backdrop-blur-[10px] transition-opacity duration-500 ${
           expanded ? "opacity-100" : "opacity-0"
         }`}
         onClick={beginClose}
@@ -117,7 +115,7 @@ export function ShardCaseStudyOverlay({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`shard-grow absolute overflow-hidden bg-bg-elev ${
+        className={`shard-grow absolute overflow-hidden ${
           expanded ? "shard-grow-open" : ""
         }`}
         style={{
@@ -125,7 +123,7 @@ export function ShardCaseStudyOverlay({
           top: box.top,
           width: box.width,
           height: box.height,
-          clipPath: expanded ? CLIP_CARD : origin.clip,
+          clipPath: expanded ? origin.openClip : origin.clip,
         }}
         onTransitionEnd={onGrowEnd}
       >
@@ -133,12 +131,14 @@ export function ShardCaseStudyOverlay({
         <img
           src={origin.snapshot}
           alt=""
-          className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-            expanded ? "opacity-0" : "opacity-100"
+          className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-all duration-700 ${
+            expanded
+              ? "scale-110 opacity-35 blur-[12px]"
+              : "scale-100 opacity-100 blur-0"
           }`}
         />
         <div
-          className={`relative flex h-full flex-col overflow-auto transition-opacity duration-500 ${
+          className={`relative z-[4] flex h-full flex-col overflow-auto bg-bg/55 px-[clamp(1.4rem,8%,3.4rem)] py-[clamp(1.5rem,8%,3.2rem)] transition-opacity duration-500 ${
             expanded ? "opacity-100 delay-150" : "opacity-0"
           }`}
         >
@@ -152,7 +152,7 @@ export function ShardCaseStudyOverlay({
           ref={closeRef}
           type="button"
           onClick={beginClose}
-          className={`absolute top-4 right-8 z-10 grid h-9 w-9 place-items-center bg-bg/80 text-lg leading-none text-bone transition-opacity hover:text-volt ${
+          className={`absolute top-[9%] right-[11%] z-10 grid h-9 w-9 place-items-center bg-bg/55 text-lg leading-none text-bone backdrop-blur-sm transition-opacity hover:text-volt ${
             expanded ? "opacity-100" : "opacity-0"
           }`}
           aria-label="Close"
