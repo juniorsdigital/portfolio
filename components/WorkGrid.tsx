@@ -136,10 +136,10 @@ export function WorkGrid({
                 type="button"
                 aria-pressed={on}
                 onClick={() => setFilter(item.id)}
-                className={`clip-shard-sm px-4 py-2 text-[0.68rem] tracking-[0.18em] uppercase ${
+                className={`px-4 py-2 text-[0.68rem] tracking-[0.18em] uppercase ${
                   on
                     ? "bg-volt text-bg"
-                    : "hairline text-muted hover:text-bone"
+                    : "border border-gilt/25 text-muted hover:text-bone"
                 }`}
               >
                 {item.label}
@@ -155,7 +155,7 @@ export function WorkGrid({
             <button
               type="button"
               onClick={() => setActive(project)}
-              className="group clip-shard hairline relative block w-full overflow-hidden bg-bg-panel text-left"
+              className="group clip-shard hairline relative z-0 block w-full cursor-pointer overflow-hidden bg-bg-panel text-left"
             >
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
@@ -163,11 +163,11 @@ export function WorkGrid({
                   alt={project.thumbnail.alt}
                   width={project.thumbnail.width}
                   height={project.thumbnail.height}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  className="pointer-events-none h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-bg/90 via-transparent to-transparent opacity-80" />
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-bg/90 via-transparent to-transparent opacity-80" />
               </div>
-              <div className="absolute inset-x-0 bottom-0 p-5">
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 p-5">
                 <p className="text-[0.65rem] tracking-[0.18em] text-gilt uppercase">
                   {project.client}
                 </p>

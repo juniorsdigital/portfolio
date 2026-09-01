@@ -101,12 +101,17 @@ export function ContactForm() {
     "clip-shard-sm w-full border border-gilt/25 bg-bg px-4 py-3 text-sm text-bone placeholder:text-faint";
 
   return (
-    <form onSubmit={onSubmit} className="relative space-y-6" noValidate>
+    <form
+      onSubmit={onSubmit}
+      className="relative space-y-6"
+      noValidate
+      method="post"
+      action="#"
+    >
       <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
         <label htmlFor="company_website">Company website</label>
         <input
           id="company_website"
-          name="company_website"
           tabIndex={-1}
           autoComplete="off"
           value={form.company_website}
@@ -159,7 +164,7 @@ export function ContactForm() {
             return (
               <label
                 key={opt.value}
-                className={`clip-shard-sm cursor-pointer border px-4 py-3 text-sm ${
+                className={`cursor-pointer border px-4 py-3 text-sm ${
                   on
                     ? "border-volt bg-volt/10 text-bone"
                     : "border-gilt/25 text-muted hover:border-gilt/50"
@@ -196,10 +201,10 @@ export function ContactForm() {
                   key={need}
                   type="button"
                   onClick={() => toggleNeed(need)}
-                  className={`clip-shard-sm px-3 py-2 text-xs tracking-[0.04em] ${
+                  className={`cursor-pointer px-3 py-2 text-xs tracking-[0.04em] ${
                     on
                       ? "bg-ember text-bone"
-                      : "hairline text-muted hover:text-bone"
+                      : "border border-gilt/25 text-muted hover:text-bone"
                   }`}
                 >
                   {need}

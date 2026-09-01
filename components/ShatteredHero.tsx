@@ -61,16 +61,16 @@ function buildMesh(w: number, h: number): Triangle[] {
         const cx = (a.x + b.x + c.x) / 3;
         const cy = (a.y + b.y + c.y) / 3;
         const ang = hash(cx, cy, 4) * Math.PI * 2;
-        const dist = 16 + hash(cx, cy, 5) * 48;
+        const dist = 8 + hash(cx, cy, 5) * 22;
         tris.push({
           a,
           b,
           c,
           cx,
           cy,
-          dx: Math.cos(ang) * dist + (cx - w / 2) * 0.045,
-          dy: Math.sin(ang) * dist + (cy - h / 2) * 0.045,
-          rot: (hash(cx, cy, 6) - 0.5) * 0.32,
+          dx: Math.cos(ang) * dist + (cx - w / 2) * 0.02,
+          dy: Math.sin(ang) * dist + (cy - h / 2) * 0.02,
+          rot: (hash(cx, cy, 6) - 0.5) * 0.14,
           assemble: 0,
         });
       }
@@ -107,50 +107,62 @@ export function ShatteredHero() {
   const [ready, setReady] = useState(false);
   const [locked, setLocked] = useState(false);
   const [reduced, setReduced] = useState(false);
-  const [isCoarse, setIsCoarse] = useState(false);
+
+  const sizeRef = useRef({ w: 0, h: 0 });
 
   const resize = useCallback(() => {
     const canvas = canvasRef.current;
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return;
     const rect = wrap.getBoundingClientRect();
+    const w = Math.max(1, Math.round(rect.width));
+    const h = Math.max(1, Math.round(rect.height));
+    if (w === sizeRef.current.w && h === sizeRef.current.h && meshRef.current.length) {
+      return;
+    }
+    sizeRef.current = { w, h };
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
+    canvas.width = Math.max(1, Math.floor(w * dpr));
+    canvas.height = Math.max(1, Math.floor(h * dpr));
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
     const ctx = canvas.getContext("2d");
     if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    meshRef.current = buildMesh(rect.width, rect.height);
+    meshRef.current = buildMesh(w, h);
   }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const coarse = window.matchMedia("(pointer: coarse)");
     const apply = () => {
       reducedRef.current = media.matches;
       setReduced(media.matches);
-      setIsCoarse(coarse.matches);
     };
     apply();
     media.addEventListener("change", apply);
-    coarse.addEventListener("change", apply);
     return () => {
       media.removeEventListener("change", apply);
-      coarse.removeEventListener("change", apply);
     };
   }, []);
 
   useEffect(() => {
     const img = new Image();
     img.src = "/images/about-portrait.png";
-    img.onload = () => {
+    const start = () => {
       imgRef.current = img;
       resize();
       setReady(true);
     };
+    if (img.complete && img.naturalWidth > 0) start();
+    else img.onload = start;
+
     window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    const wrap = wrapRef.current;
+    const ro = wrap ? new ResizeObserver(resize) : null;
+    if (wrap && ro) ro.observe(wrap);
+    return () => {
+      window.removeEventListener("resize", resize);
+      ro?.disconnect();
+    };
   }, [resize]);
 
   useEffect(() => {
@@ -182,6 +194,11 @@ export function ShatteredHero() {
       const pointer = pointerRef.current;
       const hovering = lockedRef.current || pointer.inside;
 
+      ctx.save();
+      ctx.globalAlpha = 0.28;
+      ctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
+      ctx.restore();
+
       for (const tri of mesh) {
         const dist = Math.hypot(tri.cx - pointer.x, tri.cy - pointer.y);
         const target = hovering ? 1 : 0;
@@ -204,8 +221,8 @@ export function ShatteredHero() {
         ctx.closePath();
         ctx.clip();
         ctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
-        ctx.strokeStyle = `rgba(196, 163, 90, ${0.42 * (1 - ease * 0.85)})`;
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(230, 225, 214, ${0.55 * (1 - ease * 0.75)})`;
+        ctx.lineWidth = 1.25;
         ctx.stroke();
         ctx.restore();
       }
@@ -248,15 +265,13 @@ export function ShatteredHero() {
       onPointerLeave={reduced ? undefined : onPointerLeave}
       onClick={reduced ? undefined : onToggleLock}
     >
-      {reduced ? (
-        // Portrait is a static public asset; canvas hero handles the motion path.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src="/images/about-portrait.png"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      ) : (
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/about-portrait.png"
+        alt=""
+        className={`absolute inset-0 h-full w-full object-cover ${reduced ? "" : "opacity-50"}`}
+      />
+      {reduced ? null : (
         <canvas
           ref={canvasRef}
           className="absolute inset-0 h-full w-full cursor-crosshair"
@@ -265,11 +280,11 @@ export function ShatteredHero() {
       )}
 
       <div
-        className="pointer-events-none absolute inset-0 bg-linear-to-r from-bg/80 via-bg/35 to-bg/55"
+        className="pointer-events-none absolute inset-0 bg-linear-to-r from-bg/65 via-bg/15 to-transparent"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-linear-to-t from-bg via-transparent to-bg/40"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-bg/80 to-transparent"
         aria-hidden="true"
       />
 
@@ -301,14 +316,15 @@ export function ShatteredHero() {
           </Link>
         </div>
         {!reduced ? (
-          <p className="mt-8 text-[0.65rem] tracking-[0.2em] text-muted uppercase">
-            {isCoarse
-              ? locked
-                ? "Tap to shatter"
-                : "Tap a shard to rebuild the pane"
-              : locked
-                ? "Click to shatter"
-                : "Hover a shard — the pane rebuilds. Click to lock."}
+          <p className="mt-8 text-[0.65rem] tracking-[0.2em] text-muted uppercase md:hidden">
+            {locked ? "Tap to shatter" : "Tap to rebuild the pane"}
+          </p>
+        ) : null}
+        {!reduced ? (
+          <p className="mt-8 hidden text-[0.65rem] tracking-[0.2em] text-muted uppercase md:block">
+            {locked
+              ? "Click to shatter"
+              : "Hover a shard — the pane rebuilds. Click to lock."}
           </p>
         ) : null}
       </div>
