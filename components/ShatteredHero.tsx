@@ -622,7 +622,6 @@ export function ShatteredHero() {
   };
 
   const onLayerClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (openIdRef.current) return;
     const wrap = wrapRef.current;
     if (!wrap) return;
     const hit = hitTriangle(meshRef.current, localPoint(e, wrap));
