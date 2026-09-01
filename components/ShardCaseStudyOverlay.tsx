@@ -138,7 +138,7 @@ export function ShardCaseStudyOverlay({
           }`}
         />
         <div
-          className={`relative z-[4] flex h-full flex-col overflow-auto bg-bg/55 px-[clamp(1.4rem,8%,3.4rem)] py-[clamp(1.5rem,8%,3.2rem)] transition-opacity duration-500 ${
+          className={`relative z-[4] flex h-full flex-col overflow-auto bg-bg/40 px-[clamp(1.8rem,12%,4.2rem)] py-[clamp(2rem,13%,4.4rem)] transition-opacity duration-500 ${
             expanded ? "opacity-100 delay-150" : "opacity-0"
           }`}
         >
@@ -148,11 +148,19 @@ export function ShardCaseStudyOverlay({
             play={expanded}
           />
         </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[5]"
+          style={{
+            boxShadow:
+              "inset 0 0 0 1.5px rgba(230, 225, 214, 0.55), inset 0 0 0 3px rgba(214, 255, 58, 0.18), inset 0 24px 40px rgba(255, 255, 255, 0.12), inset 0 -28px 48px rgba(122, 168, 196, 0.1)",
+          }}
+        />
         <button
           ref={closeRef}
           type="button"
           onClick={beginClose}
-          className={`absolute top-[9%] right-[11%] z-10 grid h-9 w-9 place-items-center bg-bg/55 text-lg leading-none text-bone backdrop-blur-sm transition-opacity hover:text-volt ${
+          className={`absolute top-[12%] right-[14%] z-10 grid h-9 w-9 place-items-center bg-bg/55 text-lg leading-none text-bone backdrop-blur-sm transition-opacity hover:text-volt ${
             expanded ? "opacity-100" : "opacity-0"
           }`}
           aria-label="Close"

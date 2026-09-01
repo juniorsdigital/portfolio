@@ -108,7 +108,7 @@ function originClip(tri: Triangle, box: { x: number; y: number; w: number; h: nu
 
 function expandedClip(tri: Triangle) {
   const span = Math.min(bboxOf(tri.a, tri.b, tri.c).w, bboxOf(tri.a, tri.b, tri.c).h);
-  const points = shardHex(tri, span * 0.22);
+  const points = shardHex(tri, span * 0.42);
   const box = bboxOfPoints(points);
   const padX = box.w * 0.04;
   const padY = box.h * 0.04;
@@ -429,11 +429,12 @@ export function ShatteredHero() {
         const isHover = tri.id === hoverId && !openId;
         const lifted = isHover && !reducedRef.current;
         const dimmed = Boolean(openId) && tri.projectId !== openId;
+        const hoverScale = isHot ? 1.05 : 1.07;
 
         ctx.save();
         if (lifted) {
           ctx.translate(tri.cx, tri.cy);
-          ctx.scale(1.05, 1.05);
+          ctx.scale(hoverScale, hoverScale);
           ctx.translate(-tri.cx, -tri.cy);
         }
 
@@ -452,8 +453,9 @@ export function ShatteredHero() {
         const lit = lightVertex(tri);
         const wash = ctx.createLinearGradient(lit.x, lit.y, tri.cx, tri.cy);
         if (isHover) {
-          wash.addColorStop(0, "rgba(255, 255, 255, 0.28)");
-          wash.addColorStop(0.35, "rgba(122, 168, 196, 0.14)");
+          wash.addColorStop(0, "rgba(255, 255, 255, 0.38)");
+          wash.addColorStop(0.28, "rgba(122, 168, 196, 0.2)");
+          wash.addColorStop(0.7, "rgba(255, 255, 255, 0.04)");
           wash.addColorStop(1, "rgba(255, 255, 255, 0)");
         } else if (isHot) {
           wash.addColorStop(0, "rgba(214, 255, 58, 0.12)");
@@ -532,11 +534,11 @@ export function ShatteredHero() {
               ctx.shadowColor = "rgba(214, 255, 58, 0.9)";
               ctx.shadowBlur = 16 + facing * 14;
             } else {
-              ctx.strokeStyle = `rgba(230, 225, 214, ${0.32 + facing * 0.62})`;
-              ctx.shadowColor = `rgba(255, 255, 255, ${0.2 + facing * 0.45})`;
-              ctx.shadowBlur = 8 + facing * 16;
+              ctx.strokeStyle = `rgba(245, 248, 255, ${0.55 + facing * 0.45})`;
+              ctx.shadowColor = `rgba(180, 220, 255, ${0.4 + facing * 0.5})`;
+              ctx.shadowBlur = 14 + facing * 18;
             }
-            ctx.lineWidth = 1.35 + facing * 1.15;
+            ctx.lineWidth = 1.6 + facing * 1.2;
           } else if (isHot) {
             ctx.strokeStyle = `rgba(214, 255, 58, ${0.38 + facing * 0.38})`;
             ctx.shadowColor = "rgba(214, 255, 58, 0.42)";
@@ -637,6 +639,7 @@ export function ShatteredHero() {
       ref={wrapRef}
       className="relative h-dvh min-h-[640px] overflow-hidden bg-bg"
       aria-label="Introduction"
+      style={{ cursor }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
