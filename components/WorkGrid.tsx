@@ -157,7 +157,7 @@ export function WorkGrid({
               onClick={() => setActive(project)}
               className="group clip-shard hairline relative z-0 block w-full cursor-pointer overflow-hidden bg-bg-panel text-left"
             >
-              <div className="relative aspect-[16/10] overflow-hidden">
+              <span className="relative block aspect-[16/10] overflow-hidden">
                 <Image
                   src={project.thumbnail.src}
                   alt={project.thumbnail.alt}
@@ -165,16 +165,16 @@ export function WorkGrid({
                   height={project.thumbnail.height}
                   className="pointer-events-none h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
-                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-bg/90 via-transparent to-transparent opacity-80" />
-              </div>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 p-5">
-                <p className="text-[0.65rem] tracking-[0.18em] text-gilt uppercase">
+                <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-bg/90 via-transparent to-transparent opacity-80" />
+              </span>
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 block p-5">
+                <span className="block text-[0.65rem] tracking-[0.18em] text-gilt uppercase">
                   {project.client}
-                </p>
-                <h3 className="mt-1 font-display text-xl font-extrabold tracking-tight text-bone sm:text-2xl">
+                </span>
+                <span className="mt-1 block font-display text-xl font-extrabold tracking-tight text-bone sm:text-2xl">
                   {project.title}
-                </h3>
-              </div>
+                </span>
+              </span>
             </button>
           </li>
         ))}

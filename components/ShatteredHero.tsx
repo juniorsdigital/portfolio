@@ -61,16 +61,16 @@ function buildMesh(w: number, h: number): Triangle[] {
         const cx = (a.x + b.x + c.x) / 3;
         const cy = (a.y + b.y + c.y) / 3;
         const ang = hash(cx, cy, 4) * Math.PI * 2;
-        const dist = 8 + hash(cx, cy, 5) * 22;
+        const dist = 36 + hash(cx, cy, 5) * 70;
         tris.push({
           a,
           b,
           c,
           cx,
           cy,
-          dx: Math.cos(ang) * dist + (cx - w / 2) * 0.02,
-          dy: Math.sin(ang) * dist + (cy - h / 2) * 0.02,
-          rot: (hash(cx, cy, 6) - 0.5) * 0.14,
+          dx: Math.cos(ang) * dist + (cx - w / 2) * 0.1,
+          dy: Math.sin(ang) * dist + (cy - h / 2) * 0.1,
+          rot: (hash(cx, cy, 6) - 0.5) * 0.55,
           assemble: 0,
         });
       }
@@ -194,11 +194,6 @@ export function ShatteredHero() {
       const pointer = pointerRef.current;
       const hovering = lockedRef.current || pointer.inside;
 
-      ctx.save();
-      ctx.globalAlpha = 0.28;
-      ctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
-      ctx.restore();
-
       for (const tri of mesh) {
         const dist = Math.hypot(tri.cx - pointer.x, tri.cy - pointer.y);
         const target = hovering ? 1 : 0;
@@ -210,9 +205,11 @@ export function ShatteredHero() {
 
         const t = tri.assemble;
         const ease = t * t * (3 - 2 * t);
+        const scale = 0.82 + 0.18 * ease;
         ctx.save();
         ctx.translate(tri.cx + tri.dx * (1 - ease), tri.cy + tri.dy * (1 - ease));
         ctx.rotate(tri.rot * (1 - ease));
+        ctx.scale(scale, scale);
         ctx.translate(-tri.cx, -tri.cy);
         ctx.beginPath();
         ctx.moveTo(tri.a.x, tri.a.y);
@@ -221,8 +218,8 @@ export function ShatteredHero() {
         ctx.closePath();
         ctx.clip();
         ctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
-        ctx.strokeStyle = `rgba(230, 225, 214, ${0.55 * (1 - ease * 0.75)})`;
-        ctx.lineWidth = 1.25;
+        ctx.strokeStyle = `rgba(230, 225, 214, ${0.72 * (1 - ease)})`;
+        ctx.lineWidth = 1.4;
         ctx.stroke();
         ctx.restore();
       }
@@ -269,7 +266,9 @@ export function ShatteredHero() {
       <img
         src="/images/about-portrait.png"
         alt=""
-        className={`absolute inset-0 h-full w-full object-cover ${reduced ? "" : "opacity-50"}`}
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+          reduced ? "opacity-100" : ready ? "opacity-0" : "opacity-50"
+        }`}
       />
       {reduced ? null : (
         <canvas

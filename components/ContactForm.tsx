@@ -162,27 +162,21 @@ export function ContactForm() {
           {SERVICE_OPTIONS.map((opt) => {
             const on = form.service === opt.value;
             return (
-              <label
+              <button
                 key={opt.value}
-                className={`cursor-pointer border px-4 py-3 text-sm ${
+                type="button"
+                onClick={() => {
+                  update("service", opt.value);
+                  update("needs", []);
+                }}
+                className={`cursor-pointer border px-4 py-3 text-left text-sm ${
                   on
                     ? "border-volt bg-volt/10 text-bone"
                     : "border-gilt/25 text-muted hover:border-gilt/50"
                 }`}
               >
-                <input
-                  type="radio"
-                  name="service"
-                  className="sr-only"
-                  value={opt.value}
-                  checked={on}
-                  onChange={() => {
-                    update("service", opt.value);
-                    update("needs", []);
-                  }}
-                />
                 {opt.label}
-              </label>
+              </button>
             );
           })}
         </div>
