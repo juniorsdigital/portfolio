@@ -66,14 +66,14 @@ function polygonClip(points: Pt[], box: { x: number; y: number; w: number; h: nu
 
 function assignProjects(tris: Triangle[], w: number, h: number) {
   const anchors = [
-    [0.54, 0.24],
-    [0.8, 0.28],
-    [0.66, 0.48],
-    [0.86, 0.58],
-    [0.58, 0.66],
+    [0.64, 0.22],
+    [0.84, 0.26],
+    [0.72, 0.44],
+    [0.9, 0.52],
+    [0.78, 0.68],
   ];
   const minArea = (w * h) / 140;
-  const minDist = Math.min(w, h) * 0.16;
+  const minDist = Math.min(w, h) * 0.14;
   const used = new Set<number>();
 
   const pick = (tx: number, ty: number, requireSpread: boolean) => {
@@ -82,8 +82,8 @@ function assignProjects(tris: Triangle[], w: number, h: number) {
     tris.forEach((tri, idx) => {
       if (used.has(idx)) return;
       if (triArea(tri) < minArea) return;
-      if (tri.cx < w * 0.44 || tri.cx > w * 0.94) return;
-      if (tri.cy < h * 0.14 || tri.cy > h * 0.82) return;
+      if (tri.cx < w * 0.58 || tri.cx > w * 0.96) return;
+      if (tri.cy < h * 0.12 || tri.cy > h * 0.78) return;
       if (requireSpread) {
         for (const other of used) {
           const prev = tris[other];
