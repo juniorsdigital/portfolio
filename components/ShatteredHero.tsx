@@ -66,29 +66,29 @@ function polygonClip(points: Pt[], box: { x: number; y: number; w: number; h: nu
 
 function assignProjects(tris: Triangle[], w: number, h: number) {
   const anchors = [
-    [0.56, 0.26],
-    [0.8, 0.34],
-    [0.66, 0.5],
-    [0.84, 0.62],
-    [0.52, 0.58],
+    [0.54, 0.24],
+    [0.8, 0.28],
+    [0.66, 0.48],
+    [0.86, 0.58],
+    [0.58, 0.66],
   ];
+  const minArea = (w * h) / 140;
+  const minDist = Math.min(w, h) * 0.16;
   const used = new Set<number>();
-  const minArea = (w * h) / 90;
 
-  PROJECTS.forEach((project, i) => {
-    const [tx, ty] = anchors[i] ?? [0.5, 0.5];
+  const pick = (tx: number, ty: number, requireSpread: boolean) => {
     let best = -1;
     let bestScore = Infinity;
     tris.forEach((tri, idx) => {
       if (used.has(idx)) return;
       if (triArea(tri) < minArea) return;
-      if (
-        tri.cx < w * 0.08 ||
-        tri.cx > w * 0.92 ||
-        tri.cy < h * 0.14 ||
-        tri.cy > h * 0.88
-      ) {
-        return;
+      if (tri.cx < w * 0.44 || tri.cx > w * 0.94) return;
+      if (tri.cy < h * 0.14 || tri.cy > h * 0.82) return;
+      if (requireSpread) {
+        for (const other of used) {
+          const prev = tris[other];
+          if (Math.hypot(tri.cx - prev.cx, tri.cy - prev.cy) < minDist) return;
+        }
       }
       const dist = Math.hypot(tri.cx / w - tx, tri.cy / h - ty);
       const score = dist - triArea(tri) / (w * h);
@@ -97,6 +97,13 @@ function assignProjects(tris: Triangle[], w: number, h: number) {
         best = idx;
       }
     });
+    return best;
+  };
+
+  PROJECTS.forEach((project, i) => {
+    const [tx, ty] = anchors[i] ?? [0.7, 0.45];
+    let best = pick(tx, ty, true);
+    if (best < 0) best = pick(tx, ty, false);
     if (best >= 0) {
       used.add(best);
       tris[best].projectId = project.id;
@@ -312,7 +319,10 @@ export function ShatteredHero() {
       const cover = coverRect(img.naturalWidth, img.naturalHeight, width, height);
       const hoverId = hoverIdRef.current;
       const openId = openIdRef.current;
-      const rest = mesh.filter((tri) => tri.projectId !== hoverId);
+      const cold = mesh.filter((tri) => !tri.projectId);
+      const hotIdle = mesh.filter(
+        (tri) => tri.projectId && tri.projectId !== hoverId,
+      );
       const hovered = mesh.filter((tri) => tri.projectId && tri.projectId === hoverId);
 
       const drawTri = (tri: Triangle) => {
@@ -323,7 +333,7 @@ export function ShatteredHero() {
         ctx.save();
         if (lifted) {
           ctx.translate(tri.cx, tri.cy);
-          ctx.scale(1.045, 1.045);
+          ctx.scale(1.05, 1.05);
           ctx.translate(-tri.cx, -tri.cy);
         }
 
@@ -339,10 +349,10 @@ export function ShatteredHero() {
           ctx.fillStyle = "rgba(7, 8, 9, 0.48)";
           ctx.fill();
         } else if (isHover) {
-          ctx.fillStyle = "rgba(214, 255, 58, 0.14)";
+          ctx.fillStyle = "rgba(214, 255, 58, 0.16)";
           ctx.fill();
         } else if (isHot) {
-          ctx.fillStyle = "rgba(196, 163, 90, 0.06)";
+          ctx.fillStyle = "rgba(214, 255, 58, 0.05)";
           ctx.fill();
         }
         ctx.restore();
@@ -352,25 +362,28 @@ export function ShatteredHero() {
         ctx.lineTo(tri.b.x, tri.b.y);
         ctx.lineTo(tri.c.x, tri.c.y);
         ctx.closePath();
+        ctx.shadowColor = "rgba(0, 0, 0, 0)";
+        ctx.shadowBlur = 0;
         if (isHover) {
           ctx.shadowColor = "rgba(214, 255, 58, 0.95)";
-          ctx.shadowBlur = 26;
-          ctx.strokeStyle = "rgba(214, 255, 58, 0.95)";
-          ctx.lineWidth = 2.1;
+          ctx.shadowBlur = 28;
+          ctx.strokeStyle = "rgba(214, 255, 58, 0.98)";
+          ctx.lineWidth = 2.2;
         } else if (isHot) {
-          ctx.shadowColor = "rgba(214, 255, 58, 0.28)";
-          ctx.shadowBlur = 8;
-          ctx.strokeStyle = "rgba(214, 255, 58, 0.42)";
-          ctx.lineWidth = 1.35;
+          ctx.shadowColor = "rgba(214, 255, 58, 0.45)";
+          ctx.shadowBlur = 12;
+          ctx.strokeStyle = "rgba(214, 255, 58, 0.72)";
+          ctx.lineWidth = 1.55;
         } else {
-          ctx.strokeStyle = "rgba(230, 225, 214, 0.2)";
-          ctx.lineWidth = 1;
+          ctx.strokeStyle = "rgba(230, 225, 214, 0.14)";
+          ctx.lineWidth = 0.85;
         }
         ctx.stroke();
         ctx.restore();
       };
 
-      for (const tri of rest) drawTri(tri);
+      for (const tri of cold) drawTri(tri);
+      for (const tri of hotIdle) drawTri(tri);
       for (const tri of hovered) drawTri(tri);
 
       rafRef.current = requestAnimationFrame(tick);

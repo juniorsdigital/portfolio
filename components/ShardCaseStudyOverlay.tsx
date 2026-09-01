@@ -152,7 +152,7 @@ export function ShardCaseStudyOverlay({
           ref={closeRef}
           type="button"
           onClick={beginClose}
-          className={`absolute top-3 right-3 z-10 h-9 w-9 text-bone/80 transition-opacity hover:text-volt ${
+          className={`absolute top-4 right-8 z-10 grid h-9 w-9 place-items-center bg-bg/80 text-lg leading-none text-bone transition-opacity hover:text-volt ${
             expanded ? "opacity-100" : "opacity-0"
           }`}
           aria-label="Close"
