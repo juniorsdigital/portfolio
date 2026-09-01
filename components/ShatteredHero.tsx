@@ -9,10 +9,12 @@ import {
 import { PROJECTS } from "@/lib/projects";
 
 const HERO_SRC = "/images/about-portrait.png";
+const LIGHT = { x: -0.45, y: -0.89 };
 
 type Pt = { x: number; y: number };
 
 type Triangle = {
+  id: string;
   a: Pt;
   b: Pt;
   c: Pt;
@@ -21,7 +23,7 @@ type Triangle = {
   projectId?: string;
 };
 
-type HotShard = {
+type ProjectHit = {
   projectId: string;
   title: string;
   bbox: { x: number; y: number; w: number; h: number };
@@ -50,8 +52,17 @@ function bboxOf(a: Pt, b: Pt, c: Pt) {
   return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
 }
 
-function mid(p: Pt, q: Pt): Pt {
-  return { x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 };
+function bboxOfPoints(points: Pt[]) {
+  const xs = points.map((pt) => pt.x);
+  const ys = points.map((pt) => pt.y);
+  const minX = Math.min(...xs);
+  const minY = Math.min(...ys);
+  return {
+    x: minX,
+    y: minY,
+    w: Math.max(...xs) - minX,
+    h: Math.max(...ys) - minY,
+  };
 }
 
 function polygonClip(points: Pt[], box: { x: number; y: number; w: number; h: number }) {
@@ -62,6 +73,98 @@ function polygonClip(points: Pt[], box: { x: number; y: number; w: number; h: nu
       return `${x.toFixed(2)}% ${y.toFixed(2)}%`;
     })
     .join(", ")})`;
+}
+
+function outwardMid(p: Pt, q: Pt, centroid: Pt, amount: number): Pt {
+  const mx = (p.x + q.x) / 2;
+  const my = (p.y + q.y) / 2;
+  let nx = q.y - p.y;
+  let ny = p.x - q.x;
+  const len = Math.hypot(nx, ny) || 1;
+  nx /= len;
+  ny /= len;
+  if ((mx - centroid.x) * nx + (my - centroid.y) * ny < 0) {
+    nx = -nx;
+    ny = -ny;
+  }
+  return { x: mx + nx * amount, y: my + ny * amount };
+}
+
+function shardHex(tri: Triangle, midOutset: number): Pt[] {
+  const centroid = { x: tri.cx, y: tri.cy };
+  return [
+    tri.a,
+    outwardMid(tri.a, tri.b, centroid, midOutset),
+    tri.b,
+    outwardMid(tri.b, tri.c, centroid, midOutset),
+    tri.c,
+    outwardMid(tri.c, tri.a, centroid, midOutset),
+  ];
+}
+
+function originClip(tri: Triangle, box: { x: number; y: number; w: number; h: number }) {
+  return polygonClip(shardHex(tri, 0), box);
+}
+
+function expandedClip(tri: Triangle) {
+  const span = Math.min(bboxOf(tri.a, tri.b, tri.c).w, bboxOf(tri.a, tri.b, tri.c).h);
+  const points = shardHex(tri, span * 0.42);
+  const box = bboxOfPoints(points);
+  const padX = box.w * 0.04;
+  const padY = box.h * 0.04;
+  return polygonClip(points, {
+    x: box.x - padX,
+    y: box.y - padY,
+    w: box.w + padX * 2,
+    h: box.h + padY * 2,
+  });
+}
+
+function projectHits(mesh: Triangle[]): ProjectHit[] {
+  return mesh.flatMap((tri) => {
+    if (!tri.projectId) return [];
+    const project = PROJECTS.find((item) => item.id === tri.projectId);
+    if (!project) return [];
+    const bbox = bboxOf(tri.a, tri.b, tri.c);
+    return [
+      {
+        projectId: project.id,
+        title: project.title,
+        bbox,
+        clip: polygonClip([tri.a, tri.b, tri.c], bbox),
+      },
+    ];
+  });
+}
+
+function pointInTri(p: Pt, tri: Triangle) {
+  const { a, b, c } = tri;
+  const d = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
+  if (d === 0) return false;
+  const u = ((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / d;
+  const v = ((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / d;
+  const w = 1 - u - v;
+  return u >= 0 && v >= 0 && w >= 0;
+}
+
+function hitTriangle(mesh: Triangle[], p: Pt) {
+  for (let i = mesh.length - 1; i >= 0; i -= 1) {
+    if (pointInTri(p, mesh[i])) return mesh[i];
+  }
+  return null;
+}
+
+function lightVertex(tri: Triangle) {
+  let best = tri.a;
+  let bestDot = -Infinity;
+  for (const v of [tri.a, tri.b, tri.c]) {
+    const d = (v.x - tri.cx) * LIGHT.x + (v.y - tri.cy) * LIGHT.y;
+    if (d > bestDot) {
+      bestDot = d;
+      best = v;
+    }
+  }
+  return best;
 }
 
 function assignProjects(tris: Triangle[], w: number, h: number) {
@@ -148,6 +251,7 @@ function buildMesh(w: number, h: number): Triangle[] {
 
       for (const [a, b, c] of pair) {
         tris.push({
+          id: `s${tris.length}`,
           a,
           b,
           c,
@@ -198,21 +302,17 @@ function captureShard(
   return { url: canvas.toDataURL("image/png"), bbox };
 }
 
-function hotList(mesh: Triangle[]): HotShard[] {
-  return mesh.flatMap((tri) => {
-    if (!tri.projectId) return [];
-    const project = PROJECTS.find((item) => item.id === tri.projectId);
-    if (!project) return [];
-    const bbox = bboxOf(tri.a, tri.b, tri.c);
-    return [
-      {
-        projectId: project.id,
-        title: project.title,
-        bbox,
-        clip: polygonClip([tri.a, tri.b, tri.c], bbox),
-      },
-    ];
-  });
+function pathTri(ctx: CanvasRenderingContext2D, tri: Triangle) {
+  ctx.beginPath();
+  ctx.moveTo(tri.a.x, tri.a.y);
+  ctx.lineTo(tri.b.x, tri.b.y);
+  ctx.lineTo(tri.c.x, tri.c.y);
+  ctx.closePath();
+}
+
+function localPoint(e: { clientX: number; clientY: number }, wrap: HTMLElement) {
+  const rect = wrap.getBoundingClientRect();
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
 }
 
 export function ShatteredHero() {
@@ -224,9 +324,11 @@ export function ShatteredHero() {
   const openIdRef = useRef<string | null>(null);
   const reducedRef = useRef(false);
   const rafRef = useRef<number>(0);
+  const cursorRef = useRef<"default" | "pointer">("default");
   const [ready, setReady] = useState(false);
   const [reduced, setReduced] = useState(false);
-  const [hotShards, setHotShards] = useState<HotShard[]>([]);
+  const [cursor, setCursor] = useState<"default" | "pointer">("default");
+  const [hits, setHits] = useState<ProjectHit[]>([]);
   const [origin, setOrigin] = useState<ShardOrigin | null>(null);
   const sizeRef = useRef({ w: 0, h: 0 });
 
@@ -249,7 +351,7 @@ export function ShatteredHero() {
     const ctx = canvas.getContext("2d");
     if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     meshRef.current = buildMesh(w, h);
-    setHotShards(hotList(meshRef.current));
+    setHits(projectHits(meshRef.current));
   }, []);
 
   useEffect(() => {
@@ -319,72 +421,146 @@ export function ShatteredHero() {
       const cover = coverRect(img.naturalWidth, img.naturalHeight, width, height);
       const hoverId = hoverIdRef.current;
       const openId = openIdRef.current;
-      const cold = mesh.filter((tri) => !tri.projectId);
-      const hotIdle = mesh.filter(
-        (tri) => tri.projectId && tri.projectId !== hoverId,
-      );
-      const hovered = mesh.filter((tri) => tri.projectId && tri.projectId === hoverId);
+      const now = performance.now();
+      let hovered: Triangle | null = null;
 
       const drawTri = (tri: Triangle) => {
         const isHot = Boolean(tri.projectId);
-        const isHover = isHot && tri.projectId === hoverId && !openId;
+        const isHover = tri.id === hoverId && !openId;
         const lifted = isHover && !reducedRef.current;
+        const dimmed = Boolean(openId) && tri.projectId !== openId;
+        const hoverScale = isHot ? 1.05 : 1.07;
 
         ctx.save();
         if (lifted) {
           ctx.translate(tri.cx, tri.cy);
-          ctx.scale(1.05, 1.05);
+          ctx.scale(hoverScale, hoverScale);
           ctx.translate(-tri.cx, -tri.cy);
         }
 
-        ctx.beginPath();
-        ctx.moveTo(tri.a.x, tri.a.y);
-        ctx.lineTo(tri.b.x, tri.b.y);
-        ctx.lineTo(tri.c.x, tri.c.y);
-        ctx.closePath();
+        pathTri(ctx, tri);
         ctx.save();
         ctx.clip();
+
+        if (lifted) {
+          ctx.translate(LIGHT.x * 5, LIGHT.y * 5);
+        }
         ctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
-        if (openId) {
+        if (lifted) {
+          ctx.translate(-LIGHT.x * 5, -LIGHT.y * 5);
+        }
+
+        const lit = lightVertex(tri);
+        const wash = ctx.createLinearGradient(lit.x, lit.y, tri.cx, tri.cy);
+        if (isHover) {
+          wash.addColorStop(0, "rgba(255, 255, 255, 0.38)");
+          wash.addColorStop(0.28, "rgba(122, 168, 196, 0.2)");
+          wash.addColorStop(0.7, "rgba(255, 255, 255, 0.04)");
+          wash.addColorStop(1, "rgba(255, 255, 255, 0)");
+        } else if (isHot) {
+          wash.addColorStop(0, "rgba(214, 255, 58, 0.12)");
+          wash.addColorStop(0.4, "rgba(196, 163, 90, 0.06)");
+          wash.addColorStop(1, "rgba(255, 255, 255, 0)");
+        } else {
+          wash.addColorStop(0, "rgba(230, 225, 214, 0.1)");
+          wash.addColorStop(0.45, "rgba(122, 168, 196, 0.05)");
+          wash.addColorStop(1, "rgba(255, 255, 255, 0)");
+        }
+        ctx.fillStyle = wash;
+        ctx.fill();
+
+        if (dimmed) {
           ctx.fillStyle = "rgba(7, 8, 9, 0.48)";
           ctx.fill();
-        } else if (isHover) {
-          ctx.fillStyle = "rgba(214, 255, 58, 0.16)";
+        } else if (isHot && !isHover) {
+          ctx.fillStyle = "rgba(214, 255, 58, 0.045)";
           ctx.fill();
-        } else if (isHot) {
-          ctx.fillStyle = "rgba(214, 255, 58, 0.05)";
+        }
+
+        if (isHover && !reducedRef.current) {
+          const box = bboxOf(tri.a, tri.b, tri.c);
+          const span = Math.max(box.w, box.h) * 1.35;
+          const s = (now / 1600) % 1;
+          const dx = LIGHT.y;
+          const dy = -LIGHT.x;
+          const gx = tri.cx + dx * (s * 2 - 1) * span;
+          const gy = tri.cy + dy * (s * 2 - 1) * span;
+          const glint = ctx.createLinearGradient(
+            gx - dx * 28,
+            gy - dy * 28,
+            gx + dx * 28,
+            gy + dy * 28,
+          );
+          glint.addColorStop(0, "rgba(255, 255, 255, 0)");
+          glint.addColorStop(0.42, "rgba(255, 255, 255, 0)");
+          glint.addColorStop(0.5, "rgba(255, 255, 255, 0.42)");
+          glint.addColorStop(
+            0.54,
+            isHot ? "rgba(214, 255, 58, 0.22)" : "rgba(122, 168, 196, 0.16)",
+          );
+          glint.addColorStop(0.62, "rgba(255, 255, 255, 0)");
+          glint.addColorStop(1, "rgba(255, 255, 255, 0)");
+          ctx.fillStyle = glint;
           ctx.fill();
         }
         ctx.restore();
 
-        ctx.beginPath();
-        ctx.moveTo(tri.a.x, tri.a.y);
-        ctx.lineTo(tri.b.x, tri.b.y);
-        ctx.lineTo(tri.c.x, tri.c.y);
-        ctx.closePath();
-        ctx.shadowColor = "rgba(0, 0, 0, 0)";
-        ctx.shadowBlur = 0;
-        if (isHover) {
-          ctx.shadowColor = "rgba(214, 255, 58, 0.95)";
-          ctx.shadowBlur = 28;
-          ctx.strokeStyle = "rgba(214, 255, 58, 0.98)";
-          ctx.lineWidth = 2.2;
-        } else if (isHot) {
-          ctx.shadowColor = "rgba(214, 255, 58, 0.45)";
-          ctx.shadowBlur = 12;
-          ctx.strokeStyle = "rgba(214, 255, 58, 0.72)";
-          ctx.lineWidth = 1.55;
-        } else {
-          ctx.strokeStyle = "rgba(230, 225, 214, 0.14)";
-          ctx.lineWidth = 0.85;
+        const edges: [Pt, Pt][] = [
+          [tri.a, tri.b],
+          [tri.b, tri.c],
+          [tri.c, tri.a],
+        ];
+        for (const [p, q] of edges) {
+          const mx = (p.x + q.x) / 2;
+          const my = (p.y + q.y) / 2;
+          let nx = q.y - p.y;
+          let ny = p.x - q.x;
+          const len = Math.hypot(nx, ny) || 1;
+          nx /= len;
+          ny /= len;
+          if ((mx - tri.cx) * nx + (my - tri.cy) * ny < 0) {
+            nx = -nx;
+            ny = -ny;
+          }
+          const facing = Math.max(0, nx * LIGHT.x + ny * LIGHT.y);
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.shadowColor = "rgba(0, 0, 0, 0)";
+          ctx.shadowBlur = 0;
+          if (isHover) {
+            if (isHot) {
+              ctx.strokeStyle = `rgba(214, 255, 58, ${0.5 + facing * 0.5})`;
+              ctx.shadowColor = "rgba(214, 255, 58, 0.9)";
+              ctx.shadowBlur = 16 + facing * 14;
+            } else {
+              ctx.strokeStyle = `rgba(245, 248, 255, ${0.55 + facing * 0.45})`;
+              ctx.shadowColor = `rgba(180, 220, 255, ${0.4 + facing * 0.5})`;
+              ctx.shadowBlur = 14 + facing * 18;
+            }
+            ctx.lineWidth = 1.6 + facing * 1.2;
+          } else if (isHot) {
+            ctx.strokeStyle = `rgba(214, 255, 58, ${0.38 + facing * 0.38})`;
+            ctx.shadowColor = "rgba(214, 255, 58, 0.42)";
+            ctx.shadowBlur = 10;
+            ctx.lineWidth = 1.35;
+          } else {
+            ctx.strokeStyle = `rgba(230, 225, 214, ${0.12 + facing * 0.32})`;
+            ctx.lineWidth = 0.85 + facing * 0.55;
+          }
+          ctx.stroke();
         }
-        ctx.stroke();
         ctx.restore();
       };
 
-      for (const tri of cold) drawTri(tri);
-      for (const tri of hotIdle) drawTri(tri);
-      for (const tri of hovered) drawTri(tri);
+      for (const tri of mesh) {
+        if (tri.id === hoverId) {
+          hovered = tri;
+          continue;
+        }
+        drawTri(tri);
+      }
+      if (hovered) drawTri(hovered);
 
       rafRef.current = requestAnimationFrame(tick);
     };
@@ -392,6 +568,29 @@ export function ShatteredHero() {
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
   }, [ready]);
+
+  const setHoverCursor = (next: "default" | "pointer") => {
+    if (cursorRef.current === next) return;
+    cursorRef.current = next;
+    setCursor(next);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const hit = hitTriangle(meshRef.current, localPoint(e, wrap));
+    if (openIdRef.current) {
+      setHoverCursor(hit?.projectId ? "pointer" : "default");
+      return;
+    }
+    hoverIdRef.current = hit?.id ?? null;
+    setHoverCursor(hit?.projectId ? "pointer" : "default");
+  };
+
+  const onPointerLeave = () => {
+    if (!openIdRef.current) hoverIdRef.current = null;
+    setHoverCursor("default");
+  };
 
   const openProject = (projectId: string) => {
     const tri = meshRef.current.find((item) => item.projectId === projectId);
@@ -409,16 +608,24 @@ export function ShatteredHero() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const { url, bbox } = captureShard(img, tri, cover, dpr);
     openIdRef.current = projectId;
-    hoverIdRef.current = projectId;
+    hoverIdRef.current = tri.id;
     setOrigin({
       project,
       left: rect.left + bbox.x,
       top: rect.top + bbox.y,
       width: bbox.w,
       height: bbox.h,
-      clip: polygonClip([tri.a, mid(tri.a, tri.b), tri.b, mid(tri.b, tri.c), tri.c, mid(tri.c, tri.a)], bbox),
+      clip: originClip(tri, bbox),
+      openClip: expandedClip(tri),
       snapshot: url,
     });
+  };
+
+  const onLayerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const hit = hitTriangle(meshRef.current, localPoint(e, wrap));
+    if (hit?.projectId) openProject(hit.projectId);
   };
 
   const closeProject = useCallback(() => {
@@ -431,6 +638,7 @@ export function ShatteredHero() {
       ref={wrapRef}
       className="relative h-dvh min-h-[640px] overflow-hidden bg-bg"
       aria-label="Introduction"
+      style={{ cursor }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -445,27 +653,28 @@ export function ShatteredHero() {
         className="absolute inset-0 h-full w-full"
         aria-hidden="true"
       />
+      {ready ? (
+        <div
+          className="absolute inset-0 z-[5]"
+          style={{ cursor }}
+          onPointerMove={onPointerMove}
+          onPointerLeave={onPointerLeave}
+          onClick={onLayerClick}
+        />
+      ) : null}
       {ready
-        ? hotShards.map((shard) => (
+        ? hits.map((shard) => (
             <button
               key={shard.projectId}
               type="button"
               aria-label={`Open case study: ${shard.title}`}
-              className="absolute z-[5] cursor-pointer bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
+              className="pointer-events-none absolute z-[6] bg-transparent focus-visible:pointer-events-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
               style={{
                 left: shard.bbox.x,
                 top: shard.bbox.y,
                 width: shard.bbox.w,
                 height: shard.bbox.h,
                 clipPath: shard.clip,
-              }}
-              onPointerEnter={() => {
-                hoverIdRef.current = shard.projectId;
-              }}
-              onPointerLeave={() => {
-                if (hoverIdRef.current === shard.projectId && !openIdRef.current) {
-                  hoverIdRef.current = null;
-                }
               }}
               onClick={() => openProject(shard.projectId)}
             />
@@ -507,10 +716,10 @@ export function ShatteredHero() {
           </Link>
         </div>
         <p className="mt-8 text-[0.65rem] tracking-[0.2em] text-muted uppercase md:hidden">
-          Tap a lit shard to open a project
+          Tap any shard — a lit pane opens the work
         </p>
         <p className="mt-8 hidden text-[0.65rem] tracking-[0.2em] text-muted uppercase md:block">
-          Hover a lit shard — click to open the work
+          Hover any shard — click a lit pane to open the work
         </p>
       </div>
 
