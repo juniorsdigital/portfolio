@@ -2,6 +2,13 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ShardCaseStudyOverlay,
+  type ShardOrigin,
+} from "@/components/ShardCaseStudyOverlay";
+import { PROJECTS } from "@/lib/projects";
+
+const HERO_SRC = "/images/about-portrait.png";
 
 type Pt = { x: number; y: number };
 
@@ -11,10 +18,14 @@ type Triangle = {
   c: Pt;
   cx: number;
   cy: number;
-  dx: number;
-  dy: number;
-  rot: number;
-  assemble: number;
+  projectId?: string;
+};
+
+type HotShard = {
+  projectId: string;
+  title: string;
+  bbox: { x: number; y: number; w: number; h: number };
+  clip: string;
 };
 
 function hash(x: number, y: number, seed: number) {
@@ -22,9 +33,87 @@ function hash(x: number, y: number, seed: number) {
   return n - Math.floor(n);
 }
 
+function triArea(tri: Triangle) {
+  return Math.abs(
+    (tri.a.x * (tri.b.y - tri.c.y) +
+      tri.b.x * (tri.c.y - tri.a.y) +
+      tri.c.x * (tri.a.y - tri.b.y)) /
+      2,
+  );
+}
+
+function bboxOf(a: Pt, b: Pt, c: Pt) {
+  const minX = Math.min(a.x, b.x, c.x);
+  const maxX = Math.max(a.x, b.x, c.x);
+  const minY = Math.min(a.y, b.y, c.y);
+  const maxY = Math.max(a.y, b.y, c.y);
+  return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+}
+
+function mid(p: Pt, q: Pt): Pt {
+  return { x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 };
+}
+
+function polygonClip(points: Pt[], box: { x: number; y: number; w: number; h: number }) {
+  return `polygon(${points
+    .map((pt) => {
+      const x = box.w === 0 ? 0 : ((pt.x - box.x) / box.w) * 100;
+      const y = box.h === 0 ? 0 : ((pt.y - box.y) / box.h) * 100;
+      return `${x.toFixed(2)}% ${y.toFixed(2)}%`;
+    })
+    .join(", ")})`;
+}
+
+function assignProjects(tris: Triangle[], w: number, h: number) {
+  const anchors = [
+    [0.64, 0.22],
+    [0.84, 0.26],
+    [0.72, 0.44],
+    [0.9, 0.52],
+    [0.78, 0.68],
+  ];
+  const minArea = (w * h) / 140;
+  const minDist = Math.min(w, h) * 0.14;
+  const used = new Set<number>();
+
+  const pick = (tx: number, ty: number, requireSpread: boolean) => {
+    let best = -1;
+    let bestScore = Infinity;
+    tris.forEach((tri, idx) => {
+      if (used.has(idx)) return;
+      if (triArea(tri) < minArea) return;
+      if (tri.cx < w * 0.58 || tri.cx > w * 0.96) return;
+      if (tri.cy < h * 0.12 || tri.cy > h * 0.78) return;
+      if (requireSpread) {
+        for (const other of used) {
+          const prev = tris[other];
+          if (Math.hypot(tri.cx - prev.cx, tri.cy - prev.cy) < minDist) return;
+        }
+      }
+      const dist = Math.hypot(tri.cx / w - tx, tri.cy / h - ty);
+      const score = dist - triArea(tri) / (w * h);
+      if (score < bestScore) {
+        bestScore = score;
+        best = idx;
+      }
+    });
+    return best;
+  };
+
+  PROJECTS.forEach((project, i) => {
+    const [tx, ty] = anchors[i] ?? [0.7, 0.45];
+    let best = pick(tx, ty, true);
+    if (best < 0) best = pick(tx, ty, false);
+    if (best >= 0) {
+      used.add(best);
+      tris[best].projectId = project.id;
+    }
+  });
+}
+
 function buildMesh(w: number, h: number): Triangle[] {
-  const cols = w < 700 ? 6 : 9;
-  const rows = w < 700 ? 5 : 6;
+  const cols = w < 700 ? 5 : 8;
+  const rows = w < 700 ? 4 : 5;
   const pts: Pt[][] = [];
 
   for (let y = 0; y <= rows; y += 1) {
@@ -58,24 +147,18 @@ function buildMesh(w: number, h: number): Triangle[] {
           ];
 
       for (const [a, b, c] of pair) {
-        const cx = (a.x + b.x + c.x) / 3;
-        const cy = (a.y + b.y + c.y) / 3;
-        const ang = hash(cx, cy, 4) * Math.PI * 2;
-        const dist = 36 + hash(cx, cy, 5) * 70;
         tris.push({
           a,
           b,
           c,
-          cx,
-          cy,
-          dx: Math.cos(ang) * dist + (cx - w / 2) * 0.1,
-          dy: Math.sin(ang) * dist + (cy - h / 2) * 0.1,
-          rot: (hash(cx, cy, 6) - 0.5) * 0.55,
-          assemble: 0,
+          cx: (a.x + b.x + c.x) / 3,
+          cy: (a.y + b.y + c.y) / 3,
         });
       }
     }
   }
+
+  assignProjects(tris, w, h);
   return tris;
 }
 
@@ -91,23 +174,60 @@ function coverRect(
   return { x: (canvasW - dw) / 2, y: (canvasH - dh) / 2, w: dw, h: dh };
 }
 
+function captureShard(
+  img: HTMLImageElement,
+  tri: Triangle,
+  cover: { x: number; y: number; w: number; h: number },
+  dpr: number,
+) {
+  const bbox = bboxOf(tri.a, tri.b, tri.c);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.ceil(bbox.w * dpr));
+  canvas.height = Math.max(1, Math.ceil(bbox.h * dpr));
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return { url: "", bbox };
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.translate(-bbox.x, -bbox.y);
+  ctx.beginPath();
+  ctx.moveTo(tri.a.x, tri.a.y);
+  ctx.lineTo(tri.b.x, tri.b.y);
+  ctx.lineTo(tri.c.x, tri.c.y);
+  ctx.closePath();
+  ctx.clip();
+  ctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
+  return { url: canvas.toDataURL("image/png"), bbox };
+}
+
+function hotList(mesh: Triangle[]): HotShard[] {
+  return mesh.flatMap((tri) => {
+    if (!tri.projectId) return [];
+    const project = PROJECTS.find((item) => item.id === tri.projectId);
+    if (!project) return [];
+    const bbox = bboxOf(tri.a, tri.b, tri.c);
+    return [
+      {
+        projectId: project.id,
+        title: project.title,
+        bbox,
+        clip: polygonClip([tri.a, tri.b, tri.c], bbox),
+      },
+    ];
+  });
+}
+
 export function ShatteredHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const meshRef = useRef<Triangle[]>([]);
-  const pointerRef = useRef<{ x: number; y: number; inside: boolean }>({
-    x: 0,
-    y: 0,
-    inside: false,
-  });
-  const lockedRef = useRef(false);
+  const hoverIdRef = useRef<string | null>(null);
+  const openIdRef = useRef<string | null>(null);
   const reducedRef = useRef(false);
   const rafRef = useRef<number>(0);
   const [ready, setReady] = useState(false);
-  const [locked, setLocked] = useState(false);
   const [reduced, setReduced] = useState(false);
-
+  const [hotShards, setHotShards] = useState<HotShard[]>([]);
+  const [origin, setOrigin] = useState<ShardOrigin | null>(null);
   const sizeRef = useRef({ w: 0, h: 0 });
 
   const resize = useCallback(() => {
@@ -129,6 +249,7 @@ export function ShatteredHero() {
     const ctx = canvas.getContext("2d");
     if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     meshRef.current = buildMesh(w, h);
+    setHotShards(hotList(meshRef.current));
   }, []);
 
   useEffect(() => {
@@ -146,7 +267,7 @@ export function ShatteredHero() {
 
   useEffect(() => {
     const img = new Image();
-    img.src = "/images/about-portrait.png";
+    img.src = HERO_SRC;
     const start = () => {
       imgRef.current = img;
       resize();
@@ -154,6 +275,11 @@ export function ShatteredHero() {
     };
     if (img.complete && img.naturalWidth > 0) start();
     else img.onload = start;
+
+    for (const project of PROJECTS) {
+      const preload = new Image();
+      preload.src = project.thumbnail.src;
+    }
 
     window.addEventListener("resize", resize);
     const wrap = wrapRef.current;
@@ -166,7 +292,7 @@ export function ShatteredHero() {
   }, [resize]);
 
   useEffect(() => {
-    if (!ready || reduced) return;
+    if (!ready) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -191,92 +317,160 @@ export function ShatteredHero() {
       }
 
       const cover = coverRect(img.naturalWidth, img.naturalHeight, width, height);
-      const pointer = pointerRef.current;
-      const hovering = lockedRef.current || pointer.inside;
+      const hoverId = hoverIdRef.current;
+      const openId = openIdRef.current;
+      const cold = mesh.filter((tri) => !tri.projectId);
+      const hotIdle = mesh.filter(
+        (tri) => tri.projectId && tri.projectId !== hoverId,
+      );
+      const hovered = mesh.filter((tri) => tri.projectId && tri.projectId === hoverId);
 
-      for (const tri of mesh) {
-        const dist = Math.hypot(tri.cx - pointer.x, tri.cy - pointer.y);
-        const target = hovering ? 1 : 0;
-        const speed = hovering
-          ? 0.16 / (1 + dist / 280)
-          : 0.09 / (1 + dist / 420);
-        tri.assemble += (target - tri.assemble) * speed;
-        if (Math.abs(target - tri.assemble) < 0.002) tri.assemble = target;
+      const drawTri = (tri: Triangle) => {
+        const isHot = Boolean(tri.projectId);
+        const isHover = isHot && tri.projectId === hoverId && !openId;
+        const lifted = isHover && !reducedRef.current;
 
-        const t = tri.assemble;
-        const ease = t * t * (3 - 2 * t);
-        const scale = 0.82 + 0.18 * ease;
         ctx.save();
-        ctx.translate(tri.cx + tri.dx * (1 - ease), tri.cy + tri.dy * (1 - ease));
-        ctx.rotate(tri.rot * (1 - ease));
-        ctx.scale(scale, scale);
-        ctx.translate(-tri.cx, -tri.cy);
+        if (lifted) {
+          ctx.translate(tri.cx, tri.cy);
+          ctx.scale(1.05, 1.05);
+          ctx.translate(-tri.cx, -tri.cy);
+        }
+
         ctx.beginPath();
         ctx.moveTo(tri.a.x, tri.a.y);
         ctx.lineTo(tri.b.x, tri.b.y);
         ctx.lineTo(tri.c.x, tri.c.y);
         ctx.closePath();
+        ctx.save();
         ctx.clip();
         ctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
-        ctx.strokeStyle = `rgba(230, 225, 214, ${0.72 * (1 - ease)})`;
-        ctx.lineWidth = 1.4;
+        if (openId) {
+          ctx.fillStyle = "rgba(7, 8, 9, 0.48)";
+          ctx.fill();
+        } else if (isHover) {
+          ctx.fillStyle = "rgba(214, 255, 58, 0.16)";
+          ctx.fill();
+        } else if (isHot) {
+          ctx.fillStyle = "rgba(214, 255, 58, 0.05)";
+          ctx.fill();
+        }
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.moveTo(tri.a.x, tri.a.y);
+        ctx.lineTo(tri.b.x, tri.b.y);
+        ctx.lineTo(tri.c.x, tri.c.y);
+        ctx.closePath();
+        ctx.shadowColor = "rgba(0, 0, 0, 0)";
+        ctx.shadowBlur = 0;
+        if (isHover) {
+          ctx.shadowColor = "rgba(214, 255, 58, 0.95)";
+          ctx.shadowBlur = 28;
+          ctx.strokeStyle = "rgba(214, 255, 58, 0.98)";
+          ctx.lineWidth = 2.2;
+        } else if (isHot) {
+          ctx.shadowColor = "rgba(214, 255, 58, 0.45)";
+          ctx.shadowBlur = 12;
+          ctx.strokeStyle = "rgba(214, 255, 58, 0.72)";
+          ctx.lineWidth = 1.55;
+        } else {
+          ctx.strokeStyle = "rgba(230, 225, 214, 0.14)";
+          ctx.lineWidth = 0.85;
+        }
         ctx.stroke();
         ctx.restore();
-      }
+      };
+
+      for (const tri of cold) drawTri(tri);
+      for (const tri of hotIdle) drawTri(tri);
+      for (const tri of hovered) drawTri(tri);
 
       rafRef.current = requestAnimationFrame(tick);
     };
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [ready, reduced]);
+  }, [ready]);
 
-  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+  const openProject = (projectId: string) => {
+    const tri = meshRef.current.find((item) => item.projectId === projectId);
+    const img = imgRef.current;
     const wrap = wrapRef.current;
-    if (!wrap) return;
+    const project = PROJECTS.find((item) => item.id === projectId);
+    if (!tri || !img || !wrap || !project) return;
     const rect = wrap.getBoundingClientRect();
-    pointerRef.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      inside: true,
-    };
+    const cover = coverRect(
+      img.naturalWidth,
+      img.naturalHeight,
+      rect.width,
+      rect.height,
+    );
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const { url, bbox } = captureShard(img, tri, cover, dpr);
+    openIdRef.current = projectId;
+    hoverIdRef.current = projectId;
+    setOrigin({
+      project,
+      left: rect.left + bbox.x,
+      top: rect.top + bbox.y,
+      width: bbox.w,
+      height: bbox.h,
+      clip: polygonClip([tri.a, mid(tri.a, tri.b), tri.b, mid(tri.b, tri.c), tri.c, mid(tri.c, tri.a)], bbox),
+      snapshot: url,
+    });
   };
 
-  const onPointerLeave = () => {
-    pointerRef.current.inside = false;
-  };
-
-  const onToggleLock = () => {
-    lockedRef.current = !lockedRef.current;
-    pointerRef.current.inside = lockedRef.current;
-    setLocked(lockedRef.current);
-  };
+  const closeProject = useCallback(() => {
+    openIdRef.current = null;
+    setOrigin(null);
+  }, []);
 
   return (
     <section
       ref={wrapRef}
       className="relative h-dvh min-h-[640px] overflow-hidden bg-bg"
       aria-label="Introduction"
-      onPointerMove={reduced ? undefined : onPointerMove}
-      onPointerEnter={reduced ? undefined : onPointerMove}
-      onPointerLeave={reduced ? undefined : onPointerLeave}
-      onClick={reduced ? undefined : onToggleLock}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/about-portrait.png"
+        src={HERO_SRC}
         alt=""
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-          reduced ? "opacity-100" : ready ? "opacity-0" : "opacity-50"
+          ready ? "opacity-0" : "opacity-50"
         }`}
       />
-      {reduced ? null : (
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 h-full w-full cursor-crosshair"
-          aria-hidden="true"
-        />
-      )}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 h-full w-full"
+        aria-hidden="true"
+      />
+      {ready
+        ? hotShards.map((shard) => (
+            <button
+              key={shard.projectId}
+              type="button"
+              aria-label={`Open case study: ${shard.title}`}
+              className="absolute z-[5] cursor-pointer bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
+              style={{
+                left: shard.bbox.x,
+                top: shard.bbox.y,
+                width: shard.bbox.w,
+                height: shard.bbox.h,
+                clipPath: shard.clip,
+              }}
+              onPointerEnter={() => {
+                hoverIdRef.current = shard.projectId;
+              }}
+              onPointerLeave={() => {
+                if (hoverIdRef.current === shard.projectId && !openIdRef.current) {
+                  hoverIdRef.current = null;
+                }
+              }}
+              onClick={() => openProject(shard.projectId)}
+            />
+          ))
+        : null}
 
       <div
         className="pointer-events-none absolute inset-0 bg-linear-to-r from-bg/65 via-bg/15 to-transparent"
@@ -302,31 +496,31 @@ export function ShatteredHero() {
           <Link
             href="#work"
             className="clip-shard-sm bg-ember px-5 py-3 text-[0.72rem] font-medium tracking-[0.18em] text-bone uppercase transition-colors hover:bg-ember/85"
-            onClick={(e) => e.stopPropagation()}
           >
             View work
           </Link>
           <Link
             href="/contact"
             className="clip-shard-sm hairline bg-bg/40 px-5 py-3 text-[0.72rem] font-medium tracking-[0.18em] text-bone uppercase backdrop-blur-sm transition-colors hover:border-volt hover:text-volt"
-            onClick={(e) => e.stopPropagation()}
           >
             Start a project
           </Link>
         </div>
-        {!reduced ? (
-          <p className="mt-8 text-[0.65rem] tracking-[0.2em] text-muted uppercase md:hidden">
-            {locked ? "Tap to shatter" : "Tap to rebuild the pane"}
-          </p>
-        ) : null}
-        {!reduced ? (
-          <p className="mt-8 hidden text-[0.65rem] tracking-[0.2em] text-muted uppercase md:block">
-            {locked
-              ? "Click to shatter"
-              : "Hover a shard — the pane rebuilds. Click to lock."}
-          </p>
-        ) : null}
+        <p className="mt-8 text-[0.65rem] tracking-[0.2em] text-muted uppercase md:hidden">
+          Tap a lit shard to open a project
+        </p>
+        <p className="mt-8 hidden text-[0.65rem] tracking-[0.2em] text-muted uppercase md:block">
+          Hover a lit shard — click to open the work
+        </p>
       </div>
+
+      {origin ? (
+        <ShardCaseStudyOverlay
+          origin={origin}
+          reduced={reduced}
+          onClose={closeProject}
+        />
+      ) : null}
     </section>
   );
 }

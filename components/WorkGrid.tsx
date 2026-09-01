@@ -2,22 +2,13 @@
 
 import Image from "next/image";
 import { useEffect, useId, useState } from "react";
+import { ProjectCaseStudy } from "@/components/ProjectCaseStudy";
 import {
   PROJECTS,
   WORK_FILTERS,
   type Project,
   type WorkCategory,
 } from "@/lib/projects";
-
-function youtubeSrc(id: string, start?: number) {
-  const params = new URLSearchParams({
-    autoplay: "1",
-    rel: "0",
-    modestbranding: "1",
-  });
-  if (start) params.set("start", String(start));
-  return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
-}
 
 function ProjectModal({
   project,
@@ -27,7 +18,6 @@ function ProjectModal({
   onClose: () => void;
 }) {
   const titleId = useId();
-  const media = project.media[0];
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -61,49 +51,7 @@ function ProjectModal({
         >
           ×
         </button>
-        {media.type === "video" ? (
-          <div className="aspect-video bg-black">
-            <iframe
-              title={media.title}
-              src={youtubeSrc(media.id, media.start)}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        ) : (
-          <Image
-            src={media.src}
-            alt={media.alt}
-            width={1200}
-            height={750}
-            className="h-auto w-full"
-          />
-        )}
-        <div className="p-6">
-          <p className="label-kicker">{project.client}</p>
-          <h3 id={titleId} className="mt-2 font-display text-2xl font-extrabold">
-            {project.title}
-          </h3>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            {project.description}
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="border border-gilt/25 px-2 py-1 text-[0.65rem] tracking-[0.14em] text-muted uppercase"
-              >
-                {tag}
-              </span>
-            ))}
-            {project.result ? (
-              <span className="border border-volt/40 px-2 py-1 text-[0.65rem] tracking-[0.14em] text-volt uppercase">
-                {project.result}
-              </span>
-            ) : null}
-          </div>
-        </div>
+        <ProjectCaseStudy project={project} titleId={titleId} />
       </div>
     </div>
   );
