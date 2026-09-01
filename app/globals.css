@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #070809;
+  --bg-elev: #101114;
+  --bg-panel: #16181c;
+  --bone: #e6e1d6;
+  --muted: #8a8680;
+  --faint: #4a4844;
+  --ember: #ff3b1f;
+  --volt: #d6ff3a;
+  --steel: #7aa8c4;
+  --gilt: #c4a35a;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-bg-panel: var(--bg-panel);
+  --color-bone: var(--bone);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-ember: var(--ember);
+  --color-volt: var(--volt);
+  --color-steel: var(--steel);
+  --color-gilt: var(--gilt);
+  --font-display: var(--font-syne);
+  --font-serif: var(--font-instrument);
+  --font-mono: var(--font-ibm);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--bone);
+  font-family: var(--font-ibm), ui-monospace, monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--ember) 70%, transparent);
+  color: var(--bone);
+}
+
+:focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.clip-shard {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 14px) 0,
+    100% 14px,
+    100% 100%,
+    14px 100%,
+    0 calc(100% - 14px)
+  );
+}
+
+.clip-shard-sm {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% 100%,
+    8px 100%,
+    0 calc(100% - 8px)
+  );
+}
+
+.hairline {
+  border: 1px solid color-mix(in oklab, var(--gilt) 32%, transparent);
+}
+
+.section-pad {
+  padding-block: clamp(4.5rem, 10vw, 8rem);
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.label-kicker {
+  font-family: var(--font-ibm), ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gilt);
+}
