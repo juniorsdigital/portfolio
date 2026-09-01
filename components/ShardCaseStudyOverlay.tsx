@@ -133,15 +133,24 @@ export function ShardCaseStudyOverlay({
           alt=""
           className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-all duration-700 ${
             expanded
-              ? "scale-110 opacity-35 blur-[12px]"
+              ? "scale-110 opacity-45 blur-[14px]"
               : "scale-100 opacity-100 blur-0"
           }`}
         />
         <div
-          className={`relative z-[4] flex h-full flex-col overflow-auto bg-bg/40 px-[clamp(1.8rem,12%,4.2rem)] py-[clamp(2rem,13%,4.4rem)] transition-opacity duration-500 ${
+          className={`absolute inset-[14%] z-[4] flex flex-col overflow-auto bg-bg/60 backdrop-blur-md transition-opacity duration-500 ${
             expanded ? "opacity-100 delay-150" : "opacity-0"
           }`}
         >
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={beginClose}
+            className="absolute top-3 right-3 z-10 grid h-9 w-9 place-items-center bg-bg/70 text-lg leading-none text-bone backdrop-blur-sm hover:text-volt"
+            aria-label="Close"
+          >
+            ×
+          </button>
           <ProjectCaseStudy
             project={origin.project}
             titleId={titleId}
@@ -150,23 +159,12 @@ export function ShardCaseStudyOverlay({
         </div>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[5]"
+          className="pointer-events-none absolute inset-0 z-[3]"
           style={{
             boxShadow:
               "inset 0 0 0 1.5px rgba(230, 225, 214, 0.55), inset 0 0 0 3px rgba(214, 255, 58, 0.18), inset 0 24px 40px rgba(255, 255, 255, 0.12), inset 0 -28px 48px rgba(122, 168, 196, 0.1)",
           }}
         />
-        <button
-          ref={closeRef}
-          type="button"
-          onClick={beginClose}
-          className={`absolute top-[12%] right-[14%] z-10 grid h-9 w-9 place-items-center bg-bg/55 text-lg leading-none text-bone backdrop-blur-sm transition-opacity hover:text-volt ${
-            expanded ? "opacity-100" : "opacity-0"
-          }`}
-          aria-label="Close"
-        >
-          ×
-        </button>
       </div>
     </div>,
     document.body,
