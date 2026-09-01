@@ -80,6 +80,25 @@ body {
   );
 }
 
+.shard-grow {
+  transition-property: left, top, width, height, clip-path, filter;
+  transition-duration: 720ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--volt) 40%, transparent));
+  will-change: left, top, width, height, clip-path;
+}
+
+.shard-grow-open {
+  filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 24px color-mix(in oklab, var(--gilt) 30%, transparent));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shard-grow {
+    transition-duration: 0.01ms;
+  }
+}
+
 .hairline {
   border: 1px solid color-mix(in oklab, var(--gilt) 32%, transparent);
 }
