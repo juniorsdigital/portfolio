@@ -1,6 +1,6 @@
 import { PROJECTS } from "@/lib/projects";
 import {
-  REACH,
+  GLASS,
   type Pt,
   type Shard,
   type ShardPose,
@@ -18,33 +18,45 @@ uniform vec2 uCentroid;
 uniform vec2 uOffset;
 uniform float uScale;
 uniform float uRotation;
-uniform float uReach;
-uniform float uReachMax;
+uniform float uFloat;
+uniform float uTilt;
 uniform vec2 uReachDir;
 
 out vec2 vRest;
 out vec2 vWorld;
 out float vEdge;
+out float vLift;
 
 void main() {
   vec2 d = aPos - uCentroid;
   float c = cos(uRotation);
   float s = sin(uRotation);
   vec2 r = vec2(d.x * c - d.y * s, d.x * s + d.y * c) * uScale;
+  float z = uFloat * ${GLASS.maxFloat.toFixed(1)};
   float dirLen = length(uReachDir);
-  if (uReach > 0.001 && dirLen > 0.001) {
+  if (uTilt > 0.001 && dirLen > 0.001) {
     vec2 dir = uReachDir / dirLen;
+    vec2 perp = vec2(-dir.y, dir.x);
     float along = dot(d, dir);
-    float cornerness = smoothstep(${REACH.cornerIn.toFixed(1)}, ${REACH.cornerOut.toFixed(1)}, length(d));
-    float side = smoothstep(${REACH.alongIn.toFixed(1)}, ${REACH.alongOut.toFixed(1)}, along) * cornerness;
-    float amt = side * uReach;
-    float lift = uScale + ${REACH.lift.toFixed(3)} * amt;
-    r = d * lift + dir * (uReachMax * amt);
+    float across = dot(d, perp);
+    float tc = cos(uTilt);
+    float ts = sin(uTilt);
+    z += along * ts;
+    r = (dir * (along * tc) + perp * across) * uScale;
   }
+  float radial = length(d);
+  float lift = clamp(z / ${GLASS.maxFloat.toFixed(1)}, 0.0, 1.5);
+  if (radial > 0.001) {
+    float lip = ${GLASS.edgePop.toFixed(1)} * (0.25 + 0.75 * lift) * (1.0 - aEdge);
+    r += (d / radial) * lip;
+  }
+  float persp = ${GLASS.focal.toFixed(1)} / max(${GLASS.focal.toFixed(1)} - z, ${GLASS.focal.toFixed(1)} * 0.35);
+  r *= persp;
   vec2 world = uCentroid + uOffset + r;
   vRest = aPos;
   vWorld = world;
   vEdge = aEdge;
+  vLift = lift;
   vec2 clip = vec2(
     world.x / uResolution.x * 2.0 - 1.0,
     1.0 - world.y / uResolution.y * 2.0
@@ -80,6 +92,7 @@ uniform vec2 uVerts[16];
 in vec2 vRest;
 in vec2 vWorld;
 in float vEdge;
+in float vLift;
 out vec4 fragColor;
 
 vec2 coverUv(vec2 px, vec2 canvas, vec2 img) {
@@ -170,19 +183,23 @@ void main() {
   col += vec3(1.0) * dust * 0.07;
   col = mix(col, col * 0.5, chip * 0.55);
 
-  float fresnel = pow(clamp(edge, 0.0, 1.0), 1.7);
-  float sep = clamp(length(uOffset) / 18.0, 0.0, 1.0);
-  col *= 1.0 - fresnel * (1.0 - sep) * (0.22 + 0.1 * (1.0 - prox));
-  vec3 rim = vec3(0.93, 0.97, 1.0) * fresnel * (prox * 0.72 + sep * 0.85 + uHover * 0.4);
-  rim += vec3(0.55, 0.72, 0.86) * fresnel * (0.06 + prox * 0.18);
-  rim += vec3(0.84, 1.0, 0.23) * fresnel * uHasProject * (0.04 + uHover * 0.14 + sep * 0.12);
+  float lift = clamp(vLift, 0.0, 1.5);
+  float hairline = 1.0 - smoothstep(0.0, 1.8, rimPx);
+  float bevel = smoothstep(0.0, 2.4, rimPx) * (1.0 - smoothstep(2.4, 10.0, rimPx));
+  float glassEdge = max(pow(clamp(edge, 0.0, 1.0), 1.35), bevel * 0.9);
+  col *= 1.0 - glassEdge * (0.16 + 0.28 * lift) * (1.0 - prox * 0.35);
+  col = mix(col, col * 0.52 + vec3(0.78, 0.9, 1.0) * 0.48, glassEdge * (0.2 + lift * 0.42));
+  vec3 rim = vec3(0.94, 0.98, 1.0) * glassEdge * (0.22 + prox * 0.62 + lift * 0.95 + uHover * 0.32);
+  rim += vec3(0.62, 0.82, 0.96) * glassEdge * (0.07 + lift * 0.24);
+  rim += vec3(0.84, 1.0, 0.23) * glassEdge * uHasProject * (0.05 + uHover * 0.16 + lift * 0.12);
+  rim += vec3(0.95, 0.98, 1.0) * hairline * (0.28 + lift * 0.85 + prox * 0.35);
+  rim += vec3(0.76, 0.9, 1.0) * bevel * lift * (0.28 + prox * 0.32);
   col += rim;
-  col += vec3(0.78, 0.9, 1.0) * fresnel * sep * 0.35;
 
   vec2 glassN = normalize(bump * 1.4 + vec2(-0.2, -0.9));
   float facing = max(0.0, dot(glassN, ldir));
-  float spec = pow(facing, 40.0) * (0.16 + prox * 0.55 + uHover * 0.18);
-  spec *= 0.45 + edge * 0.7;
+  float spec = pow(facing, 40.0) * (0.16 + prox * 0.55 + uHover * 0.18 + lift * 0.22);
+  spec *= 0.45 + edge * 0.7 + lift * 0.2;
   float glint = 0.0;
   if (uReduced < 0.5) {
     float g = fract(uTime * 0.11 + uSeed * 2.3);
@@ -359,8 +376,8 @@ export class HeroGlassGL {
       "uOffset",
       "uScale",
       "uRotation",
-      "uReach",
-      "uReachMax",
+      "uFloat",
+      "uTilt",
       "uReachDir",
       "uPortrait",
       "uScratch",
@@ -507,21 +524,30 @@ export class HeroGlassGL {
     gl.uniform1i(this.loc.uScratch, 1);
     gl.uniform1i(this.loc.uProject, 2);
 
-    let hovered: GpuShard | null = null;
-    for (const item of this.gpu) {
-      if (item.shard.id === state.hoverId && !state.openId) {
-        hovered = item;
+    const posed = this.gpu.map((item) => ({
+      item,
+      pose: state.poseOf(item.shard),
+    }));
+    posed.sort((a, b) => {
+      const la = a.pose.float + Math.abs(a.pose.tilt);
+      const lb = b.pose.float + Math.abs(b.pose.tilt);
+      return la - lb;
+    });
+
+    let hovered: (typeof posed)[number] | null = null;
+    for (const entry of posed) {
+      if (entry.item.shard.id === state.hoverId && !state.openId) {
+        hovered = entry;
         continue;
       }
-      this.drawShard(item, state);
+      this.drawShard(entry.item, state, entry.pose);
     }
-    if (hovered) this.drawShard(hovered, state);
+    if (hovered) this.drawShard(hovered.item, state, hovered.pose);
   }
 
-  private drawShard(item: GpuShard, state: DrawState) {
+  private drawShard(item: GpuShard, state: DrawState, pose: ShardPose) {
     const gl = this.gl;
     const shard = item.shard;
-    const pose = state.poseOf(shard);
     const projectIndex = shard.projectId
       ? PROJECTS.findIndex((p) => p.id === shard.projectId)
       : -1;
@@ -544,8 +570,8 @@ export class HeroGlassGL {
     gl.uniform2f(this.loc.uOffset, pose.ox, pose.oy);
     gl.uniform1f(this.loc.uScale, pose.scale);
     gl.uniform1f(this.loc.uRotation, pose.rot);
-    gl.uniform1f(this.loc.uReach, pose.reach);
-    gl.uniform1f(this.loc.uReachMax, pose.reachMax);
+    gl.uniform1f(this.loc.uFloat, pose.float);
+    gl.uniform1f(this.loc.uTilt, pose.tilt);
     gl.uniform2f(this.loc.uReachDir, pose.rx, pose.ry);
     gl.uniform2f(this.loc.uBBox, item.bbox.x, item.bbox.y);
     gl.uniform2f(this.loc.uBBoxSize, item.bbox.w, item.bbox.h);
