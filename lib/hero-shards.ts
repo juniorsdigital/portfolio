@@ -346,17 +346,17 @@ export function poseForShard(
   const dx = shard.cx - cursor.x;
   const dy = shard.cy - cursor.y;
   const dist = Math.hypot(dx, dy) || 1;
-  const radius = view.w < 700 ? 92 : 148;
+  const radius = view.w < 700 ? 108 : 168;
   if (dist > radius) {
     if (opts.hoverId === shard.id) {
-      return { ox: 0, oy: 0, rot: 0, scale: shard.projectId ? 1.035 : 1.02 };
+      return { ox: 0, oy: 0, rot: 0, scale: shard.projectId ? 1.04 : 1.025 };
     }
     return IDENTITY_POSE;
   }
 
   const t = 1 - dist / radius;
   const ease = t * t * (3 - 2 * t);
-  const maxPush = view.w < 700 ? 11 : 17;
+  const maxPush = view.w < 700 ? 14 : 22;
   let scale = 1 - 0.038 * ease;
   if (opts.hoverId === shard.id) scale *= shard.projectId ? 1.035 : 1.02;
 

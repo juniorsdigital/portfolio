@@ -113,18 +113,18 @@ void main() {
   vec2 bump = (sn.rg - 0.5) * 2.0;
 
   float rimPx = edgeDist(vRest);
-  float edge = 1.0 - smoothstep(0.0, 22.0, rimPx);
-  float interior = smoothstep(0.0, 28.0, rimPx);
+  float edge = 1.0 - smoothstep(0.0, 8.5, rimPx);
+  float interior = smoothstep(0.0, 26.0, rimPx);
 
   vec2 fromC = (vRest - uCentroid) / max(uBBoxSize, vec2(1.0));
   float r2 = dot(fromC, fromC);
-  float ior = 0.016 + prox * 0.03 + uHover * 0.01;
-  vec2 warp = (bump * 0.7 + nOut * 0.1) * ior * (0.4 + interior * 0.9) * uResolution.y;
-  warp += fromC * r2 * (5.5 + prox * 7.0);
+  float ior = 0.03 + prox * 0.045 + uHover * 0.016;
+  vec2 warp = (bump * 0.85 + nOut * 0.16) * ior * (0.45 + interior * 1.05) * uResolution.y;
+  warp += fromC * r2 * (1.6 + prox * 3.5);
 
   vec2 samplePx = vRest + warp;
   vec2 caDir = normalize(vec2(ldir.y, -ldir.x) * 0.45 + nOut * 0.55 + bump * 0.2);
-  float ca = (0.0028 + prox * 0.008 + edge * 0.0045) * uResolution.y;
+  float ca = (0.001 + prox * 0.011 + edge * 0.002 + uHover * 0.004) * uResolution.y;
 
   vec3 portrait;
   portrait.r = texture(uPortrait, coverUv(samplePx + caDir * ca, uResolution, uImageSize)).r;
@@ -143,29 +143,28 @@ void main() {
     proj.r = texture(uProject, puvR).r;
     proj.g = texture(uProject, puv).g;
     proj.b = texture(uProject, puvB).b;
-    float glimpse = interior * interior * 0.88;
-    col = mix(col, proj, glimpse);
-    col = mix(col, col * vec3(0.95, 1.03, 0.84), glimpse * 0.12);
+    float glimpse = smoothstep(0.08, 0.55, interior);
+    col = mix(col, proj, glimpse * 0.9);
+    col = mix(col, col * vec3(0.96, 1.02, 0.88), glimpse * 0.1);
   }
 
-  float hair = smoothstep(0.58, 0.9, scratch);
-  float dust = smoothstep(0.82, 0.97, scratch2);
-  float chip = smoothstep(0.91, 0.99, scratch) * edge;
-  col = mix(col, col * vec3(0.7, 0.74, 0.78), hair * 0.38);
-  col += vec3(0.86, 0.91, 0.97) * hair * 0.07;
-  col += vec3(1.0) * dust * 0.045;
-  col = mix(col, col * 0.55, chip * 0.5);
+  float hair = smoothstep(0.5, 0.86, scratch);
+  float dust = smoothstep(0.78, 0.96, scratch2);
+  float chip = smoothstep(0.88, 0.98, scratch) * edge;
+  col = mix(col, col * vec3(0.62, 0.66, 0.7), hair * 0.5);
+  col += vec3(0.9, 0.94, 1.0) * hair * 0.12;
+  col += vec3(1.0) * dust * 0.07;
+  col = mix(col, col * 0.5, chip * 0.55);
 
-  float fresnel = pow(clamp(edge, 0.0, 1.0), 1.45);
+  float fresnel = pow(clamp(edge, 0.0, 1.0), 1.7);
   float facing = max(0.0, dot(nOut, ldir));
-  vec3 rim = vec3(0.93, 0.96, 1.0) * fresnel * (0.26 + facing * 0.58 + prox * 0.4);
-  rim += vec3(0.48, 0.68, 0.82) * fresnel * 0.22;
-  rim += vec3(0.84, 1.0, 0.23) * fresnel * uHasProject * (0.14 + uHover * 0.22);
-  col += rim;
-
   float sep = clamp(length(uOffset) / 18.0, 0.0, 1.0);
-  col += vec3(0.72, 0.88, 1.0) * fresnel * sep * 0.55;
-  col += vec3(0.84, 1.0, 0.28) * fresnel * sep * prox * 0.3;
+  col *= 1.0 - fresnel * (1.0 - sep) * (0.22 + 0.1 * (1.0 - prox));
+  vec3 rim = vec3(0.93, 0.97, 1.0) * fresnel * (prox * 0.72 + sep * 0.85 + uHover * 0.4);
+  rim += vec3(0.55, 0.72, 0.86) * fresnel * (0.06 + prox * 0.18);
+  rim += vec3(0.84, 1.0, 0.23) * fresnel * uHasProject * (0.04 + uHover * 0.14 + sep * 0.12);
+  col += rim;
+  col += vec3(0.78, 0.9, 1.0) * fresnel * sep * 0.35;
 
   float spec = pow(max(0.0, facing), 32.0) * (0.22 + prox * 0.8 + uHover * 0.2);
   float glint = 0.0;
@@ -244,8 +243,8 @@ function makeScratchCanvas() {
   for (let i = 0; i < 110; i += 1) {
     const bright = Math.random() > 0.35;
     ctx.strokeStyle = bright
-      ? `rgba(255,255,255,${0.06 + Math.random() * 0.16})`
-      : `rgba(12,14,18,${0.1 + Math.random() * 0.18})`;
+      ? `rgba(255,255,255,${0.1 + Math.random() * 0.22})`
+      : `rgba(12,14,18,${0.16 + Math.random() * 0.24})`;
     ctx.lineWidth = Math.random() < 0.75 ? 0.35 : 1.05;
     const x = Math.random() * size;
     const y = Math.random() * size;
