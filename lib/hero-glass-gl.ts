@@ -184,16 +184,16 @@ void main() {
   col = mix(col, col * 0.5, chip * 0.55);
 
   float lift = clamp(vLift, 0.0, 1.5);
-  float hairline = 1.0 - smoothstep(0.0, 1.8, rimPx);
-  float bevel = smoothstep(0.0, 2.4, rimPx) * (1.0 - smoothstep(2.4, 10.0, rimPx));
-  float glassEdge = max(pow(clamp(edge, 0.0, 1.0), 1.35), bevel * 0.9);
-  col *= 1.0 - glassEdge * (0.16 + 0.28 * lift) * (1.0 - prox * 0.35);
-  col = mix(col, col * 0.52 + vec3(0.78, 0.9, 1.0) * 0.48, glassEdge * (0.2 + lift * 0.42));
-  vec3 rim = vec3(0.94, 0.98, 1.0) * glassEdge * (0.22 + prox * 0.62 + lift * 0.95 + uHover * 0.32);
-  rim += vec3(0.62, 0.82, 0.96) * glassEdge * (0.07 + lift * 0.24);
-  rim += vec3(0.84, 1.0, 0.23) * glassEdge * uHasProject * (0.05 + uHover * 0.16 + lift * 0.12);
-  rim += vec3(0.95, 0.98, 1.0) * hairline * (0.28 + lift * 0.85 + prox * 0.35);
-  rim += vec3(0.76, 0.9, 1.0) * bevel * lift * (0.28 + prox * 0.32);
+  float hairline = 1.0 - smoothstep(0.0, 2.2, rimPx);
+  float bevel = smoothstep(0.0, 2.8, rimPx) * (1.0 - smoothstep(2.8, 12.0, rimPx));
+  float glassEdge = max(pow(clamp(edge, 0.0, 1.0), 1.25), bevel * 0.95);
+  col *= 1.0 - glassEdge * (0.1 + 0.34 * lift) * (1.0 - prox * 0.35);
+  col = mix(col, col * 0.48 + vec3(0.8, 0.92, 1.0) * 0.52, glassEdge * (0.12 + lift * 0.55));
+  vec3 rim = vec3(0.94, 0.98, 1.0) * glassEdge * (0.08 + prox * 0.55 + lift * 1.2 + uHover * 0.38);
+  rim += vec3(0.62, 0.82, 0.96) * glassEdge * (0.04 + lift * 0.32);
+  rim += vec3(0.84, 1.0, 0.23) * glassEdge * uHasProject * (0.04 + uHover * 0.16 + lift * 0.14);
+  rim += vec3(0.97, 0.99, 1.0) * hairline * (0.1 + lift * 1.15 + prox * 0.4);
+  rim += vec3(0.76, 0.9, 1.0) * bevel * lift * (0.4 + prox * 0.35);
   col += rim;
 
   vec2 glassN = normalize(bump * 1.4 + vec2(-0.2, -0.9));

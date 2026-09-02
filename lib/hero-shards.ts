@@ -48,11 +48,11 @@ export const IDENTITY_POSE: ShardPose = {
 /** Keep in sync with the vertex shader in hero-glass-gl.ts */
 export const GLASS = {
   deadzone: 10,
-  tiltIn: 46,
-  maxTilt: 0.42,
-  maxFloat: 40,
-  focal: 400,
-  edgePop: 6,
+  tiltIn: 40,
+  maxTilt: 0.72,
+  maxFloat: 24,
+  focal: 250,
+  edgePop: 11,
 } as const;
 
 function hermite(edge0: number, edge1: number, x: number) {
