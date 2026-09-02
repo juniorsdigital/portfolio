@@ -93,8 +93,10 @@ body {
   backdrop-filter: blur(18px) saturate(1.55);
   -webkit-backdrop-filter: blur(18px) saturate(1.55);
   box-shadow:
-    inset 0 1px 0 rgba(230, 225, 214, 0.42),
-    inset 0 -28px 48px rgba(122, 168, 196, 0.08),
+    inset 1px 0 0 rgba(255, 92, 92, 0.2),
+    inset -1px 0 0 rgba(96, 186, 255, 0.22),
+    inset 0 1px 0 rgba(230, 225, 214, 0.5),
+    inset 0 -28px 48px rgba(122, 168, 196, 0.1),
     inset 18px 0 40px color-mix(in oklab, var(--volt) 8%, transparent);
   filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
     drop-shadow(0 0 8px color-mix(in oklab, var(--volt) 45%, transparent))
@@ -109,13 +111,28 @@ body {
   z-index: 2;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, transparent 22%),
     linear-gradient(
       125deg,
       transparent 38%,
       color-mix(in oklab, var(--volt) 14%, transparent) 50%,
       color-mix(in oklab, var(--gilt) 12%, transparent) 58%,
       transparent 70%
+    ),
+    repeating-linear-gradient(
+      116deg,
+      transparent 0 42px,
+      rgba(255, 255, 255, 0.05) 43px,
+      transparent 45px,
+      transparent 96px,
+      rgba(8, 10, 12, 0.08) 97px,
+      transparent 99px
+    ),
+    repeating-linear-gradient(
+      28deg,
+      transparent 0 70px,
+      rgba(255, 255, 255, 0.035) 71px,
+      transparent 73px
     );
 }
 
