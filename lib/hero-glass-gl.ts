@@ -1,5 +1,6 @@
 import { PROJECTS } from "@/lib/projects";
 import {
+  REACH,
   type Pt,
   type Shard,
   type ShardPose,
@@ -17,6 +18,9 @@ uniform vec2 uCentroid;
 uniform vec2 uOffset;
 uniform float uScale;
 uniform float uRotation;
+uniform float uReach;
+uniform float uReachMax;
+uniform vec2 uReachDir;
 
 out vec2 vRest;
 out vec2 vWorld;
@@ -27,6 +31,16 @@ void main() {
   float c = cos(uRotation);
   float s = sin(uRotation);
   vec2 r = vec2(d.x * c - d.y * s, d.x * s + d.y * c) * uScale;
+  float dirLen = length(uReachDir);
+  if (uReach > 0.001 && dirLen > 0.001) {
+    vec2 dir = uReachDir / dirLen;
+    float along = dot(d, dir);
+    float cornerness = smoothstep(${REACH.cornerIn.toFixed(1)}, ${REACH.cornerOut.toFixed(1)}, length(d));
+    float side = smoothstep(${REACH.alongIn.toFixed(1)}, ${REACH.alongOut.toFixed(1)}, along) * cornerness;
+    float amt = side * uReach;
+    float lift = uScale + ${REACH.lift.toFixed(3)} * amt;
+    r = d * lift + dir * (uReachMax * amt);
+  }
   vec2 world = uCentroid + uOffset + r;
   vRest = aPos;
   vWorld = world;
@@ -120,7 +134,7 @@ void main() {
   float r2 = dot(fromC, fromC);
   float ior = 0.03 + prox * 0.045 + uHover * 0.016;
   vec2 warp = (bump * 0.85 + nOut * 0.16) * ior * (0.45 + interior * 1.05) * uResolution.y;
-  warp += fromC * r2 * (1.6 + prox * 3.5);
+  warp += fromC * r2 * (0.35 + prox * 0.8);
 
   vec2 samplePx = vRest + warp;
   vec2 caDir = normalize(vec2(ldir.y, -ldir.x) * 0.45 + nOut * 0.55 + bump * 0.2);
@@ -157,7 +171,6 @@ void main() {
   col = mix(col, col * 0.5, chip * 0.55);
 
   float fresnel = pow(clamp(edge, 0.0, 1.0), 1.7);
-  float facing = max(0.0, dot(nOut, ldir));
   float sep = clamp(length(uOffset) / 18.0, 0.0, 1.0);
   col *= 1.0 - fresnel * (1.0 - sep) * (0.22 + 0.1 * (1.0 - prox));
   vec3 rim = vec3(0.93, 0.97, 1.0) * fresnel * (prox * 0.72 + sep * 0.85 + uHover * 0.4);
@@ -166,7 +179,10 @@ void main() {
   col += rim;
   col += vec3(0.78, 0.9, 1.0) * fresnel * sep * 0.35;
 
-  float spec = pow(max(0.0, facing), 32.0) * (0.22 + prox * 0.8 + uHover * 0.2);
+  vec2 glassN = normalize(bump * 1.4 + vec2(-0.2, -0.9));
+  float facing = max(0.0, dot(glassN, ldir));
+  float spec = pow(facing, 40.0) * (0.16 + prox * 0.55 + uHover * 0.18);
+  spec *= 0.45 + edge * 0.7;
   float glint = 0.0;
   if (uReduced < 0.5) {
     float g = fract(uTime * 0.11 + uSeed * 2.3);
@@ -174,10 +190,7 @@ void main() {
     float stripe = abs(dot((vWorld / uResolution - 0.5), gdir) - (g * 1.6 - 0.8));
     glint = smoothstep(0.07, 0.0, stripe) * (0.12 + prox * 0.16);
   }
-  float band = abs(dot(vWorld - uCentroid, vec2(ldir.y, -ldir.x)));
-  float caustic = smoothstep(24.0, 2.0, band) * prox * (0.1 + 0.16 * uHover) * interior;
   col += vec3(1.0) * (spec * 0.7 + glint);
-  col += vec3(0.78, 0.92, 1.0) * caustic;
   col += vec3(0.84, 1.0, 0.32) * spec * uHasProject * 0.18;
 
   col = mix(col, col + vec3(0.06, 0.08, 0.11), 0.14 * interior);
@@ -289,7 +302,7 @@ function bindImage(
   source: TexImageSource,
 ) {
   gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -346,6 +359,9 @@ export class HeroGlassGL {
       "uOffset",
       "uScale",
       "uRotation",
+      "uReach",
+      "uReachMax",
+      "uReachDir",
       "uPortrait",
       "uScratch",
       "uProject",
@@ -528,6 +544,9 @@ export class HeroGlassGL {
     gl.uniform2f(this.loc.uOffset, pose.ox, pose.oy);
     gl.uniform1f(this.loc.uScale, pose.scale);
     gl.uniform1f(this.loc.uRotation, pose.rot);
+    gl.uniform1f(this.loc.uReach, pose.reach);
+    gl.uniform1f(this.loc.uReachMax, pose.reachMax);
+    gl.uniform2f(this.loc.uReachDir, pose.rx, pose.ry);
     gl.uniform2f(this.loc.uBBox, item.bbox.x, item.bbox.y);
     gl.uniform2f(this.loc.uBBoxSize, item.bbox.w, item.bbox.h);
     gl.uniform2f(this.loc.uProjectSize, projectSize.w, projectSize.h);
