@@ -160,7 +160,8 @@ export function ShatteredHero() {
         reach: prev.reach + (target.reach - prev.reach) * 0.2,
         rx: prev.rx + (target.rx - prev.rx) * 0.2,
         ry: prev.ry + (target.ry - prev.ry) * 0.2,
-        reachMax: prev.reachMax + (target.reachMax - prev.reachMax) * 0.2,
+        float: prev.float + (target.float - prev.float) * 0.2,
+        tilt: prev.tilt + (target.tilt - prev.tilt) * 0.2,
       };
       posesRef.current.set(shard.id, next);
       return next;

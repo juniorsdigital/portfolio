@@ -29,7 +29,8 @@ export type ShardPose = {
   reach: number;
   rx: number;
   ry: number;
-  reachMax: number;
+  float: number;
+  tilt: number;
 };
 
 export const IDENTITY_POSE: ShardPose = {
@@ -40,17 +41,18 @@ export const IDENTITY_POSE: ShardPose = {
   reach: 0,
   rx: 0,
   ry: 0,
-  reachMax: 0,
+  float: 0,
+  tilt: 0,
 };
 
 /** Keep in sync with the vertex shader in hero-glass-gl.ts */
-export const REACH = {
-  cornerIn: 4,
-  cornerOut: 28,
-  alongIn: 0,
-  alongOut: 16,
-  lift: 0.018,
-  deadzone: 12,
+export const GLASS = {
+  deadzone: 10,
+  tiltIn: 40,
+  maxTilt: 0.72,
+  maxFloat: 24,
+  focal: 250,
+  edgePop: 11,
 } as const;
 
 function hermite(edge0: number, edge1: number, x: number) {
@@ -355,24 +357,35 @@ export function transformPoint(p: Pt, shard: Shard, pose: ShardPose): Pt {
   const s = Math.sin(pose.rot);
   let sx = (dx * c - dy * s) * pose.scale;
   let sy = (dx * s + dy * c) * pose.scale;
+  let z = pose.float * GLASS.maxFloat;
 
   const dirLen = Math.hypot(pose.rx, pose.ry);
-  if (pose.reach > 0.001 && dirLen > 0.001) {
+  if (pose.tilt > 0.001 && dirLen > 0.001) {
     const dirx = pose.rx / dirLen;
     const diry = pose.ry / dirLen;
+    const perpx = -diry;
+    const perpy = dirx;
     const along = dx * dirx + dy * diry;
-    const radial = Math.hypot(dx, dy);
-    const cornerness = hermite(REACH.cornerIn, REACH.cornerOut, radial);
-    const side = hermite(REACH.alongIn, REACH.alongOut, along) * cornerness;
-    const amt = side * pose.reach;
-    const lift = pose.scale + REACH.lift * amt;
-    sx = dx * lift + dirx * pose.reachMax * amt;
-    sy = dy * lift + diry * pose.reachMax * amt;
+    const across = dx * perpx + dy * perpy;
+    const tc = Math.cos(pose.tilt);
+    const ts = Math.sin(pose.tilt);
+    z += along * ts;
+    sx = (dirx * along * tc + perpx * across) * pose.scale;
+    sy = (diry * along * tc + perpy * across) * pose.scale;
   }
 
+  const radial = Math.hypot(dx, dy);
+  if (radial > 0.001) {
+    const lift = Math.min(Math.max(z / GLASS.maxFloat, 0), 1.5);
+    const lip = GLASS.edgePop * (0.25 + 0.75 * lift);
+    sx += (dx / radial) * lip;
+    sy += (dy / radial) * lip;
+  }
+
+  const persp = GLASS.focal / Math.max(GLASS.focal - z, GLASS.focal * 0.35);
   return {
-    x: shard.cx + pose.ox + sx,
-    y: shard.cy + pose.oy + sy,
+    x: shard.cx + pose.ox + sx * persp,
+    y: shard.cy + pose.oy + sy * persp,
   };
 }
 
@@ -397,9 +410,9 @@ export function poseForShard(
   const dx = cursor.x - shard.cx;
   const dy = cursor.y - shard.cy;
   const dist = Math.hypot(dx, dy) || 1;
-  const radius = view.w < 700 ? 108 : 168;
-  const reachMax = view.w < 700 ? 5.5 : 7.5;
+  const radius = view.w < 700 ? 120 : 188;
   const scale = hoverScale(shard, hovered);
+  const maxTilt = view.w < 700 ? GLASS.maxTilt * 0.82 : GLASS.maxTilt;
 
   if (dist > radius) {
     if (hovered) {
@@ -408,12 +421,11 @@ export function poseForShard(
     return IDENTITY_POSE;
   }
 
-  if (dist < REACH.deadzone) {
-    return { ...IDENTITY_POSE, scale, reachMax };
-  }
-
   const t = 1 - dist / radius;
   const ease = t * t * (3 - 2 * t);
+  const float = Math.min(1, ease * (hovered ? 1.12 : 1));
+  const tiltRamp = hermite(GLASS.deadzone, GLASS.tiltIn, dist);
+  const hasDir = dist >= GLASS.deadzone;
 
   return {
     ox: 0,
@@ -421,9 +433,10 @@ export function poseForShard(
     rot: 0,
     scale,
     reach: ease,
-    rx: dx / dist,
-    ry: dy / dist,
-    reachMax,
+    rx: hasDir ? dx / dist : 0,
+    ry: hasDir ? dy / dist : 0,
+    float,
+    tilt: hasDir ? ease * tiltRamp * maxTilt * (hovered ? 1.18 : 1) : 0,
   };
 }
 
