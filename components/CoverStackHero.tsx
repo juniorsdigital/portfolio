@@ -96,7 +96,10 @@ export function CoverStackHero() {
           setPulled(null);
         }}
       >
-        <div className="cover-stack-fan">
+        <div
+          className="cover-stack-fan"
+          style={{ "--count": HERO_COVERS.length } as CSSProperties}
+        >
           {HERO_COVERS.map((cover, index) => (
             <StackCover
               key={cover.id}
@@ -104,7 +107,7 @@ export function CoverStackHero() {
               index={index}
               pulled={pulledId === cover.id}
               hidden={origin?.cover.id === cover.id}
-              priority={index < 4}
+              priority={index < 6}
               reduced={reduced}
               onClick={onCoverClick}
               onPull={setPulled}
@@ -186,7 +189,7 @@ function StackCover({
   onPull: (id: string | null) => void;
 }) {
   const count = HERO_COVERS.length;
-  const tilt = -7 + (index / Math.max(count - 1, 1)) * 14;
+  const tilt = -2 + (index / Math.max(count - 1, 1)) * 5;
 
   return (
     <button
@@ -196,7 +199,7 @@ function StackCover({
         {
           "--art-ratio": cover.width / cover.height,
           "--tilt": `${tilt}deg`,
-          "--z": count - index,
+          "--z": index + 1,
         } as CSSProperties
       }
       aria-label={`Open case study: ${cover.title}`}
