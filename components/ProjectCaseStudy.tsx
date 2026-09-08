@@ -15,17 +15,19 @@ export function ProjectCaseStudy({
   project,
   titleId,
   play = true,
+  showMedia = true,
 }: {
   project: Project;
   titleId?: string;
   play?: boolean;
+  showMedia?: boolean;
 }) {
   const media = project.media[0];
-  const showVideo = play && media.type === "video";
+  const showVideo = showMedia && play && media.type === "video";
 
   return (
     <>
-      {showVideo ? (
+      {showMedia && showVideo ? (
         <div className="aspect-video shrink-0 bg-black">
           <iframe
             title={media.title}
@@ -35,7 +37,7 @@ export function ProjectCaseStudy({
             allowFullScreen
           />
         </div>
-      ) : (
+      ) : showMedia ? (
         <Image
           src={media.type === "image" ? media.src : project.thumbnail.src}
           alt={media.type === "image" ? media.alt : project.thumbnail.alt}
@@ -43,7 +45,7 @@ export function ProjectCaseStudy({
           height={750}
           className="h-auto w-full shrink-0"
         />
-      )}
+      ) : null}
       <div className="p-6">
         <p className="label-kicker">{project.client}</p>
         <h3 id={titleId} className="mt-2 font-display text-2xl font-extrabold">
