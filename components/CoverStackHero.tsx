@@ -90,7 +90,7 @@ export function CoverStackHero() {
     >
       <div className="hero-copy pointer-events-none relative z-10 flex h-full w-full flex-col justify-center px-[clamp(1.25rem,4vw,3.5rem)] pt-28 pb-16">
         <p className="label-kicker mb-5">Philadelphia</p>
-        <h1 className="font-display text-[clamp(2.8rem,8.5vw,6.4rem)] font-extrabold leading-[0.86] tracking-[-0.04em] text-bone">
+        <h1 className="font-display text-[clamp(2.4rem,6vw,5.2rem)] font-extrabold leading-[0.86] tracking-[-0.04em] text-bone">
           JOHN
           <br />
           SWANSON
@@ -140,7 +140,7 @@ export function CoverStackHero() {
               index={index}
               pulled={pulledId === cover.id}
               hidden={origin?.cover.id === cover.id}
-              priority={index < 6}
+              priority={index === 0 || index >= HERO_COVERS.length - 3}
               reduced={reduced}
               onClick={onCoverClick}
               onPull={setPulled}

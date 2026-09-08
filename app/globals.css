@@ -102,7 +102,7 @@ body {
 
 .cover-hero {
   display: grid;
-  grid-template-columns: minmax(18rem, 34rem) minmax(0, 1fr);
+  grid-template-columns: minmax(18rem, 46vw) minmax(0, 1fr);
   height: 100dvh;
   min-height: 640px;
   overflow: hidden;
@@ -110,6 +110,7 @@ body {
 }
 
 .hero-copy {
+  min-width: 0;
   max-width: none;
 }
 
