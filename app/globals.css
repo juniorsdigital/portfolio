@@ -239,8 +239,8 @@ body {
 
   .cover-stack-fan {
     --cover-h: clamp(7.2rem, 22vh, 11.5rem);
-    --peek: 1.05rem;
-    --pull: 4.6rem;
+    --peek: 0.82rem;
+    --pull: 5.2rem;
   }
 
   .book-pages {

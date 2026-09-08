@@ -74,7 +74,9 @@ export function CoverStackHero() {
     cover: HeroCover,
   ) => {
     if (origin) return;
-    if (pointerTypeRef.current === "touch" && pulledRef.current !== cover.id) {
+    const twoStep =
+      pointerTypeRef.current === "touch" || window.innerWidth < 720;
+    if (twoStep && pulledRef.current !== cover.id) {
       setPulled(cover.id);
       return;
     }
