@@ -173,7 +173,7 @@ export function BookshelfHero() {
     >
       <div
         ref={caseRef}
-        className="bookcase-scene absolute inset-0"
+        className="bookcase-scene"
         onPointerLeave={(e) => {
           if (e.pointerType === "touch" || origin) return;
           setPulled(null);
@@ -195,17 +195,17 @@ export function BookshelfHero() {
       </div>
 
       <div
-        className="pointer-events-none absolute inset-0 bg-linear-to-r from-bg/80 via-bg/25 to-transparent"
+        className="pointer-events-none absolute inset-y-0 left-0 w-[min(52%,28rem)] bg-linear-to-r from-bg via-bg/70 to-transparent"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-bg/85 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[28%] bg-linear-to-t from-bg/70 to-transparent md:h-[18%]"
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col justify-end px-[clamp(1.25rem,4vw,3.5rem)] pt-28 pb-16 pointer-events-none">
+      <div className="hero-copy pointer-events-none relative z-10 flex h-full w-full flex-col justify-center px-[clamp(1.25rem,4vw,3.5rem)] pt-28 pb-16">
         <p className="label-kicker mb-5">Philadelphia</p>
-        <h1 className="font-display text-[clamp(3.4rem,12vw,8.5rem)] font-extrabold leading-[0.86] tracking-[-0.04em] text-bone">
+        <h1 className="font-display text-[clamp(2.8rem,8.5vw,6.4rem)] font-extrabold leading-[0.86] tracking-[-0.04em] text-bone">
           JOHN
           <br />
           SWANSON
