@@ -85,46 +85,9 @@ export function CoverStackHero() {
 
   return (
     <section
-      className="relative h-dvh min-h-[640px] overflow-hidden bg-bg"
+      className="cover-hero"
       aria-label="Introduction"
     >
-      <div
-        ref={stackRef}
-        className="cover-stack"
-        onPointerLeave={(e) => {
-          if (e.pointerType === "touch" || origin) return;
-          setPulled(null);
-        }}
-      >
-        <div
-          className="cover-stack-fan"
-          style={{ "--count": HERO_COVERS.length } as CSSProperties}
-        >
-          {HERO_COVERS.map((cover, index) => (
-            <StackCover
-              key={cover.id}
-              cover={cover}
-              index={index}
-              pulled={pulledId === cover.id}
-              hidden={origin?.cover.id === cover.id}
-              priority={index < 6}
-              reduced={reduced}
-              onClick={onCoverClick}
-              onPull={setPulled}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-[min(52%,28rem)] bg-linear-to-r from-bg via-bg/80 to-transparent"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[28%] bg-linear-to-t from-bg/70 to-transparent md:h-[18%]"
-        aria-hidden="true"
-      />
-
       <div className="hero-copy pointer-events-none relative z-10 flex h-full w-full flex-col justify-center px-[clamp(1.25rem,4vw,3.5rem)] pt-28 pb-16">
         <p className="label-kicker mb-5">Philadelphia</p>
         <h1 className="font-display text-[clamp(2.8rem,8.5vw,6.4rem)] font-extrabold leading-[0.86] tracking-[-0.04em] text-bone">
@@ -158,6 +121,34 @@ export function CoverStackHero() {
         </p>
       </div>
 
+      <div
+        ref={stackRef}
+        className="cover-stack"
+        onPointerLeave={(e) => {
+          if (e.pointerType === "touch" || origin) return;
+          setPulled(null);
+        }}
+      >
+        <div
+          className="cover-stack-fan"
+          style={{ "--count": HERO_COVERS.length } as CSSProperties}
+        >
+          {HERO_COVERS.map((cover, index) => (
+            <StackCover
+              key={cover.id}
+              cover={cover}
+              index={index}
+              pulled={pulledId === cover.id}
+              hidden={origin?.cover.id === cover.id}
+              priority={index < 6}
+              reduced={reduced}
+              onClick={onCoverClick}
+              onPull={setPulled}
+            />
+          ))}
+        </div>
+      </div>
+
       {origin ? (
         <BookCaseStudyOverlay
           origin={origin}
@@ -188,9 +179,6 @@ function StackCover({
   onClick: (e: MouseEvent<HTMLButtonElement>, cover: HeroCover) => void;
   onPull: (id: string | null) => void;
 }) {
-  const count = HERO_COVERS.length;
-  const tilt = -2 + (index / Math.max(count - 1, 1)) * 5;
-
   return (
     <button
       type="button"
@@ -198,7 +186,6 @@ function StackCover({
       style={
         {
           "--art-ratio": cover.width / cover.height,
-          "--tilt": `${tilt}deg`,
           "--z": index + 1,
         } as CSSProperties
       }
@@ -206,7 +193,7 @@ function StackCover({
       aria-expanded={pulled}
       onClick={(e) => onClick(e, cover)}
       onPointerEnter={(e) => {
-        if (e.pointerType === "touch") return;
+        if (e.pointerType === "touch" || window.innerWidth < 720) return;
         onPull(cover.id);
       }}
       onFocus={() => {
