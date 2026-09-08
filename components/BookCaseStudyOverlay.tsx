@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ProjectCaseStudy } from "@/components/ProjectCaseStudy";
-import type { HeroBox } from "@/lib/hero-boxes";
+import type { HeroCover } from "@/lib/hero-covers";
 import type { Project } from "@/lib/projects";
 
 export type BookOrigin = {
-  box: HeroBox;
+  cover: HeroCover;
   project: Project;
   left: number;
   top: number;
@@ -131,10 +131,10 @@ export function BookCaseStudyOverlay({
         <div className="book-pages">
           <div className="book-page book-page-left">
             <Image
-              src={origin.box.src}
-              alt={origin.box.alt}
+              src={origin.cover.src}
+              alt={origin.cover.alt}
               fill
-              className="object-cover object-left"
+              className="object-contain"
               sizes="(max-width: 720px) 92vw, 460px"
             />
           </div>
@@ -148,7 +148,7 @@ export function BookCaseStudyOverlay({
             >
               ×
             </button>
-            <p className="label-kicker px-6 pt-6">{origin.box.title}</p>
+            <p className="label-kicker px-6 pt-6">{origin.cover.title}</p>
             <ProjectCaseStudy
               project={origin.project}
               titleId={titleId}
