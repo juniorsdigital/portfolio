@@ -80,115 +80,6 @@ body {
   );
 }
 
-.shard-grow {
-  transition-property: left, top, width, height, clip-path, filter;
-  transition-duration: 720ms;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  background: linear-gradient(
-    155deg,
-    color-mix(in oklab, var(--bone) 24%, transparent) 0%,
-    color-mix(in oklab, var(--steel) 16%, #101114d4) 46%,
-    color-mix(in oklab, var(--bg) 82%, transparent) 100%
-  );
-  backdrop-filter: blur(18px) saturate(1.55);
-  -webkit-backdrop-filter: blur(18px) saturate(1.55);
-  box-shadow:
-    inset 1px 0 0 rgba(255, 92, 92, 0.2),
-    inset -1px 0 0 rgba(96, 186, 255, 0.22),
-    inset 0 1px 0 rgba(230, 225, 214, 0.5),
-    inset 0 -28px 48px rgba(122, 168, 196, 0.1),
-    inset 18px 0 40px color-mix(in oklab, var(--volt) 8%, transparent);
-  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
-    drop-shadow(0 0 8px color-mix(in oklab, var(--volt) 45%, transparent))
-    drop-shadow(0 0 18px color-mix(in oklab, var(--steel) 35%, transparent));
-  will-change: left, top, width, height, clip-path;
-}
-
-.shard-grow::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, transparent 22%),
-    linear-gradient(
-      125deg,
-      transparent 38%,
-      color-mix(in oklab, var(--volt) 14%, transparent) 50%,
-      color-mix(in oklab, var(--gilt) 12%, transparent) 58%,
-      transparent 70%
-    ),
-    repeating-linear-gradient(
-      116deg,
-      transparent 0 42px,
-      rgba(255, 255, 255, 0.05) 43px,
-      transparent 45px,
-      transparent 96px,
-      rgba(8, 10, 12, 0.08) 97px,
-      transparent 99px
-    ),
-    repeating-linear-gradient(
-      28deg,
-      transparent 0 70px,
-      rgba(255, 255, 255, 0.035) 71px,
-      transparent 73px
-    );
-}
-
-.shard-grow::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.5) 49%,
-    color-mix(in oklab, var(--gilt) 40%, transparent) 53%,
-    transparent 64%,
-    transparent 100%
-  );
-  background-size: 220% 220%;
-  mix-blend-mode: screen;
-  opacity: 0;
-  animation: shard-glint-sweep 2.8s ease-in-out infinite;
-}
-
-.shard-grow-open {
-  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.85))
-    drop-shadow(0 28px 50px rgba(0, 0, 0, 0.55))
-    drop-shadow(0 0 18px color-mix(in oklab, var(--volt) 50%, transparent))
-    drop-shadow(0 0 40px color-mix(in oklab, var(--gilt) 35%, transparent))
-    drop-shadow(0 0 8px rgba(255, 255, 255, 0.32));
-}
-
-.shard-grow-open::after {
-  opacity: 0.55;
-}
-
-@keyframes shard-glint-sweep {
-  0% {
-    background-position: 0% 40%;
-  }
-  100% {
-    background-position: 100% 60%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shard-grow {
-    transition-duration: 0.01ms;
-  }
-
-  .shard-grow::after {
-    animation: none;
-    opacity: 0;
-  }
-}
-
 .hairline {
   border: 1px solid color-mix(in oklab, var(--gilt) 32%, transparent);
 }
@@ -205,4 +96,403 @@ body {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gilt);
+}
+
+/* --- Bookshelf hero --- */
+
+.bookcase-scene {
+  position: absolute;
+  top: 4.5rem;
+  right: 0;
+  bottom: 1.25rem;
+  left: min(36vw, 24rem);
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  padding: 0.6rem 1.6rem 0.9rem 0.4rem;
+  perspective: 1400px;
+}
+
+.hero-copy {
+  max-width: min(38rem, 48vw);
+}
+
+.bookcase {
+  --wood: #2a1d14;
+  --wood-hi: #4a3426;
+  --wood-lo: #1a110c;
+  position: relative;
+  display: flex;
+  width: min(100%, 56rem);
+  flex: 1;
+  transform: rotateY(-4deg);
+  transform-style: preserve-3d;
+}
+
+.bookcase-back {
+  position: absolute;
+  inset: 0.7rem 1.15rem 1.4rem;
+  background:
+    radial-gradient(
+      120% 80% at 50% 0%,
+      color-mix(in oklab, var(--gilt) 10%, transparent),
+      transparent 55%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #1c1410 0 11px,
+      #241910 11px 22px,
+      #18110d 22px 33px
+    );
+  box-shadow: inset 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+.bookcase-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0.4rem;
+  width: 1.15rem;
+  background:
+    linear-gradient(90deg, var(--wood-lo), var(--wood-hi) 40%, var(--wood) 70%, var(--wood-lo));
+  box-shadow:
+    inset 1px 0 0 color-mix(in oklab, var(--gilt) 28%, transparent),
+    inset -1px 0 0 rgba(0, 0, 0, 0.4);
+}
+
+.bookcase-rail-left {
+  left: 0;
+}
+
+.bookcase-rail-right {
+  right: 0;
+}
+
+.bookcase-shelves {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: 0.8rem 1.7rem 0.5rem;
+}
+
+.shelf {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.shelf-items {
+  --box-h: clamp(8.8rem, 26vh, 16.5rem);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  gap: 0.45rem;
+  padding: 0 0.4rem 0.15rem;
+}
+
+.shelf-plank {
+  height: 0.85rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--gilt) 35%, #6a4a30) 0%,
+      var(--wood-hi) 28%,
+      var(--wood) 70%,
+      var(--wood-lo)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 9px,
+      rgba(0, 0, 0, 0.12) 9px 10px
+    );
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 color-mix(in oklab, var(--gilt) 40%, transparent);
+}
+
+.hero-box {
+  position: relative;
+  z-index: 1;
+  height: calc(var(--box-h) * var(--box-scale, 1));
+  width: calc(var(--box-h) * var(--box-scale, 1) * 0.24);
+  overflow: hidden;
+  background: #050505;
+  box-shadow:
+    4px 8px 16px rgba(0, 0, 0, 0.45),
+    inset -8px 0 12px rgba(0, 0, 0, 0.25);
+  transition:
+    width 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms ease;
+  transform: translateZ(0);
+}
+
+.hero-box.is-pulled {
+  z-index: 8;
+  width: calc(var(--box-h) * var(--box-scale, 1) * var(--art-ratio, 0.7));
+  transform: translateY(-12px) translateZ(36px);
+  box-shadow:
+    12px 22px 36px rgba(0, 0, 0, 0.55),
+    0 0 0 1px color-mix(in oklab, var(--gilt) 28%, transparent);
+}
+
+.hero-box.is-opening {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-box-art {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: left center;
+}
+
+.knick {
+  position: relative;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.knick-plant {
+  width: 3.4rem;
+  height: 5.8rem;
+  margin-bottom: 0.1rem;
+}
+
+.knick-candle {
+  display: flex;
+  width: 1.85rem;
+  height: 4.8rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.candle-flame {
+  width: 0.42rem;
+  height: 0.7rem;
+  border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+  background: radial-gradient(circle at 40% 70%, #fff6c8 0%, var(--ember) 55%, transparent 78%);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--ember) 70%, transparent);
+  animation: candle-flicker 1.8s ease-in-out infinite;
+}
+
+.candle-wick {
+  width: 1px;
+  height: 0.28rem;
+  background: #2a2018;
+}
+
+.candle-body {
+  width: 0.7rem;
+  height: 2.2rem;
+  background: linear-gradient(90deg, #d8d0c2, #f3eee4 40%, #cfc6b6);
+  box-shadow: inset 0 8px 0 color-mix(in oklab, var(--gilt) 35%, transparent);
+}
+
+.candle-base {
+  width: 1.15rem;
+  height: 0.28rem;
+  background: var(--gilt);
+}
+
+.knick-vinyl {
+  width: 3.5rem;
+  height: 3.6rem;
+}
+
+.vinyl {
+  position: absolute;
+  bottom: 0;
+  height: 3.15rem;
+  width: 3.15rem;
+  border-radius: 50%;
+  border: 1px solid #2a2a2a;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      var(--gilt) 0 0.22rem,
+      #1a1a1a 0.24rem 0.42rem,
+      #0c0c0c 0.44rem 1.05rem,
+      #171717 1.07rem 1.45rem,
+      #090909 1.47rem 100%
+    );
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+}
+
+.vinyl-a {
+  left: 0;
+  transform: rotate(-18deg);
+}
+
+.vinyl-b {
+  left: 0.35rem;
+  transform: rotate(6deg);
+}
+
+.vinyl-c {
+  left: 0.15rem;
+  bottom: 0.08rem;
+  transform: rotate(-4deg);
+}
+
+.knick-sculpture {
+  display: grid;
+  width: 2.15rem;
+  height: 2.7rem;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, var(--gilt) 50%, transparent);
+  background: color-mix(in oklab, var(--bg-elev) 80%, transparent);
+}
+
+.knick-frame {
+  width: 2.35rem;
+  height: 3.1rem;
+  border: 3px solid var(--gilt);
+  box-shadow: inset 0 0 0 1px #1a140e;
+  background: linear-gradient(160deg, #1c1814, #0c0b0a);
+}
+
+.knick-frame span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--steel) 18%, transparent),
+    transparent 60%
+  );
+}
+
+.book-spread {
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1800px;
+  background: var(--bg-elev);
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px color-mix(in oklab, var(--gilt) 32%, transparent);
+  transition:
+    left 640ms cubic-bezier(0.16, 1, 0.3, 1),
+    top 640ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 640ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 640ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.book-pages {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+}
+
+.book-page {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-elev);
+}
+
+.book-page-left {
+  flex: 1.05 1 0;
+  min-width: 0;
+  background: #090909;
+}
+
+.book-page-right {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: auto;
+  transform-origin: left center;
+  transform: rotateY(-88deg);
+  border-left: 1px solid color-mix(in oklab, var(--gilt) 22%, transparent);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent 18px),
+    var(--bg-panel);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1) 80ms;
+}
+
+.book-spread.is-open .book-page-right {
+  transform: rotateY(0deg);
+}
+
+@keyframes candle-flicker {
+  0%,
+  100% {
+    transform: scaleY(1) translateX(0);
+    opacity: 0.92;
+  }
+  40% {
+    transform: scaleY(1.12) translateX(0.4px);
+    opacity: 1;
+  }
+  70% {
+    transform: scaleY(0.92) translateX(-0.3px);
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 720px) {
+  .bookcase-scene {
+    top: 4.25rem;
+    right: 0;
+    bottom: 48%;
+    left: 0;
+    padding: 0.2rem 0.45rem 0.35rem;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+    justify-content: flex-end;
+  }
+
+  .bookcase {
+    transform: none;
+    width: 100%;
+  }
+
+  .shelf-items {
+    --box-h: clamp(6.6rem, 18vh, 10.5rem);
+    gap: 0.32rem;
+  }
+
+  .book-pages {
+    flex-direction: column;
+  }
+
+  .book-page-left {
+    flex: 0 0 42%;
+  }
+
+  .book-page-right {
+    transform: none;
+    border-left: 0;
+    border-top: 1px solid color-mix(in oklab, var(--gilt) 22%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-box,
+  .book-spread,
+  .book-page-right,
+  .candle-flame {
+    transition: none;
+    animation: none;
+  }
+
+  .hero-box.is-pulled {
+    transform: none;
+  }
+
+  .book-page-right {
+    transform: none;
+  }
 }

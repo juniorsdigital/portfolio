@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Offerings } from "@/components/Offerings";
-import { ShatteredHero } from "@/components/ShatteredHero";
+import { BookshelfHero } from "@/components/BookshelfHero";
 import { WorkGrid } from "@/components/WorkGrid";
 import { SITE } from "@/lib/site";
 
 export default function HomePage() {
   return (
     <>
-      <ShatteredHero />
+      <BookshelfHero />
       <Offerings />
 
       <section className="section-pad border-t border-gilt/20" id="work">
