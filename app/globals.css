@@ -126,7 +126,7 @@ body {
   height: 100%;
   object-fit: cover;
   transform: scale(1.12);
-  filter: blur(18px) brightness(0.55);
+  filter: blur(14px) brightness(0.72) saturate(0.95);
 }
 
 .hero-footage video.hero-footage-media {
@@ -140,18 +140,18 @@ body {
   background:
     linear-gradient(
       90deg,
-      color-mix(in oklab, var(--bg) 78%, transparent) 0%,
-      color-mix(in oklab, var(--bg) 32%, transparent) 46%,
-      color-mix(in oklab, var(--bg) 42%, transparent) 100%
+      color-mix(in oklab, var(--bg) 55%, transparent) 0%,
+      color-mix(in oklab, var(--bg) 14%, transparent) 48%,
+      color-mix(in oklab, var(--bg) 18%, transparent) 100%
     ),
     linear-gradient(
       180deg,
-      color-mix(in oklab, var(--bg) 62%, transparent) 0%,
-      transparent 22%,
-      transparent 76%,
-      color-mix(in oklab, var(--bg) 48%, transparent) 100%
+      color-mix(in oklab, var(--bg) 42%, transparent) 0%,
+      transparent 20%,
+      transparent 82%,
+      color-mix(in oklab, var(--bg) 28%, transparent) 100%
     ),
-    color-mix(in oklab, var(--bg) 28%, transparent);
+    color-mix(in oklab, var(--bg) 10%, transparent);
 }
 
 .hero-copy {
