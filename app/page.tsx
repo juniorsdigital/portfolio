@@ -11,7 +11,7 @@ export default function HomePage() {
       <CoverStackHero />
       <Offerings />
 
-      <section className="section-pad border-t border-gilt/20" id="work">
+      <section className="section-pad border-t border-gilt/25" id="work">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
