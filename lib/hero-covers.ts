@@ -8,8 +8,10 @@ export type HeroCover = {
   projectId: "ovani";
 };
 
-/** Drop-in slots: replace the PNG in public/images/hero-covers/ with the same name. */
-const SIZE = { width: 800, height: 1100 };
+/** Drop-in slots: replace the PNG in public/images/hero-covers/ with the same name.
+ *  Hero footage: overwrite public/videos/she-who-flies-hero.mp4 (muted H.264, 16:9).
+ */
+const SIZE = { width: 1187, height: 1678 };
 
 function cover(n: number): HeroCover {
   const id = `cover-${String(n).padStart(2, "0")}`;

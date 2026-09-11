@@ -97,6 +97,7 @@ export function CoverStackHero() {
           sizes="100vw"
           className="hero-footage-media"
         />
+        {/* Drop-in: overwrite public/videos/she-who-flies-hero.mp4 */}
         <video
           className="hero-footage-media hero-footage-video"
           autoPlay

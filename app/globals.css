@@ -174,7 +174,7 @@ body {
 
 .cover-stack-fan {
   --count: 11;
-  --art-ratio: 0.727;
+  --art-ratio: 0.707;
   --spine-frac: 0.26;
   --face-from-w: calc(
     100cqi / (1 + (var(--count) - 1) * var(--spine-frac))
@@ -198,8 +198,8 @@ body {
   z-index: var(--z, 1);
   flex-shrink: 0;
   height: var(--cover-h);
-  width: calc(var(--cover-h) * var(--art-ratio, 0.727));
-  margin-left: calc(var(--peek) - (var(--cover-h) * var(--art-ratio, 0.727)));
+  width: calc(var(--cover-h) * var(--art-ratio, 0.707));
+  margin-left: calc(var(--peek) - (var(--cover-h) * var(--art-ratio, 0.707)));
   padding: 0;
   overflow: visible;
   border: 0;
