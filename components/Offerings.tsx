@@ -12,25 +12,27 @@ export function Offerings() {
         </h2>
         <div className="mt-12 grid gap-4 lg:grid-cols-3">
           {OFFERINGS.map((offering) => (
-            <article
+            <div
               key={offering.num}
-              className="clip-shard hairline bg-bg-elev p-7 transition-colors hover:border-ember/60"
+              className="transition-[transform,filter] duration-300 [filter:drop-shadow(0_10px_24px_rgba(0,0,0,0.2))] hover:-translate-y-1 hover:[filter:drop-shadow(0_22px_40px_rgba(0,0,0,0.34))]"
             >
-              <p className="font-mono text-[0.65rem] tracking-[0.22em] text-ember uppercase">
-                {offering.num}
-              </p>
-              <h3 className="mt-6 font-display text-2xl font-extrabold tracking-tight">
-                {offering.title}
-              </h3>
-              <ul className="mt-6 space-y-2 text-sm text-muted">
-                {offering.items.map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <span className="mt-2 h-1 w-1 shrink-0 bg-volt" aria-hidden />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </article>
+              <article className="clip-shard hairline bg-bg-elev p-7 transition-colors hover:border-ember/60">
+                <p className="font-mono text-[0.65rem] tracking-[0.22em] text-ember uppercase">
+                  {offering.num}
+                </p>
+                <h3 className="mt-6 font-display text-2xl font-extrabold tracking-tight">
+                  {offering.title}
+                </h3>
+                <ul className="mt-6 space-y-2 text-sm text-muted">
+                  {offering.items.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="mt-2 h-1 w-1 shrink-0 bg-volt" aria-hidden />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </div>
           ))}
         </div>
         <p className="mt-8 text-sm text-muted">

@@ -18,6 +18,9 @@ export function Footer() {
           <p className="mt-1 text-xs tracking-[0.16em] text-muted uppercase">
             {SITE.location}
           </p>
+          <p className="mt-3 text-[0.65rem] tracking-[0.16em] text-faint uppercase">
+            © {new Date().getFullYear()} {SITE.name}
+          </p>
         </div>
         <nav aria-label="Footer" className="flex flex-wrap gap-6 text-xs tracking-[0.18em] uppercase">
           {links.map((link) => (

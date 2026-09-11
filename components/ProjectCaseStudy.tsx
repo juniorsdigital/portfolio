@@ -47,7 +47,10 @@ export function ProjectCaseStudy({
         />
       ) : null}
       <div className="p-6">
-        <p className="label-kicker">{project.client}</p>
+        <p className="text-[0.65rem] tracking-[0.18em] text-muted uppercase">
+          {project.categories.join(" · ")}
+        </p>
+        <p className="label-kicker mt-3">{project.client}</p>
         <h3 id={titleId} className="mt-2 font-display text-2xl font-extrabold">
           {project.title}
         </h3>

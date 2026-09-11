@@ -88,6 +88,28 @@ export function CoverStackHero() {
       className="cover-hero"
       aria-label="Introduction"
     >
+      <div className="hero-footage" aria-hidden="true">
+        <Image
+          src="/images/hero-she-who-flies-poster.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="hero-footage-media"
+        />
+        <video
+          className="hero-footage-media hero-footage-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          poster="/images/hero-she-who-flies-poster.jpg"
+        >
+          <source src="/videos/she-who-flies-hero.mp4" type="video/mp4" />
+        </video>
+        <div className="hero-footage-veil" />
+      </div>
       <div className="hero-copy pointer-events-none relative z-10 flex h-full w-full flex-col justify-center px-[clamp(1.25rem,4vw,3.5rem)] pt-28 pb-16">
         <p className="label-kicker mb-5">Philadelphia</p>
         <h1 className="font-display text-[clamp(2.4rem,6vw,5.2rem)] font-extrabold leading-[0.86] tracking-[-0.04em] text-bone">
