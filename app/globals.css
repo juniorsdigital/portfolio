@@ -193,100 +193,209 @@ body {
   transform-style: preserve-3d;
 }
 
-.hero-cover {
+.cover-stack:has(.hero-book.is-open) {
+  z-index: 12;
+}
+
+.hero-book {
   position: relative;
   z-index: var(--z, 1);
   flex-shrink: 0;
   height: var(--cover-h);
   width: calc(var(--cover-h) * var(--art-ratio, 0.707));
   margin-left: calc(var(--peek) - (var(--cover-h) * var(--art-ratio, 0.707)));
+  overflow: visible;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+.hero-book:first-child {
+  margin-left: 0;
+}
+
+.hero-book.is-open {
+  z-index: 50;
+}
+
+.hero-book-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: translateX(0) rotate(var(--tilt, 0deg)) translateZ(0);
+  transform-origin: 8% 100%;
+  transform-style: preserve-3d;
+  transition: transform 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-book.is-pulled .hero-book-stage,
+.hero-book.is-open .hero-book-stage {
+  transform: translateX(calc(-1 * var(--pull))) rotate(-3deg) translateZ(12px);
+}
+
+.hero-book-page {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  overflow: auto;
+  padding: 0.7rem 0.85rem 0.75rem 0.7rem;
+  pointer-events: none;
+  border: 1px solid color-mix(in oklab, var(--gilt) 28%, transparent);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 16px),
+    var(--bg-panel);
+  color: var(--bone);
+  box-shadow:
+    8px 18px 24px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px color-mix(in oklab, var(--gilt) 10%, transparent);
+}
+
+.hero-book.is-open .hero-book-page {
+  pointer-events: auto;
+}
+
+.hero-book-page .label-kicker {
+  padding-right: 1.4rem;
+  font-size: 0.58rem;
+}
+
+.hero-book-close {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  z-index: 1;
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: color-mix(in oklab, var(--bg) 72%, transparent);
+  color: var(--bone);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.hero-book-close:hover {
+  color: var(--volt);
+}
+
+.hero-book-title {
+  margin: 0.15rem 0 0;
+  padding-right: 1.25rem;
+  font-size: clamp(0.95rem, 1.4cqi, 1.35rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.hero-book-process {
+  flex: 1;
+  margin: 0;
+  min-height: 0;
+  overflow: auto;
+  color: var(--muted);
+  font-size: clamp(0.68rem, 0.95cqi, 0.8rem);
+  line-height: 1.45;
+}
+
+.hero-book-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: auto;
+}
+
+.hero-book-link {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid color-mix(in oklab, var(--gilt) 32%, transparent);
+  background: color-mix(in oklab, var(--bg) 40%, transparent);
+  color: var(--bone);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.hero-book-link:hover {
+  border-color: var(--volt);
+  color: var(--volt);
+}
+
+.hero-book-link.is-store {
+  background: var(--ember);
+  border-color: transparent;
+  color: var(--bone);
+}
+
+.hero-book-link.is-store:hover {
+  background: color-mix(in oklab, var(--ember) 85%, black);
+  border-color: transparent;
+  color: var(--bone);
+}
+
+.hero-book-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   padding: 0;
   overflow: visible;
   border: 0;
   background: transparent;
-  transform: translateX(0) rotate(var(--tilt, 0deg)) translateZ(0);
-  transform-origin: 8% 100%;
-  transition:
-    transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 480ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 180ms ease;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-book.is-open .hero-book-cover {
+  transform: rotateY(-152deg);
+}
+
+.hero-book-cover-front,
+.hero-book-cover-inside {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.hero-book-cover-front {
   filter:
     drop-shadow(-10px 4px 12px rgba(0, 0, 0, 0.58))
     drop-shadow(8px 18px 24px rgba(0, 0, 0, 0.5));
-  cursor: pointer;
+  transition: filter 480ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hero-cover:first-child {
-  margin-left: 0;
-}
-
-.hero-cover.is-pulled {
-  transform: translateX(calc(-1 * var(--pull))) rotate(-3deg) translateZ(0);
+.hero-book.is-pulled .hero-book-cover-front {
   filter:
     drop-shadow(-14px 6px 16px rgba(0, 0, 0, 0.72))
     drop-shadow(12px 24px 28px rgba(0, 0, 0, 0.58));
 }
 
-.hero-cover.is-opening {
-  opacity: 0;
-  pointer-events: none;
+.hero-book.is-open .hero-book-cover-front {
+  filter:
+    drop-shadow(-8px 6px 14px rgba(0, 0, 0, 0.55))
+    drop-shadow(6px 10px 16px rgba(0, 0, 0, 0.4));
+}
+
+.hero-book-cover-inside {
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.22) 10px, transparent 32px),
+    var(--bg-elev);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gilt) 18%, transparent);
+  transform: rotateY(180deg);
 }
 
 .hero-cover-art {
   object-fit: contain;
   object-position: left center;
   pointer-events: none;
-}
-
-.book-spread {
-  overflow: hidden;
-  transform-style: preserve-3d;
-  perspective: 1800px;
-  background: var(--bg-elev);
-  box-shadow:
-    0 28px 60px rgba(0, 0, 0, 0.55),
-    0 0 0 1px color-mix(in oklab, var(--gilt) 32%, transparent);
-  transition:
-    left 640ms cubic-bezier(0.16, 1, 0.3, 1),
-    top 640ms cubic-bezier(0.16, 1, 0.3, 1),
-    width 640ms cubic-bezier(0.16, 1, 0.3, 1),
-    height 640ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.book-pages {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  transform-style: preserve-3d;
-}
-
-.book-page {
-  position: relative;
-  overflow: hidden;
-  background: var(--bg-elev);
-}
-
-.book-page-left {
-  flex: 1.05 1 0;
-  min-width: 0;
-  background: #090909;
-}
-
-.book-page-right {
-  flex: 1 1 0;
-  min-width: 0;
-  overflow: auto;
-  transform-origin: left center;
-  transform: rotateY(-88deg);
-  border-left: 1px solid color-mix(in oklab, var(--gilt) 22%, transparent);
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent 18px),
-    var(--bg-panel);
-  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1) 80ms;
-}
-
-.book-spread.is-open .book-page-right {
-  transform: rotateY(0deg);
 }
 
 @media (max-width: 720px) {
@@ -306,20 +415,6 @@ body {
     justify-content: flex-start;
     padding-top: 1.25rem;
   }
-
-  .book-pages {
-    flex-direction: column;
-  }
-
-  .book-page-left {
-    flex: 0 0 42%;
-  }
-
-  .book-page-right {
-    transform: none;
-    border-left: 0;
-    border-top: 1px solid color-mix(in oklab, var(--gilt) 22%, transparent);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -327,20 +422,25 @@ body {
     display: none;
   }
 
-  .hero-cover,
-  .book-spread,
-  .book-page-right {
+  .hero-book,
+  .hero-book-stage,
+  .hero-book-cover,
+  .hero-book-cover-front {
     transition: none;
   }
 
-  .hero-cover.is-pulled {
-    transform: none;
+  .hero-book.is-pulled .hero-book-cover-front {
     filter:
       drop-shadow(-10px 4px 12px rgba(0, 0, 0, 0.58))
       drop-shadow(8px 18px 24px rgba(0, 0, 0, 0.5));
   }
 
-  .book-page-right {
+  .hero-book.is-pulled .hero-book-stage,
+  .hero-book.is-open .hero-book-stage {
     transform: none;
+  }
+
+  .hero-book.is-open .hero-book-cover {
+    transform: rotateY(-180deg);
   }
 }

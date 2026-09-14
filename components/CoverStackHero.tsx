@@ -5,31 +5,30 @@ import Link from "next/link";
 import {
   useCallback,
   useEffect,
+  useId,
   useRef,
   useState,
   type CSSProperties,
-  type MouseEvent,
 } from "react";
-import {
-  BookCaseStudyOverlay,
-  type BookOrigin,
-} from "@/components/BookCaseStudyOverlay";
 import { HERO_COVERS, type HeroCover } from "@/lib/hero-covers";
-import { PROJECTS } from "@/lib/projects";
-
-const OVANI = PROJECTS.find((project) => project.id === "ovani");
 
 export function CoverStackHero() {
   const stackRef = useRef<HTMLDivElement>(null);
   const pulledRef = useRef<string | null>(null);
+  const openRef = useRef<string | null>(null);
   const pointerTypeRef = useRef<string>("mouse");
   const [pulledId, setPulledId] = useState<string | null>(null);
-  const [origin, setOrigin] = useState<BookOrigin | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [reduced, setReduced] = useState(false);
 
   const setPulled = (id: string | null) => {
     pulledRef.current = id;
     setPulledId(id);
+  };
+
+  const setOpen = (id: string | null) => {
+    openRef.current = id;
+    setOpenId(id);
   };
 
   useEffect(() => {
@@ -40,47 +39,45 @@ export function CoverStackHero() {
     return () => media.removeEventListener("change", apply);
   }, []);
 
+  const closeBook = useCallback(() => {
+    setOpen(null);
+  }, []);
+
   useEffect(() => {
     const onPointerDown = (e: PointerEvent) => {
       pointerTypeRef.current = e.pointerType;
-      if (origin) return;
       const node = e.target as Node | null;
       if (node && stackRef.current?.contains(node)) return;
+      setOpen(null);
       setPulled(null);
     };
     window.addEventListener("pointerdown", onPointerDown);
     return () => window.removeEventListener("pointerdown", onPointerDown);
-  }, [origin]);
-
-  const openCover = (cover: HeroCover, el: HTMLElement) => {
-    if (!OVANI) return;
-    const rect = el.getBoundingClientRect();
-    setOrigin({
-      cover,
-      project: OVANI,
-      left: rect.left,
-      top: rect.top,
-      width: rect.width,
-      height: rect.height,
-    });
-  };
-
-  const closeCover = useCallback(() => {
-    setOrigin(null);
   }, []);
 
-  const onCoverClick = (
-    e: MouseEvent<HTMLButtonElement>,
-    cover: HeroCover,
-  ) => {
-    if (origin) return;
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const onCoverClick = (cover: HeroCover) => {
+    if (openRef.current === cover.id) {
+      closeBook();
+      return;
+    }
     const twoStep =
       pointerTypeRef.current === "touch" || window.innerWidth < 720;
     if (twoStep && pulledRef.current !== cover.id) {
+      setOpen(null);
       setPulled(cover.id);
       return;
     }
-    openCover(cover, e.currentTarget);
+    setPulled(cover.id);
+    setOpen(cover.id);
   };
 
   return (
@@ -148,7 +145,7 @@ export function CoverStackHero() {
         ref={stackRef}
         className="cover-stack"
         onPointerLeave={(e) => {
-          if (e.pointerType === "touch" || origin) return;
+          if (e.pointerType === "touch" || openRef.current) return;
           setPulled(null);
         }}
       >
@@ -162,23 +159,17 @@ export function CoverStackHero() {
               cover={cover}
               index={index}
               pulled={pulledId === cover.id}
-              hidden={origin?.cover.id === cover.id}
+              open={openId === cover.id}
               priority={index === 0 || index >= HERO_COVERS.length - 3}
               reduced={reduced}
               onClick={onCoverClick}
+              onClose={closeBook}
               onPull={setPulled}
+              anotherOpen={openId !== null && openId !== cover.id}
             />
           ))}
         </div>
       </div>
-
-      {origin ? (
-        <BookCaseStudyOverlay
-          origin={origin}
-          reduced={reduced}
-          onClose={closeCover}
-        />
-      ) : null}
     </section>
   );
 }
@@ -187,51 +178,99 @@ function StackCover({
   cover,
   index,
   pulled,
-  hidden,
+  open,
   priority,
   reduced,
   onClick,
+  onClose,
   onPull,
+  anotherOpen,
 }: {
   cover: HeroCover;
   index: number;
   pulled: boolean;
-  hidden: boolean;
+  open: boolean;
   priority: boolean;
   reduced: boolean;
-  onClick: (e: MouseEvent<HTMLButtonElement>, cover: HeroCover) => void;
+  onClick: (cover: HeroCover) => void;
+  onClose: () => void;
   onPull: (id: string | null) => void;
+  anotherOpen: boolean;
 }) {
+  const pageId = useId();
+
   return (
-    <button
-      type="button"
-      className={`hero-cover ${pulled ? "is-pulled" : ""} ${hidden ? "is-opening" : ""}`}
+    <article
+      className={`hero-book ${pulled ? "is-pulled" : ""} ${open ? "is-open" : ""}`}
       style={
         {
           "--art-ratio": cover.width / cover.height,
           "--z": index + 1,
         } as CSSProperties
       }
-      aria-label={`Open case study: ${cover.title}`}
-      aria-expanded={pulled}
-      onClick={(e) => onClick(e, cover)}
-      onPointerEnter={(e) => {
-        if (e.pointerType === "touch" || window.innerWidth < 720) return;
-        onPull(cover.id);
-      }}
-      onFocus={() => {
-        if (reduced) return;
-        onPull(cover.id);
-      }}
     >
-      <Image
-        src={cover.src}
-        alt=""
-        fill
-        priority={priority}
-        sizes="(max-width: 768px) 42vw, 280px"
-        className="hero-cover-art"
-      />
-    </button>
+      <div className="hero-book-stage">
+        <div
+          className="hero-book-page"
+          id={pageId}
+          aria-hidden={!open}
+          inert={!open}
+        >
+          <button
+            type="button"
+            className="hero-book-close"
+            onClick={onClose}
+            aria-label={`Close ${cover.title}`}
+          >
+            ×
+          </button>
+          <p className="label-kicker">Pack</p>
+          <h3 className="hero-book-title font-display">{cover.title}</h3>
+          <p className="hero-book-process">{cover.process}</p>
+          <div className="hero-book-links">
+            <Link href={cover.contactHref} className="hero-book-link">
+              Contact
+            </Link>
+            <a
+              href={cover.storeHref}
+              className="hero-book-link is-store"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ovani store
+            </a>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="hero-book-cover"
+          aria-label={open ? `Close pack: ${cover.title}` : `Open pack: ${cover.title}`}
+          aria-expanded={open}
+          aria-controls={pageId}
+          onClick={() => onClick(cover)}
+          onPointerEnter={(e) => {
+            if (e.pointerType === "touch" || window.innerWidth < 720) return;
+            if (anotherOpen) return;
+            onPull(cover.id);
+          }}
+          onFocus={() => {
+            if (reduced || anotherOpen) return;
+            onPull(cover.id);
+          }}
+        >
+          <span className="hero-book-cover-front">
+            <Image
+              src={cover.src}
+              alt=""
+              fill
+              priority={priority}
+              sizes="(max-width: 768px) 42vw, 280px"
+              className="hero-cover-art"
+            />
+          </span>
+          <span className="hero-book-cover-inside" aria-hidden="true" />
+        </button>
+      </div>
+    </article>
   );
 }
