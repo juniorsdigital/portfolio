@@ -296,7 +296,7 @@ body {
 .hero-book-title {
   margin: 0.15rem 0 0;
   padding-right: 1.25rem;
-  font-size: clamp(0.95rem, 1.4cqi, 1.35rem);
+  font-size: clamp(0.72rem, 2.2vw, 1.25rem);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -308,7 +308,7 @@ body {
   min-height: 0;
   overflow: auto;
   color: var(--muted);
-  font-size: clamp(0.68rem, 0.95cqi, 0.8rem);
+  font-size: clamp(0.62rem, 1.5vw, 0.8rem);
   line-height: 1.45;
 }
 
