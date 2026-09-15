@@ -1,3 +1,5 @@
+export const OVANI_STORE_URL = "https://ovanisound.com";
+
 export type HeroCover = {
   id: string;
   title: string;
@@ -5,24 +7,40 @@ export type HeroCover = {
   src: string;
   width: number;
   height: number;
-  projectId: "ovani";
+  process: string;
+  contactHref: string;
+  storeHref: string;
+};
+
+type CoverCopy = {
+  title?: string;
+  process?: string;
+  contactHref?: string;
+  storeHref?: string;
 };
 
 /** Drop-in slots: replace the PNG in public/images/hero-covers/ with the same name.
  *  Hero footage: overwrite public/videos/she-who-flies-hero.mp4 (muted H.264, 16:9).
+ *
+ *  Pack copy: pass a second argument to cover(), e.g.
+ *  cover(1, { title: "Ambient Vol. 13", process: "How it was made.", storeHref: "https://…" })
  */
 const SIZE = { width: 1187, height: 1678 };
 
-function cover(n: number): HeroCover {
+const PROCESS_STUB = "Add how this cover was made.";
+
+function cover(n: number, copy: CoverCopy = {}): HeroCover {
   const id = `cover-${String(n).padStart(2, "0")}`;
-  const title = `Cover ${String(n).padStart(2, "0")}`;
+  const title = copy.title ?? `Cover ${String(n).padStart(2, "0")}`;
   return {
     id,
     title,
     alt: `${title} — 3D product box art`,
     src: `/images/hero-covers/${id}.png`,
     ...SIZE,
-    projectId: "ovani",
+    process: copy.process ?? PROCESS_STUB,
+    contactHref: copy.contactHref ?? "/contact",
+    storeHref: copy.storeHref ?? OVANI_STORE_URL,
   };
 }
 
