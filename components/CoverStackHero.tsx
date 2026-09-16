@@ -241,13 +241,19 @@ function StackCover({
             </a>
           </div>
         </div>
-        <button
-          type="button"
+        <div
           className="hero-book-cover"
+          role="button"
+          tabIndex={0}
           aria-label={open ? `Close pack: ${cover.title}` : `Open pack: ${cover.title}`}
           aria-expanded={open}
           aria-controls={pageId}
           onClick={() => onClick(cover)}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            onClick(cover);
+          }}
           onPointerEnter={(e) => {
             if (e.pointerType === "touch" || window.innerWidth < 720) return;
             if (anotherOpen) return;
@@ -277,7 +283,7 @@ function StackCover({
               className="hero-inside-art"
             />
           </span>
-        </button>
+        </div>
       </div>
     </article>
   );
