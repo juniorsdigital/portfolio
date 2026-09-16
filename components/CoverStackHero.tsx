@@ -268,7 +268,15 @@ function StackCover({
               className="hero-cover-art"
             />
           </span>
-          <span className="hero-book-cover-inside" aria-hidden="true" />
+          <span className="hero-book-cover-inside" aria-hidden="true">
+            <Image
+              src={cover.insideSrc}
+              alt=""
+              fill
+              sizes="(max-width: 768px) 42vw, 280px"
+              className="hero-inside-art"
+            />
+          </span>
         </button>
       </div>
     </article>

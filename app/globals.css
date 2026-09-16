@@ -395,21 +395,30 @@ body {
 }
 
 .hero-book-cover-inside {
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 22px),
-    repeating-linear-gradient(
-      180deg,
-      transparent 0 11px,
-      color-mix(in oklab, var(--gilt) 7%, transparent) 11px 12px
-    ),
-    var(--bg-elev);
+  overflow: hidden;
+  background: var(--bg-elev);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gilt) 22%, transparent);
   transform: rotateY(180deg);
+}
+
+.hero-book-cover-inside::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 22px);
 }
 
 .hero-cover-art {
   object-fit: contain;
   object-position: left center;
+  pointer-events: none;
+}
+
+.hero-inside-art {
+  object-fit: cover;
+  object-position: center;
   pointer-events: none;
 }
 
