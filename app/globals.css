@@ -252,9 +252,6 @@ body {
   box-shadow:
     8px 18px 24px rgba(0, 0, 0, 0.5),
     inset 0 0 0 1px color-mix(in oklab, var(--gilt) 10%, transparent);
-  transition:
-    opacity 80ms ease,
-    visibility 0s 80ms;
 }
 
 .hero-book.is-open .hero-book-page {
@@ -262,7 +259,7 @@ body {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 240ms ease 280ms,
+    opacity 0s 280ms,
     visibility 0s 280ms;
 }
 
