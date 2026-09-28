@@ -94,19 +94,19 @@ export const HERO_COVERS: HeroCover[] = [
   }),
   cover(9, {
     title: "Horror Vol. 9",
-    process: "Add how this cover was made.",
+    process: "Horror is one of my favourite packs to design. The side panels always fall together nicely, the ability to lean on the uniformity of religion, teeth, moons, skulls, knives, doors ajar just lets the side-panel feel free. The hard part is tuning down the horror for the cover to convey the theme of the packs music.",
     contactHref: "/contact",
     storeHref: OVANI_STORE_URL,
   }),
   cover(10, {
     title: "Magical Vol. 5",
-    process: "Add how this cover was made.",
+    process: "Magical is very difficult to depict with stock imagery, so I leaned on an artist who posts their work on Adobe Stock to license the image. It worked nicely with the theme I was going for which is: Storming the wizards castle. The side-panel is an expansion of the covers scene.",
     contactHref: "/contact",
     storeHref: OVANI_STORE_URL,
   }),
   cover(11, {
     title: "Spooky",
-    process: "Add how this cover was made.",
+    process: "The revision after my first submission for 'Spooky' was 'This is great, but we were thinking something more goofy'- so goofy it became. Skeletons dancing on their graves, Jack-o-Lanterns wearing witch hats, Cats hanging out with brooms, and ghosts with sunglasses. This cover has a special place in my heart.",
     contactHref: "/contact",
     storeHref: OVANI_STORE_URL,
   }),
