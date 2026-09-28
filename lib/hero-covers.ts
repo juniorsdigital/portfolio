@@ -52,7 +52,7 @@ export const HERO_COVERS: HeroCover[] = [
   }),
   cover(2, {
     title: "Ambient Fantasy",
-    process: "Add how this cover was made.",
+    process: "This was the first cover to pitch a more detailed side-panel. The goal with them is to create a separate piece of art to expand on the world from the cover. This cover features a castle in Germany, and the side-panel consists of (from top to bottom): Ice Caves, Stones by a lake, a Sword from a battle, Clouds from various sky pictures, a Dragon render, and a knight sitting in a field stock image.", 
     contactHref: "/contact",
     storeHref: OVANI_STORE_URL,
   }),
