@@ -46,7 +46,7 @@ function cover(n: number, copy: PackCopy): HeroCover {
 export const HERO_COVERS: HeroCover[] = [
   cover(1, {
     title: "Ambient Vol. 13",
-    process: "Add how this cover was made.",
+    process: "When a new volume comes around it is my job to create a new sticker. With the last few stickers being more shiny and polished I wanted to go for more of a grungy packaging theme. Cover is a slightly edited stock image of a forest, and the side-panel is various glyphs.",
     contactHref: "/contact",
     storeHref: OVANI_STORE_URL,
   }),
@@ -58,13 +58,13 @@ export const HERO_COVERS: HeroCover[] = [
   }),
   cover(3, {
     title: "Casual Vol. 8",
-    process: "Add how this cover was made.",
+    process: "How do you express casual activities in one image? Previously we used AI, but having pivoted away since, I added a man fishing to this serene lake in the mountains. This included painting on light, outlining the fishing rod, and adding subtle reflections on the water.",
     contactHref: "/contact",
     storeHref: OVANI_STORE_URL,
   }),
   cover(4, {
     title: "Dark Fantasy Vol. 3",
-    process: "Add how this cover was made.",
+    process: "Volume 3 packs have a theme for duo-tone side-panels. This posed a challenge for a pack that thematically takes very dark and red tones easily because of readability and being able to understand the side-panel imagery. This took a long time of blending Color Overlay's to avoid a 'negative' effect while still keeping a duo-tone theme.",
     contactHref: "/contact",
     storeHref: OVANI_STORE_URL,
   }),
