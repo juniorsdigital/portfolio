@@ -1,46 +1,58 @@
 import Link from "next/link";
+import { SectionHeader } from "@/components/SectionHeader";
 import { OFFERINGS } from "@/lib/offerings";
 
 export function Offerings() {
   return (
-    <section className="section-pad border-t border-gilt/20" id="offerings">
-      <div className="mx-auto max-w-6xl">
-        <p className="label-kicker">Offerings</p>
-        <h2 className="mt-4 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-bone sm:text-5xl">
-          Three lanes.{" "}
-          <em className="font-serif font-normal text-gilt">One person.</em>
-        </h2>
-        <div className="mt-12 grid gap-4 lg:grid-cols-3">
+    <section
+      className="section on-paper bg-paper text-ink"
+      id="services"
+      aria-labelledby="services-title"
+    >
+      <div className="wrap">
+        <SectionHeader
+          tone="paper"
+          kicker="01 / Services"
+          id="services-title"
+          title="Three lanes. One person."
+          aside={
+            <p className="text-lg text-slate">
+              Hire one lane or all three. Either way you deal with the person
+              doing the work.
+            </p>
+          }
+        />
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {OFFERINGS.map((offering) => (
-            <div
+            <article
               key={offering.num}
-              className="transition-[transform,filter] duration-300 [filter:drop-shadow(0_10px_24px_rgba(0,0,0,0.2))] hover:-translate-y-1 hover:[filter:drop-shadow(0_22px_40px_rgba(0,0,0,0.34))]"
+              className="flex flex-col border border-rule bg-card p-8 sm:p-9"
             >
-              <article className="clip-shard hairline bg-bg-elev p-7 transition-colors hover:border-ember/60">
-                <p className="font-mono text-[0.65rem] tracking-[0.22em] text-ember uppercase">
-                  {offering.num}
-                </p>
-                <h3 className="mt-6 font-display text-2xl font-extrabold tracking-tight">
-                  {offering.title}
-                </h3>
-                <ul className="mt-6 space-y-2 text-sm text-muted">
-                  {offering.items.map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 bg-volt" aria-hidden />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            </div>
+              <p className="font-mono text-sm text-signal-ink">{offering.num}</p>
+              <h3 className="mt-10 text-[1.875rem] leading-tight font-bold tracking-tight">
+                {offering.title}
+              </h3>
+              <p className="mt-3 text-slate">{offering.summary}</p>
+              <ul className="mt-7 space-y-2.5 border-t border-rule-soft pt-5">
+                {offering.items.map((item) => (
+                  <li key={item} className="flex items-baseline gap-3">
+                    <span
+                      className="h-1.5 w-1.5 shrink-0 translate-y-[-0.15em] bg-signal"
+                      aria-hidden="true"
+                    />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
           ))}
         </div>
-        <p className="mt-8 text-sm text-muted">
-          Need something in more than one lane?{" "}
-          <Link href="/contact" className="text-bone underline decoration-gilt/50 underline-offset-4 hover:text-volt">
-            Send a brief
-          </Link>
-          .
+        <p className="mt-8 text-slate">
+          Need more than one lane?{" "}
+          <Link href="/contact" className="link text-ink">
+            Send one brief
+          </Link>{" "}
+          and I&apos;ll scope it together.
         </p>
       </div>
     </section>

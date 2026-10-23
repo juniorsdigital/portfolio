@@ -1,44 +1,54 @@
 import Link from "next/link";
-import { SITE } from "@/lib/site";
-
-const links = [
-  { href: "/work", label: "Work" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+import { Wordmark } from "@/components/Wordmark";
+import { NAV_LINKS, SITE } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gilt/25 bg-bg">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-[clamp(1.25rem,4vw,3.5rem)] py-10 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="font-display text-lg font-extrabold tracking-tight text-bone">
-            {SITE.name}
-          </p>
-          <p className="mt-1 text-xs tracking-[0.16em] text-muted uppercase">
-            {SITE.location}
-          </p>
-          <p className="mt-3 text-[0.65rem] tracking-[0.16em] text-faint uppercase">
-            © {new Date().getFullYear()} {SITE.name}
-          </p>
-        </div>
-        <nav aria-label="Footer" className="flex flex-wrap gap-6 text-xs tracking-[0.18em] uppercase">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-muted transition-colors hover:text-volt"
-            >
-              {link.label}
+    <footer className="border-t border-line bg-ink text-paper">
+      <div className="wrap pt-18 pb-12">
+        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
+          <div>
+            <Link href="/" className="text-[2.5rem]" aria-label={`${SITE.brand} — home`}>
+              <Wordmark />
             </Link>
-          ))}
-          <a
-            href={`mailto:${SITE.email}`}
-            className="text-muted transition-colors hover:text-ember"
-          >
-            {SITE.email}
-          </a>
-        </nav>
+            <p className="mt-4 max-w-sm text-stone">
+              {SITE.byline}
+              <br />
+              Design, video and marketing — {SITE.location}.
+            </p>
+          </div>
+          <nav aria-label="Footer">
+            <p className="kicker text-stone">Site</p>
+            <ul className="mt-4 space-y-3">
+              <li>
+                <Link href="/" className="hover:underline">
+                  Home
+                </Link>
+              </li>
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:underline">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div>
+            <p className="kicker text-stone">Contact</p>
+            <ul className="mt-4 space-y-3">
+              <li>
+                <a href={`mailto:${SITE.email}`} className="break-all hover:underline">
+                  {SITE.email}
+                </a>
+              </li>
+              <li className="text-stone">{SITE.location}, PA</li>
+            </ul>
+          </div>
+        </div>
+        <p className="kicker mt-14 border-t border-line pt-6 font-normal text-stone">
+          © {new Date().getFullYear()} {SITE.name}
+        </p>
       </div>
     </footer>
   );

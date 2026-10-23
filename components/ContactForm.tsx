@@ -77,18 +77,16 @@ export function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="clip-shard hairline bg-bg-elev p-8">
-        <p className="label-kicker">Sent</p>
-        <h2 className="mt-3 font-display text-3xl font-extrabold">
-          I have it.
-        </h2>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
-          I&apos;ll read the brief and get back to you. If it&apos;s urgent, email
-          me directly.
+      <div className="border border-rule bg-card p-8 sm:p-12" role="status">
+        <p className="kicker text-signal-ink">Sent</p>
+        <h2 className="mt-3 text-4xl font-bold tracking-tight">I have it.</h2>
+        <p className="mt-3 max-w-md text-lg leading-relaxed text-slate">
+          I&apos;ll read the brief and get back to you. If it&apos;s urgent,
+          email me directly.
         </p>
         <button
           type="button"
-          className="mt-6 text-xs tracking-[0.16em] text-volt uppercase"
+          className="btn btn-sm mt-7 border border-ink"
           onClick={() => setStatus("idle")}
         >
           Send another
@@ -97,13 +95,21 @@ export function ContactForm() {
     );
   }
 
+  const label = "flex flex-col gap-2 text-[0.9375rem] font-semibold text-ink";
+  const hint = "font-normal text-slate";
   const field =
-    "clip-shard-sm w-full border border-gilt/25 bg-bg px-4 py-3 text-sm text-bone placeholder:text-faint";
+    "min-h-13 w-full border border-field bg-card px-4 py-3 text-[1.0625rem] font-normal text-ink placeholder:text-slate focus:border-ink";
+  const choice = (on: boolean) =>
+    `cursor-pointer border transition-colors ${
+      on
+        ? "border-ink bg-ink text-paper"
+        : "border-field bg-card text-ink hover:border-ink"
+    }`;
 
   return (
     <form
       onSubmit={onSubmit}
-      className="relative space-y-6"
+      className="relative flex flex-col gap-8 border border-rule bg-card p-6 sm:p-10 lg:p-12"
       noValidate
       method="post"
       action="#"
@@ -119,23 +125,23 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-xs tracking-[0.14em] text-muted uppercase">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <label className={label}>
           Name
           <input
             required
-            className={`${field} mt-2`}
+            className={field}
             value={form.name}
             onChange={(e) => update("name", e.target.value)}
             autoComplete="name"
           />
         </label>
-        <label className="block text-xs tracking-[0.14em] text-muted uppercase">
+        <label className={label}>
           Email
           <input
             required
             type="email"
-            className={`${field} mt-2`}
+            className={field}
             value={form.email}
             onChange={(e) => update("email", e.target.value)}
             autoComplete="email"
@@ -143,11 +149,13 @@ export function ContactForm() {
         </label>
       </div>
 
-      <label className="block text-xs tracking-[0.14em] text-muted uppercase">
-        Phone <span className="text-faint">(optional)</span>
+      <label className={label}>
+        <span>
+          Phone <span className={hint}>— optional</span>
+        </span>
         <input
           type="tel"
-          className={`${field} mt-2`}
+          className={field}
           value={form.phone}
           onChange={(e) => update("phone", e.target.value)}
           autoComplete="tel"
@@ -155,25 +163,20 @@ export function ContactForm() {
       </label>
 
       <fieldset>
-        <legend className="text-xs tracking-[0.14em] text-muted uppercase">
-          What do you need?
-        </legend>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        <legend className="text-[0.9375rem] font-semibold">What do you need?</legend>
+        <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
           {SERVICE_OPTIONS.map((opt) => {
             const on = form.service === opt.value;
             return (
               <button
                 key={opt.value}
                 type="button"
+                aria-pressed={on}
                 onClick={() => {
                   update("service", opt.value);
                   update("needs", []);
                 }}
-                className={`cursor-pointer border px-4 py-3 text-left text-sm ${
-                  on
-                    ? "border-volt bg-volt/10 text-bone"
-                    : "border-gilt/25 text-muted hover:border-gilt/50"
-                }`}
+                className={`min-h-13 px-4 text-left font-semibold ${choice(on)}`}
               >
                 {opt.label}
               </button>
@@ -184,21 +187,22 @@ export function ContactForm() {
 
       {needs.length > 0 ? (
         <fieldset>
-          <legend className="text-xs tracking-[0.14em] text-muted uppercase">
-            Specifics
+          <legend className="text-[0.9375rem] font-semibold">
+            Specifics <span className={hint}>— pick any</span>
           </legend>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-2.5 flex flex-wrap gap-2">
             {needs.map((need) => {
               const on = form.needs.includes(need);
               return (
                 <button
                   key={need}
                   type="button"
+                  aria-pressed={on}
                   onClick={() => toggleNeed(need)}
-                  className={`cursor-pointer px-3 py-2 text-xs tracking-[0.04em] ${
+                  className={`min-h-11 border px-4 text-[0.9375rem] font-medium transition-colors ${
                     on
-                      ? "bg-ember text-bone"
-                      : "border border-gilt/25 text-muted hover:text-bone"
+                      ? "border-signal bg-signal text-ink"
+                      : "cursor-pointer border-field bg-card text-ink hover:border-ink"
                   }`}
                 >
                   {need}
@@ -209,32 +213,32 @@ export function ContactForm() {
         </fieldset>
       ) : null}
 
-      <label className="block text-xs tracking-[0.14em] text-muted uppercase">
-        Brand / project name
+      <label className={label}>
+        Brand or project name
         <input
-          className={`${field} mt-2`}
+          className={field}
           value={form.brand}
           onChange={(e) => update("brand", e.target.value)}
         />
       </label>
 
-      <label className="block text-xs tracking-[0.14em] text-muted uppercase">
+      <label className={label}>
         Brief
         <textarea
           required
           rows={6}
-          className={`${field} mt-2 min-h-32`}
+          className={`${field} min-h-40 resize-y`}
           placeholder="What you need, who it's for, and any constraints."
           value={form.brief}
           onChange={(e) => update("brief", e.target.value)}
         />
       </label>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-xs tracking-[0.14em] text-muted uppercase">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <label className={label}>
           Timeline
           <select
-            className={`${field} mt-2`}
+            className={field}
             value={form.timeline}
             onChange={(e) => update("timeline", e.target.value)}
           >
@@ -246,10 +250,12 @@ export function ContactForm() {
             ))}
           </select>
         </label>
-        <label className="block text-xs tracking-[0.14em] text-muted uppercase">
-          Budget <span className="text-faint">(optional)</span>
+        <label className={label}>
+          <span>
+            Budget <span className={hint}>— optional</span>
+          </span>
           <select
-            className={`${field} mt-2`}
+            className={field}
             value={form.budget}
             onChange={(e) => update("budget", e.target.value)}
           >
@@ -263,30 +269,38 @@ export function ContactForm() {
         </label>
       </div>
 
-      <label className="block text-xs tracking-[0.14em] text-muted uppercase">
-        Links <span className="text-faint">(optional)</span>
+      <label className={label}>
+        <span>
+          Links <span className={hint}>— optional</span>
+        </span>
         <textarea
           rows={3}
-          className={`${field} mt-2`}
-          placeholder="Drive folder, references, existing Google Business page…"
+          className={`${field} resize-y`}
+          placeholder="Drive folder, references, an existing Google Business page…"
           value={form.links}
           onChange={(e) => update("links", e.target.value)}
         />
       </label>
 
       {status === "error" ? (
-        <p className="text-sm text-ember" role="alert">
+        <p className="border-l-0 bg-signal/12 px-4 py-3 font-medium text-ink" role="alert">
           {error}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={status === "sending"}
-        className="clip-shard bg-ember px-6 py-3 text-[0.72rem] font-medium tracking-[0.18em] text-bone uppercase disabled:opacity-60"
-      >
-        {status === "sending" ? "Sending…" : "Send brief"}
-      </button>
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-rule-soft pt-7">
+        <button
+          type="submit"
+          disabled={status === "sending"}
+          className="btn btn-signal min-h-14 px-8 text-lg disabled:cursor-wait disabled:opacity-60"
+        >
+          {status === "sending" ? "Sending…" : "Send brief"}{" "}
+          <span aria-hidden="true">→</span>
+        </button>
+        <span className="text-[0.9375rem] text-slate">
+          I reply to the email you leave here.
+        </span>
+      </div>
     </form>
   );
 }

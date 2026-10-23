@@ -3,26 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { SITE } from "@/lib/site";
-
-const links = [
-  { href: "/work", label: "Work" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+import { Wordmark } from "@/components/Wordmark";
+import { NAV_LINKS, PAPER_ROUTES, SITE } from "@/lib/site";
 
 export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const onHero = pathname === "/";
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const paper =
+    !open && PAPER_ROUTES.some((route) => pathname.startsWith(route));
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -31,98 +19,124 @@ export function Nav() {
     };
   }, [open]);
 
-  const solid = !onHero || scrolled || open;
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-200 ${
-          solid
-            ? "border-b border-gilt/20 bg-bg/90 backdrop-blur-md"
-            : "border-b border-transparent"
+        className={`sticky top-0 z-50 border-b backdrop-blur-md ${
+          paper
+            ? "on-paper border-rule bg-paper/95 text-ink"
+            : "border-line bg-ink/92 text-paper"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-[clamp(1.25rem,4vw,3.5rem)]">
+        <div className="wrap flex h-[4.5rem] items-center justify-between gap-6">
           <Link
             href="/"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 font-display text-sm font-extrabold tracking-[0.18em] uppercase text-bone"
+            className="text-[1.625rem]"
+            aria-label={`${SITE.brand} — home`}
           >
-            <span
-              aria-hidden="true"
-              className="grid h-7 w-7 place-items-center border border-gilt/50"
-              style={{
-                clipPath:
-                  "polygon(0 0, 78% 0, 100% 22%, 100% 100%, 22% 100%, 0 78%)",
-              }}
-            >
-              <span className="h-3 w-3 bg-ember" />
-            </span>
-            {SITE.name}
+            <Wordmark />
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
-            {links.map((link) => {
-              const active = pathname === link.href;
+          <nav
+            className="hidden items-center gap-9 md:flex"
+            aria-label="Primary"
+          >
+            {NAV_LINKS.map((link) => {
+              const active = pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-[0.7rem] font-medium tracking-[0.22em] uppercase transition-colors ${
-                    active ? "text-volt" : "text-muted hover:text-bone"
+                  aria-current={active ? "page" : undefined}
+                  className={`py-2 text-base font-medium underline-offset-[0.5rem] ${
+                    active
+                      ? "underline decoration-signal decoration-2"
+                      : "hover:underline hover:decoration-1"
                   }`}
                 >
                   {link.label}
                 </Link>
               );
             })}
-            <Link
-              href="/contact"
-              className="clip-shard-sm bg-ember px-4 py-2 text-[0.7rem] font-medium tracking-[0.18em] text-bone uppercase transition-colors hover:bg-ember/85"
-            >
-              Start a project
-            </Link>
+            {pathname.startsWith("/contact") ? null : (
+              <Link
+                href="/contact"
+                className={`btn btn-sm ${paper ? "btn-ink" : "btn-signal"}`}
+              >
+                Start a project
+              </Link>
+            )}
           </nav>
 
           <button
             type="button"
-            className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
+            className={`grid h-11 w-11 place-items-center border md:hidden ${
+              paper ? "border-rule" : "border-line"
+            }`}
             aria-expanded={open}
+            aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
           >
-            <span
-              className={`block h-px w-5 bg-bone transition-transform ${open ? "translate-y-[4px] rotate-45" : ""}`}
-            />
-            <span
-              className={`block h-px w-5 bg-bone transition-opacity ${open ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`block h-px w-5 bg-bone transition-transform ${open ? "-translate-y-[8px] -rotate-45" : ""}`}
-            />
+            <svg
+              width="20"
+              height="14"
+              viewBox="0 0 20 14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              aria-hidden="true"
+            >
+              {open ? (
+                <path d="M3 0l14 14M17 0 3 14" />
+              ) : (
+                <path d="M0 1h20M0 7h20M0 13h20" />
+              )}
+            </svg>
           </button>
         </div>
       </header>
 
       {open ? (
-        <div className="fixed inset-0 top-16 z-40 flex flex-col gap-6 bg-bg px-8 py-12 md:hidden">
-          {links.map((link) => (
+        <div
+          id="mobile-menu"
+          className="fixed inset-x-0 top-[4.5rem] bottom-0 z-40 flex flex-col bg-ink md:hidden"
+        >
+          <nav aria-label="Mobile" className="wrap flex flex-col pt-6">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                aria-current={pathname.startsWith(link.href) ? "page" : undefined}
+                className="display border-b border-line py-5 text-5xl"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="wrap mt-10 flex flex-col items-start gap-5">
             <Link
-              key={link.href}
-              href={link.href}
+              href="/contact"
               onClick={() => setOpen(false)}
-              className="font-display text-4xl font-extrabold tracking-tight text-bone"
+              className="btn btn-signal"
             >
-              {link.label}
+              Start a project <span aria-hidden="true">→</span>
             </Link>
-          ))}
-          <Link
-            href="/contact"
-            onClick={() => setOpen(false)}
-            className="mt-4 inline-flex w-fit clip-shard bg-ember px-5 py-3 text-sm tracking-[0.16em] text-bone uppercase"
-          >
-            Start a project
-          </Link>
+            <a href={`mailto:${SITE.email}`} className="link font-mono text-sm font-normal text-stone">
+              {SITE.email}
+            </a>
+          </div>
         </div>
       ) : null}
     </>

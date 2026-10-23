@@ -4,29 +4,42 @@ import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Start a project with ${SITE.name}. Design, video, and marketing.`,
+  description: `Start a project with ${SITE.name} at ${SITE.brand}. Design, video, and marketing.`,
 };
+
+const steps = [
+  "Send the brief.",
+  "I reply to your email with a scope — or a no, if I'm not the right person.",
+  "We agree it, and I start.",
+];
 
 export default function ContactPage() {
   return (
-    <div className="section-pad pt-28">
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <p className="label-kicker">Contact</p>
-          <h1 className="mt-4 font-display text-5xl font-extrabold tracking-tight sm:text-6xl">
-            Brief me.
-          </h1>
-          <p className="mt-5 max-w-md text-muted">
+    <div className="on-paper bg-paper pt-16 pb-28 text-ink sm:pt-24">
+      <div className="wrap grid items-start gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+        <div className="lg:sticky lg:top-28">
+          <p className="kicker text-slate">Contact</p>
+          <h1 className="display display-xl mt-4">Brief me.</h1>
+          <p className="mt-7 max-w-[34ch] text-xl leading-relaxed text-body">
             What you need, when you need it, and enough context to quote.
-            I&apos;ll reply to the email you leave here.
           </p>
-          <p className="mt-8 text-sm text-muted">
+          <ol className="mt-10 border-t border-rule">
+            {steps.map((step, i) => (
+              <li
+                key={step}
+                className="flex gap-5 border-b border-rule py-4.5 leading-normal"
+              >
+                <span className="pt-0.5 font-mono text-sm text-signal-ink">
+                  0{i + 1}
+                </span>
+                {step}
+              </li>
+            ))}
+          </ol>
+          <p className="mt-8 leading-relaxed text-slate">
             Prefer a straight email?
             <br />
-            <a
-              href={`mailto:${SITE.email}`}
-              className="text-bone underline decoration-gilt/50 underline-offset-4 hover:text-volt"
-            >
+            <a href={`mailto:${SITE.email}`} className="link text-ink">
               {SITE.email}
             </a>
           </p>

@@ -46,32 +46,36 @@ export function ProjectCaseStudy({
           className="h-auto w-full shrink-0"
         />
       ) : null}
-      <div className="p-6">
-        <p className="text-[0.65rem] tracking-[0.18em] text-muted uppercase">
-          {project.categories.join(" · ")}
+      <div className="p-7 sm:p-10">
+        <p className="kicker text-stone">
+          {project.client} ·{" "}
+          {project.categories
+            .map((c) => c[0].toUpperCase() + c.slice(1))
+            .join(" + ")}
         </p>
-        <p className="label-kicker mt-3">{project.client}</p>
-        <h3 id={titleId} className="mt-2 font-display text-2xl font-extrabold">
-          {project.title}
-        </h3>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
-          {project.description}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="border border-gilt/25 px-2 py-1 text-[0.65rem] tracking-[0.14em] text-muted uppercase"
-            >
-              {tag}
-            </span>
-          ))}
+        <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
+          <h2 id={titleId} className="text-3xl font-bold tracking-tight sm:text-4xl">
+            {project.title}
+          </h2>
           {project.result ? (
-            <span className="border border-volt/40 px-2 py-1 text-[0.65rem] tracking-[0.14em] text-volt uppercase">
+            <p className="display text-4xl leading-none text-signal">
               {project.result}
-            </span>
+            </p>
           ) : null}
         </div>
+        <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-soft">
+          {project.description}
+        </p>
+        <ul className="mt-6 flex flex-wrap gap-2" aria-label="Disciplines">
+          {project.tags.map((tag) => (
+            <li
+              key={tag}
+              className="border border-line px-3 py-1.5 text-[0.9375rem] text-stone"
+            >
+              {tag}
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );
