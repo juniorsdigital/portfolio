@@ -1,25 +1,31 @@
 import type { Metadata } from "next";
+import { SectionHeader } from "@/components/SectionHeader";
 import { WorkGrid } from "@/components/WorkGrid";
+import { PROJECTS } from "@/lib/projects";
 
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Selected graphic design, video editing, and marketing by John Swanson.",
+    "Selected graphic design, video editing, and marketing by John Swanson at juniors.digital.",
 };
 
 export default function WorkPage() {
   return (
-    <div className="section-pad pt-28">
-      <div className="mx-auto max-w-6xl">
-        <p className="label-kicker">Archive</p>
-        <h1 className="mt-4 font-display text-5xl font-extrabold tracking-tight sm:text-6xl">
-          Work
-        </h1>
-        <p className="mt-4 max-w-lg text-muted">
-          Design, cuts, and campaigns. Click a piece to open it.
-        </p>
-        <div className="mt-12">
-          <WorkGrid showFilters />
+    <div className="pt-16 pb-28 sm:pt-24">
+      <div className="wrap">
+        <SectionHeader
+          as="h1"
+          kicker={`Work / ${PROJECTS.length} projects`}
+          title="The work."
+          aside={
+            <p className="text-xl leading-relaxed text-soft">
+              Covers, cuts and campaigns. Each one lists what was made, for
+              whom, and what it did. Pick one to open it.
+            </p>
+          }
+        />
+        <div className="mt-14">
+          <WorkGrid showFilters detailed />
         </div>
       </div>
     </div>

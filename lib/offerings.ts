@@ -1,7 +1,9 @@
 export const OFFERINGS = [
   {
     num: "01",
-    title: "Graphic Design",
+    title: "Graphic design",
+    summary:
+      "Covers, posters and ads built to sell the thing — on the shelf or in the feed.",
     items: [
       "Product covers",
       "Digital art",
@@ -11,12 +13,16 @@ export const OFFERINGS = [
   },
   {
     num: "02",
-    title: "Video Editing",
+    title: "Video editing",
+    summary:
+      "Social cuts and video ads, recut from long-form and sized for every channel.",
     items: ["Social media edits", "Video advertising"],
   },
   {
     num: "03",
     title: "Marketing",
+    summary:
+      "Google Business pages and social accounts, set up and run without a twelve-person team.",
     items: [
       "Google Business page management",
       "Google Business page creation",
@@ -26,10 +32,10 @@ export const OFFERINGS = [
 ] as const;
 
 export const SERVICE_OPTIONS = [
-  { value: "graphic-design", label: "Graphic Design" },
-  { value: "video-editing", label: "Video Editing" },
+  { value: "graphic-design", label: "Graphic design" },
+  { value: "video-editing", label: "Video editing" },
   { value: "marketing", label: "Marketing" },
-  { value: "multiple", label: "Multiple" },
+  { value: "multiple", label: "More than one" },
 ] as const;
 
 export type ServiceValue = (typeof SERVICE_OPTIONS)[number]["value"];

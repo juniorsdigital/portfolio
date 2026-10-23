@@ -12,6 +12,8 @@ export type Project = {
   description: string;
   tags: string[];
   result?: string;
+  /** Shown full-width at the top of the grid. */
+  featured?: boolean;
   thumbnail: { src: string; alt: string; width: number; height: number };
   media: WorkMedia[];
 };
@@ -19,9 +21,10 @@ export type Project = {
 export const PROJECTS: Project[] = [
   {
     id: "ryzagrow",
+    featured: true,
     categories: ["design", "marketing"],
     client: "Ryza, LLC.",
-    title: "RyzaGrow — DTC Campaign",
+    title: "RyzaGrow — DTC campaign",
     description:
       "Campaign management, content, and social direction for a direct-to-consumer mushroom grow kit. Owned media across product and web.",
     tags: ["Graphic Design", "Social", "Campaign"],
@@ -44,7 +47,7 @@ export const PROJECTS: Project[] = [
     id: "ovani",
     categories: ["design"],
     client: "OvaniSound",
-    title: "60+ E-Commerce Product Covers",
+    title: "60+ e-commerce product covers",
     description:
       "2D and 3D product cover designs for a sound-design catalog. Thirty distinct covers in one week.",
     tags: ["Product Covers", "3D"],
@@ -67,7 +70,7 @@ export const PROJECTS: Project[] = [
     id: "bgcb",
     categories: ["design"],
     client: "Boys & Girls Club of Boston",
-    title: "Teen Registration Campaign",
+    title: "Teen registration campaign",
     description:
       "OOH, print, and digital assets for a teen registration push. One campaign, coordinated across formats.",
     tags: ["Campaign", "OOH"],
@@ -88,8 +91,8 @@ export const PROJECTS: Project[] = [
   {
     id: "she-who-flies",
     categories: ["video"],
-    client: "Red Bull (Mock)",
-    title: "She Who Flies — Documentary",
+    client: "Red Bull (concept)",
+    title: "She Who Flies — documentary trailer",
     description:
       "Re-edited documentary trailer with custom title treatment. Cinematic cut, no paid promotion.",
     tags: ["Video Edit", "Trailer"],
@@ -112,8 +115,8 @@ export const PROJECTS: Project[] = [
   {
     id: "winter-heroes",
     categories: ["video"],
-    client: "Red Bull (Mock)",
-    title: "Winter Heroes — Multi-Format Video",
+    client: "Red Bull (concept)",
+    title: "Winter Heroes — multi-format video",
     description:
       "Long-form documentary recut for short-form social. One source, several channels.",
     tags: ["Video Edit", "Social Cuts"],
