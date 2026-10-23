@@ -95,13 +95,13 @@ export const PROJECTS: Project[] = [
   {
     id: "she-who-flies",
     categories: ["video"],
-    client: "Concept project — not affiliated with Red Bull",
+    client: "Personal project (cycling.clips) — not affiliated with Red Bull",
     title: "She Who Flies — Documentary",
     description:
       "Re-edited documentary trailer with custom title treatment. Cinematic cut, no paid promotion.",
     tags: ["Video Edit", "Trailer"],
     result: "7.7K views",
-    resultNote: "on cycling.clips, my unpaid personal channel on Instagram, YouTube, and TikTok",
+    resultNote: "for this clip, posted on cycling.clips (my unpaid personal channel) across Instagram, YouTube, and TikTok",
     thumbnail: {
       src: "/images/work-she-who-flies.png",
       alt: "She Who Flies documentary trailer title treatment over mountain imagery",
