@@ -85,7 +85,7 @@ export function ProjectCaseStudy({
         </div>
         {project.result && !isPlaceholder(project.resultNote) ? (
           <p className="mt-2 text-xs text-muted">
-            {project.result}: {project.resultNote}
+            {project.result} — {project.resultNote}
           </p>
         ) : null}
         {showPageLink ? (

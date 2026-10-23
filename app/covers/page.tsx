@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { CoverGrid } from "@/components/CoverGrid";
 import {
-  BOOK_DIRECT_PERK,
-  COMMERCIAL_USE_NOTE,
   COVERS_CTA_HREF,
   DELIVERABLES,
   FAQ,
   NO_AI_LINE,
-  PACKAGES,
+  PAYMENT_TERMS,
+  PRICE_PER_COVER,
+  RIGHTS_NOTE,
   SHOW_NO_AI_LINE,
   STEPS,
+  TURNAROUND,
+  TURNAROUND_SCALING,
 } from "@/lib/covers";
 import { CLIENT_NAME, COVERS_FEATURED_FIRST } from "@/lib/hero-covers";
 import { jsonLd, pageMeta } from "@/lib/seo";
@@ -32,13 +34,17 @@ const structuredData = {
   image: `${SITE_URL}/og/covers.jpg`,
   provider: { "@type": "Person", name: SITE.name, url: SITE_URL },
   serviceType: "Product cover design",
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Pack cover services",
-    itemListElement: PACKAGES.map((p) => ({
-      "@type": "Offer",
-      itemOffered: { "@type": "Service", name: p.name, description: p.summary },
-    })),
+  offers: {
+    "@type": "Offer",
+    name: "Pack cover with 3D render",
+    price: PRICE_PER_COVER,
+    priceCurrency: "USD",
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      price: PRICE_PER_COVER,
+      priceCurrency: "USD",
+      unitText: "cover",
+    },
   },
 };
 
@@ -81,6 +87,9 @@ export default function CoversPage() {
             Covers, side panels, and 3D pack renders, designed to sell on a
             store page. 60+ shipped for {CLIENT_NAME}, 30 in a single week.
           </p>
+          <p className="mt-4 font-mono text-[0.72rem] tracking-[0.18em] text-bone uppercase">
+            ${PRICE_PER_COVER} a cover · {TURNAROUND} · 3D render included
+          </p>
           {SHOW_NO_AI_LINE ? (
             <p className="mt-4 text-sm text-bone">{NO_AI_LINE}</p>
           ) : null}
@@ -113,46 +122,47 @@ export default function CoversPage() {
         </div>
       </section>
 
-      {/* 3–4 · Packages + book-direct perk */}
+      {/* 3 · Pricing */}
       <section id="packages" className="section-pad scroll-mt-20 border-t border-gilt/20">
         <div className="mx-auto max-w-6xl">
-          <SectionHead kicker="Packages">
-            Pick a size.{" "}
-            <em className="font-serif font-normal text-gilt">Add depth.</em>
+          <SectionHead kicker="Pricing">
+            One price.{" "}
+            <em className="font-serif font-normal text-gilt">Per cover.</em>
           </SectionHead>
-          <div className="mt-12 grid gap-4 lg:grid-cols-3">
-            {PACKAGES.map((pkg) => (
-              <article
-                key={pkg.name}
-                className="clip-shard hairline flex flex-col bg-bg-elev p-7"
-              >
-                <p className="font-mono text-[0.65rem] tracking-[0.22em] text-ember uppercase">
-                  {pkg.addOn ? "Add-on" : "Package"}
-                </p>
-                <h3 className="mt-5 font-display text-2xl font-extrabold tracking-tight">
-                  {pkg.name}
-                </h3>
-                <p className="mt-2 text-sm text-muted">{pkg.summary}</p>
-                <p className="mt-6 font-display text-3xl font-extrabold text-bone">
-                  <span className="mr-1 align-middle font-mono text-[0.65rem] font-normal tracking-[0.18em] text-muted uppercase">
-                    from
-                  </span>
-                  ${pkg.price}
-                </p>
-                <ul className="mt-6 space-y-2 text-sm text-muted">
-                  {pkg.includes.map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 bg-volt" aria-hidden />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
+          <div className="mt-12 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+            <article className="clip-shard hairline flex flex-col bg-bg-elev p-7 sm:p-9">
+              <p className="font-mono text-[0.65rem] tracking-[0.22em] text-ember uppercase">
+                Pack cover
+              </p>
+              <p className="mt-5 font-display text-6xl font-extrabold tracking-tight text-bone">
+                ${PRICE_PER_COVER}
+                <span className="ml-2 align-middle font-mono text-[0.7rem] font-normal tracking-[0.18em] text-muted uppercase">
+                  per cover
+                </span>
+              </p>
+              <ul className="mt-8 space-y-3 text-base text-muted">
+                {DELIVERABLES.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="mt-2.5 h-1 w-1 shrink-0 bg-volt" aria-hidden />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <CtaButton className="mt-10 w-fit" />
+            </article>
+            <article className="clip-shard hairline flex flex-col bg-bg-elev p-7 sm:p-9">
+              <p className="font-mono text-[0.65rem] tracking-[0.22em] text-ember uppercase">
+                Series &amp; bulk orders
+              </p>
+              <h3 className="mt-5 font-display text-2xl font-extrabold tracking-tight">
+                Ordering a run of volumes?
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                One cover takes {TURNAROUND}. {TURNAROUND_SCALING}
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{PAYMENT_TERMS}</p>
+            </article>
           </div>
-          <p className="mt-8 text-sm text-bone">
-            Booking here directly includes {BOOK_DIRECT_PERK}.
-          </p>
         </div>
       </section>
 
@@ -179,25 +189,17 @@ export default function CoversPage() {
         </div>
       </section>
 
-      {/* 6 · What you get */}
+      {/* 6 · Rights */}
       <section className="section-pad border-t border-gilt/20">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
           <div>
-            <SectionHead kicker="What you get">
-              Files that{" "}
-              <em className="font-serif font-normal text-gilt">upload clean.</em>
+            <SectionHead kicker="Rights">
+              It&apos;s{" "}
+              <em className="font-serif font-normal text-gilt">yours.</em>
             </SectionHead>
           </div>
-          <div>
-            <ul className="space-y-3 text-base text-muted">
-              {DELIVERABLES.map((item) => (
-                <li key={item} className="flex gap-3">
-                  <span className="mt-2.5 h-1 w-1 shrink-0 bg-volt" aria-hidden />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 text-sm text-bone">{COMMERCIAL_USE_NOTE}</p>
+          <div className="space-y-4 text-base leading-relaxed text-muted">
+            <p>{RIGHTS_NOTE}</p>
           </div>
         </div>
       </section>
@@ -235,7 +237,7 @@ export default function CoversPage() {
           </h2>
           <p className="mt-5 max-w-lg text-muted">
             Tell me the pack, the genre, and the feeling. I&apos;ll reply with a
-            scope and a price.
+            scope and a timeline.
           </p>
           <CtaButton className="mt-8" />
         </div>

@@ -12,10 +12,7 @@ export type Project = {
   description: string;
   tags: string[];
   result?: string;
-  /**
-   * 🔒 OWNER INPUT (P2-1): short qualifier shown with the result, e.g. "in 6 months vs. the prior year".
-   * Hidden while it's a [PLACEHOLDER].
-   */
+  /** Short qualifier shown under the result, e.g. "in 6 months vs. the prior year". Hidden if empty. */
   resultNote?: string;
   /** Short description for the project's own page and share card. */
   seoDescription?: string;
@@ -30,10 +27,10 @@ export const PROJECTS: Project[] = [
     client: "Ryza, LLC.",
     title: "RyzaGrow — DTC Campaign",
     description:
-      "Campaign management, content, and social direction for a direct-to-consumer mushroom grow kit. Owned media across product and web.",
+      "Campaign management, content, email marketing, and social direction for a direct-to-consumer mushroom grow kit. Owned media across product and web.",
     tags: ["Graphic Design", "Social", "Campaign"],
-    result: "2× sales",
-    resultNote: "[METRIC_CONTEXT]",
+    result: "~2× sales",
+    resultNote: "estimated lift from improved email marketing and organic traffic",
     thumbnail: {
       src: "/images/work-ryzagrow.png",
       alt: "RyzaGrow campaign — split product panels for manure and wood-loving mushroom pods",
@@ -51,18 +48,17 @@ export const PROJECTS: Project[] = [
   {
     id: "ovani",
     categories: ["design"],
-    // 🔒 OWNER INPUT (P0-3): confirm "Ovani Sound" (two words) is the brand styling.
-    client: "Ovani Sound",
+    client: "OvaniSound",
     title: "60+ E-Commerce Product Covers",
     description:
       "2D and 3D product cover designs for a sound-design catalog. Thirty distinct covers in one week.",
     tags: ["Product Covers", "3D"],
     result: "30 in 1 week",
     seoDescription:
-      "60+ e-commerce pack covers for Ovani Sound — 2D covers, side panels, and 3D pack renders. Thirty in one week.",
+      "60+ e-commerce pack covers for OvaniSound — 2D covers, side panels, and 3D pack renders. Thirty in one week.",
     thumbnail: {
       src: "/images/work-ovani.png",
-      alt: "Ovani Sound e-commerce product covers — 2D stickers and 3D pack renders",
+      alt: "OvaniSound e-commerce product covers — 2D stickers and 3D pack renders",
       width: 600,
       height: 375,
     },
@@ -70,7 +66,7 @@ export const PROJECTS: Project[] = [
       {
         type: "image",
         src: "/images/work-ovani.png",
-        alt: "Ovani Sound e-commerce product covers — 2D stickers and 3D pack renders",
+        alt: "OvaniSound e-commerce product covers — 2D stickers and 3D pack renders",
       },
     ],
   },
@@ -105,7 +101,7 @@ export const PROJECTS: Project[] = [
       "Re-edited documentary trailer with custom title treatment. Cinematic cut, no paid promotion.",
     tags: ["Video Edit", "Trailer"],
     result: "7.7K views",
-    resultNote: "[PLATFORM]",
+    resultNote: "on cycling.clips, my unpaid personal channel on Instagram, YouTube, and TikTok",
     thumbnail: {
       src: "/images/work-she-who-flies.png",
       alt: "She Who Flies documentary trailer title treatment over mountain imagery",

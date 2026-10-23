@@ -1,5 +1,5 @@
 export const OVANI_STORE_URL = "https://ovanisound.com";
-export const CLIENT_NAME = "Ovani Sound";
+export const CLIENT_NAME = "OvaniSound";
 
 export type HeroCover = {
   id: string;
@@ -94,8 +94,7 @@ export const COVERS: HeroCover[] = [
   cover(7, {
     title: "Heavy Electronic Vol. 5",
     theme: "concert photography artwork",
-    // 🔒 OWNER INPUT (P0-3): confirm spelling of "Puppet Music" and "Casiel Checoni".
-    process: `Heavy Electronic historically (in the realm of ${CLIENT_NAME}) has been mainly concert photos. This made the cover somewhat easy to pick out, but the side-panel took much longer to figure out. A lot of reference for this side-panel was taken from Puppet Music and the Casiel Checoni art style.`,
+    process: `Heavy Electronic historically (in the realm of ${CLIENT_NAME}) has been mainly concert photos. This made the cover somewhat easy to pick out, but the side-panel took much longer to figure out. A lot of reference for this side-panel was taken from the music of the artist Puppet and the art style of Casiel Checoni.`,
   }),
   cover(8, {
     title: "Hip Hop Vol. 4",

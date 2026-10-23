@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { jsonLd, pageMeta } from "@/lib/seo";
-import { DESCRIPTIONS, PLACE_LABEL, SITE, SITE_URL } from "@/lib/site";
+import { DESCRIPTIONS, SITE, SITE_URL } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "About",
@@ -9,15 +9,15 @@ export const metadata = pageMeta({
   path: "/about",
 });
 
-/** 🔒 OWNER INPUT (P2-4): add "InDesign" or other apps John confirms. */
 const tools = [
   "Photoshop",
   "Illustrator",
+  "InDesign",
   "Premiere Pro",
   "After Effects",
   "DaVinci Resolve",
   "Blender",
-  "Figma",
+  "Monday.com",
 ];
 
 const person = {
@@ -41,14 +41,14 @@ export default function AboutPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(person)} />
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
         <div>
-          <p className="label-kicker">{PLACE_LABEL}</p>
+          <p className="label-kicker">{SITE.location}</p>
           <h1 className="mt-4 font-display text-5xl font-extrabold tracking-tight sm:text-6xl">
             About
           </h1>
           <div className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-muted">
             <p>
               I&apos;m {SITE.name} — a freelance designer, editor, and marketer
-              {SITE.showLocation ? ` working out of ${SITE.location}` : " working remotely"}. Graphic design, video, and the
+              {` based in ${SITE.location}`}. Graphic design, video, and the
               marketing that has to live after the files leave my machine.
             </p>
             <p>
@@ -91,11 +91,7 @@ export default function AboutPage() {
         <div className="clip-shard hairline overflow-hidden">
           <Image
             src="/images/about-portrait.png"
-            alt={
-              SITE.showLocation
-                ? `${SITE.name}, freelance designer in ${SITE.location}`
-                : `Portrait of ${SITE.name}`
-            }
+            alt={`${SITE.name}, freelance designer in ${SITE.location}`}
             sizes="(max-width: 1024px) 100vw, 480px"
             className="h-full w-full object-cover"
             width={800}

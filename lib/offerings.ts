@@ -43,8 +43,8 @@ export const SERVICE_NEEDS: Record<ServiceValue, string[]> = {
   covers: [
     "Store cover",
     "Side panel",
-    "3D pack render",
-    "Animated cover",
+    "Series of volumes",
+    "Other assets",
   ],
   "graphic-design": [
     "Product covers",

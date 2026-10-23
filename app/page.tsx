@@ -45,11 +45,8 @@ export default function HomePage() {
           <div>
             <p className="label-kicker">About</p>
             <h2 className="mt-4 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
-              {/* 🔒 OWNER INPUT (P2-3): proposed non-location heading is "Made to ship." */}
-              Made {SITE.showLocation ? "in" : "to"}{" "}
-              <em className="font-serif font-normal text-gilt">
-                {SITE.showLocation ? `${SITE.location}.` : "ship."}
-              </em>
+              Made to{" "}
+              <em className="font-serif font-normal text-gilt">ship.</em>
             </h2>
             <p className="mt-6 max-w-md text-base leading-relaxed text-muted">
               I design, edit, and run the marketing that has to ship. Tight
@@ -65,11 +62,7 @@ export default function HomePage() {
           <div className="clip-shard hairline overflow-hidden">
             <Image
               src="/images/about-portrait.png"
-              alt={
-                SITE.showLocation
-                  ? `${SITE.name} in ${SITE.location}`
-                  : `Portrait of ${SITE.name}`
-              }
+              alt={`Portrait of ${SITE.name}`}
               sizes="(max-width: 1024px) 100vw, 560px"
               className="h-full w-full object-cover"
               width={800}

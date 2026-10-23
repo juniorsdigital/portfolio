@@ -13,9 +13,9 @@ npm run dev
 
 | What | File |
 |---|---|
-| Site URL, email, location toggle, reply-time promise | `lib/site.ts` |
+| Site URL, email, location, reply-time promise | `lib/site.ts` |
 | Cover art copy, alt text, homepage order | `lib/hero-covers.ts` |
-| `/covers` prices, perk, turnaround, deliverables, FAQ | `lib/covers.ts` |
+| `/covers` price, revisions, turnaround, payment, rights, FAQ | `lib/covers.ts` |
 | Work projects and metrics | `lib/projects.ts` |
 | Contact form options and budget tiers | `lib/offerings.ts` |
 
