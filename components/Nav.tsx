@@ -7,6 +7,7 @@ import { SITE } from "@/lib/site";
 
 const links = [
   { href: "/work", label: "Work" },
+  { href: "/covers", label: "Covers" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -63,11 +64,12 @@ export function Nav() {
 
           <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
             {links.map((link) => {
-              const active = pathname === link.href;
+              const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
+                  aria-current={active ? "page" : undefined}
                   className={`text-[0.7rem] font-medium tracking-[0.22em] uppercase transition-colors ${
                     active ? "text-volt" : "text-muted hover:text-bone"
                   }`}

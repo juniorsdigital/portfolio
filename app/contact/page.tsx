@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ContactForm } from "@/components/ContactForm";
-import { SITE } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
+import { DESCRIPTIONS, SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Contact",
-  description: `Start a project with ${SITE.name}. Design, video, and marketing.`,
-};
+  description: DESCRIPTIONS.contact,
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -31,7 +33,10 @@ export default function ContactPage() {
             </a>
           </p>
         </div>
-        <ContactForm />
+        {/* The form reads ?service= and ?ref= from the URL, so it renders client-side inside Suspense. */}
+        <Suspense fallback={<div className="min-h-[40rem]" aria-hidden="true" />}>
+          <ContactForm />
+        </Suspense>
       </div>
     </div>
   );

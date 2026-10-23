@@ -333,16 +333,32 @@ body {
   color: var(--volt);
 }
 
-.hero-book-link.is-store {
+.hero-book-link.is-primary {
   background: var(--ember);
   border-color: transparent;
   color: var(--bone);
 }
 
-.hero-book-link.is-store:hover {
+.hero-book-link.is-primary:hover {
   background: color-mix(in oklab, var(--ember) 85%, black);
   border-color: transparent;
   color: var(--bone);
+}
+
+.hero-book-credit {
+  align-self: center;
+  padding: 0.35rem 0.15rem;
+  color: var(--muted);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--gilt) 45%, transparent);
+  text-underline-offset: 3px;
+}
+
+.hero-book-credit:hover {
+  color: var(--volt);
 }
 
 .hero-book-cover {

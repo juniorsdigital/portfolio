@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
 import { WorkGrid } from "@/components/WorkGrid";
+import { pageMeta } from "@/lib/seo";
+import { DESCRIPTIONS } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Work",
-  description:
-    "Selected graphic design, video editing, and marketing by John Swanson.",
-};
+  description: DESCRIPTIONS.work,
+  path: "/work",
+  image: "work",
+});
 
 export default function WorkPage() {
   return (

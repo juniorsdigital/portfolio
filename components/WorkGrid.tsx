@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { ProjectCaseStudy } from "@/components/ProjectCaseStudy";
 import {
   PROJECTS,
@@ -22,10 +22,35 @@ function ProjectModal({
   onClose: () => void;
 }) {
   const titleId = useId();
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Focus the close button on open; return focus to the card that opened it.
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    return () => opener?.focus?.();
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      if (e.key !== "Tab" || !panelRef.current) return;
+      const items = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -44,18 +69,20 @@ function ProjectModal({
       onClick={onClose}
     >
       <div
+        ref={panelRef}
         className="clip-shard hairline relative max-h-[90dvh] w-full max-w-3xl overflow-auto bg-bg-elev"
         onClick={(e) => e.stopPropagation()}
       >
         <button
+          ref={closeRef}
           type="button"
           onClick={onClose}
           className="absolute top-3 right-3 z-10 grid h-9 w-9 place-items-center bg-bg/70 text-lg leading-none text-bone backdrop-blur-sm hover:text-volt"
-          aria-label="Close"
+          aria-label={`Close ${project.title}`}
         >
-          ×
+          <span aria-hidden="true">×</span>
         </button>
-        <ProjectCaseStudy project={project} titleId={titleId} />
+        <ProjectCaseStudy project={project} titleId={titleId} showPageLink />
       </div>
     </div>
   );
@@ -137,6 +164,11 @@ export function WorkGrid({
                     alt={project.thumbnail.alt}
                     width={project.thumbnail.width}
                     height={project.thumbnail.height}
+                    sizes={
+                      featured
+                        ? "(max-width: 640px) 100vw, 1100px"
+                        : "(max-width: 640px) 100vw, 540px"
+                    }
                     className="pointer-events-none h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                   {video ? (

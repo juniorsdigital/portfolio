@@ -5,7 +5,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
-import { SITE } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
+import { DESCRIPTIONS, SITE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const syne = Syne({
@@ -27,13 +28,20 @@ const ibm = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
+const defaults = pageMeta({
+  title: `${SITE.name} — Design, Video, Marketing`,
+  absoluteTitle: true,
+  description: DESCRIPTIONS.home,
+  path: "/",
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
+  ...defaults,
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${SITE.name} — Design, Video, Marketing`,
     template: `%s — ${SITE.name}`,
   },
-  description: SITE.description,
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },

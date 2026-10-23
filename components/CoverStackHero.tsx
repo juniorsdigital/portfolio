@@ -10,7 +10,11 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { HERO_COVERS, type HeroCover } from "@/lib/hero-covers";
+import { CLIENT_NAME, HERO_COVERS, type HeroCover } from "@/lib/hero-covers";
+import { PLACE_LABEL } from "@/lib/site";
+
+/** Matches Tailwind `md`, so the instruction text and the tap behavior switch at the same width. */
+const TWO_STEP_MAX = 768;
 
 export function CoverStackHero() {
   const stackRef = useRef<HTMLDivElement>(null);
@@ -70,7 +74,7 @@ export function CoverStackHero() {
       return;
     }
     const twoStep =
-      pointerTypeRef.current === "touch" || window.innerWidth < 720;
+      pointerTypeRef.current === "touch" || window.innerWidth < TWO_STEP_MAX;
     if (twoStep && pulledRef.current !== cover.id) {
       setOpen(null);
       setPulled(cover.id);
@@ -109,7 +113,7 @@ export function CoverStackHero() {
         <div className="hero-footage-veil" />
       </div>
       <div className="hero-copy pointer-events-none relative z-10 flex h-full w-full flex-col justify-center px-[clamp(1.25rem,4vw,3.5rem)] pt-28 pb-16">
-        <p className="label-kicker mb-5">Philadelphia</p>
+        <p className="label-kicker mb-5">{PLACE_LABEL}</p>
         <h1 className="font-display text-[clamp(2.4rem,6vw,5.2rem)] font-extrabold leading-[0.86] tracking-[-0.04em] text-bone">
           JOHN
           <br />
@@ -133,6 +137,16 @@ export function CoverStackHero() {
             Start a project
           </Link>
         </div>
+        <p className="pointer-events-auto mt-5 text-sm text-bone/80">
+          Need covers for your packs?{" "}
+          <Link
+            href="/covers"
+            className="text-volt underline decoration-volt/40 underline-offset-4 hover:text-bone"
+          >
+            See cover packages →
+          </Link>
+        </p>
+        {/* Only one of these is displayed per breakpoint; display:none also removes the other from the accessibility tree. */}
         <p className="mt-8 text-[0.65rem] tracking-[0.2em] text-muted uppercase md:hidden">
           Tap a cover to pull it — tap again to open
         </p>
@@ -160,7 +174,7 @@ export function CoverStackHero() {
               index={index}
               pulled={pulledId === cover.id}
               open={openId === cover.id}
-              priority={index === 0 || index >= HERO_COVERS.length - 3}
+              priority={index === HERO_COVERS.length - 1}
               reduced={reduced}
               onClick={onCoverClick}
               onClose={closeBook}
@@ -173,6 +187,8 @@ export function CoverStackHero() {
     </section>
   );
 }
+
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function StackCover({
   cover,
@@ -198,6 +214,44 @@ function StackCover({
   anotherOpen: boolean;
 }) {
   const pageId = useId();
+  const titleId = useId();
+  const coverRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
+
+  // Move focus into the page when it opens; hand it back to the cover when it closes.
+  useEffect(() => {
+    if (open && !wasOpen.current) {
+      closeRef.current?.focus({ preventScroll: true });
+    } else if (!open && wasOpen.current) {
+      const active = document.activeElement;
+      const focusWasInside =
+        !active || active === document.body || pageRef.current?.contains(active);
+      if (focusWasInside) coverRef.current?.focus({ preventScroll: true });
+    }
+    wasOpen.current = open;
+  }, [open]);
+
+  // Keep Tab inside the open page.
+  const trapTab = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab" || !pageRef.current) return;
+    const items = Array.from(
+      pageRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
+    );
+    if (items.length === 0) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
+
+  const process = cover.process.trim();
 
   return (
     <article
@@ -211,37 +265,49 @@ function StackCover({
     >
       <div className="hero-book-stage">
         <div
+          ref={pageRef}
           className="hero-book-page"
           id={pageId}
+          role="dialog"
+          aria-labelledby={titleId}
           aria-hidden={!open}
           inert={!open}
+          onKeyDown={trapTab}
         >
           <button
+            ref={closeRef}
             type="button"
             className="hero-book-close"
             onClick={onClose}
             aria-label={`Close ${cover.title}`}
           >
-            ×
+            <span aria-hidden="true">×</span>
           </button>
           <p className="label-kicker">Pack</p>
-          <h3 className="hero-book-title font-display">{cover.title}</h3>
-          <p className="hero-book-process">{cover.process}</p>
+          <h3 id={titleId} className="hero-book-title font-display">
+            {cover.title}
+          </h3>
+          {process ? <p className="hero-book-process">{process}</p> : <div className="flex-1" />}
           <div className="hero-book-links">
-            <Link href={cover.contactHref} className="hero-book-link">
-              Contact
+            <Link
+              href={`/contact?service=covers&ref=${cover.slug}`}
+              className="hero-book-link is-primary"
+            >
+              Get a cover like this
             </Link>
             <a
               href={cover.storeHref}
-              className="hero-book-link is-store"
+              className="hero-book-credit"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
             >
-              Ovani store
+              Made for {CLIENT_NAME} ↗
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
         </div>
         <div
+          ref={coverRef}
           className="hero-book-cover"
           role="button"
           tabIndex={0}
@@ -255,7 +321,7 @@ function StackCover({
             onClick(cover);
           }}
           onPointerEnter={(e) => {
-            if (e.pointerType === "touch" || window.innerWidth < 720) return;
+            if (e.pointerType === "touch" || window.innerWidth < TWO_STEP_MAX) return;
             if (anotherOpen) return;
             onPull(cover.id);
           }}
@@ -267,7 +333,7 @@ function StackCover({
           <span className="hero-book-cover-front">
             <Image
               src={cover.src}
-              alt=""
+              alt={cover.alt}
               fill
               priority={priority}
               sizes="(max-width: 768px) 42vw, 280px"
@@ -277,7 +343,7 @@ function StackCover({
           <span className="hero-book-cover-inside" aria-hidden="true">
             <Image
               src={cover.insideSrc}
-              alt=""
+              alt={cover.insideAlt}
               fill
               sizes="(max-width: 768px) 42vw, 280px"
               className="hero-inside-art"

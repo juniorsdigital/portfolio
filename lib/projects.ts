@@ -12,6 +12,13 @@ export type Project = {
   description: string;
   tags: string[];
   result?: string;
+  /**
+   * 🔒 OWNER INPUT (P2-1): short qualifier shown with the result, e.g. "in 6 months vs. the prior year".
+   * Hidden while it's a [PLACEHOLDER].
+   */
+  resultNote?: string;
+  /** Short description for the project's own page and share card. */
+  seoDescription?: string;
   thumbnail: { src: string; alt: string; width: number; height: number };
   media: WorkMedia[];
 };
@@ -26,6 +33,7 @@ export const PROJECTS: Project[] = [
       "Campaign management, content, and social direction for a direct-to-consumer mushroom grow kit. Owned media across product and web.",
     tags: ["Graphic Design", "Social", "Campaign"],
     result: "2× sales",
+    resultNote: "[METRIC_CONTEXT]",
     thumbnail: {
       src: "/images/work-ryzagrow.png",
       alt: "RyzaGrow campaign — split product panels for manure and wood-loving mushroom pods",
@@ -43,12 +51,15 @@ export const PROJECTS: Project[] = [
   {
     id: "ovani",
     categories: ["design"],
-    client: "OvaniSound",
+    // 🔒 OWNER INPUT (P0-3): confirm "Ovani Sound" (two words) is the brand styling.
+    client: "Ovani Sound",
     title: "60+ E-Commerce Product Covers",
     description:
       "2D and 3D product cover designs for a sound-design catalog. Thirty distinct covers in one week.",
     tags: ["Product Covers", "3D"],
     result: "30 in 1 week",
+    seoDescription:
+      "60+ e-commerce pack covers for Ovani Sound — 2D covers, side panels, and 3D pack renders. Thirty in one week.",
     thumbnail: {
       src: "/images/work-ovani.png",
       alt: "Ovani Sound e-commerce product covers — 2D stickers and 3D pack renders",
@@ -88,12 +99,13 @@ export const PROJECTS: Project[] = [
   {
     id: "she-who-flies",
     categories: ["video"],
-    client: "Red Bull (Mock)",
+    client: "Concept project — not affiliated with Red Bull",
     title: "She Who Flies — Documentary",
     description:
       "Re-edited documentary trailer with custom title treatment. Cinematic cut, no paid promotion.",
     tags: ["Video Edit", "Trailer"],
     result: "7.7K views",
+    resultNote: "[PLATFORM]",
     thumbnail: {
       src: "/images/work-she-who-flies.png",
       alt: "She Who Flies documentary trailer title treatment over mountain imagery",
@@ -112,7 +124,7 @@ export const PROJECTS: Project[] = [
   {
     id: "winter-heroes",
     categories: ["video"],
-    client: "Red Bull (Mock)",
+    client: "Concept project — not affiliated with Red Bull",
     title: "Winter Heroes — Multi-Format Video",
     description:
       "Long-form documentary recut for short-form social. One source, several channels.",

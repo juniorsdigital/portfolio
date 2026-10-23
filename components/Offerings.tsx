@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { OFFERINGS } from "@/lib/offerings";
+import { OFFERING_LINKS, OFFERINGS } from "@/lib/offerings";
 
 export function Offerings() {
   return (
@@ -24,12 +24,24 @@ export function Offerings() {
                   {offering.title}
                 </h3>
                 <ul className="mt-6 space-y-2 text-sm text-muted">
-                  {offering.items.map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 bg-volt" aria-hidden />
-                      {item}
-                    </li>
-                  ))}
+                  {offering.items.map((item) => {
+                    const href = OFFERING_LINKS[item];
+                    return (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-2 h-1 w-1 shrink-0 bg-volt" aria-hidden />
+                        {href ? (
+                          <Link
+                            href={href}
+                            className="text-bone underline decoration-gilt/50 underline-offset-4 hover:text-volt"
+                          >
+                            {item} →
+                          </Link>
+                        ) : (
+                          item
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </article>
             </div>
