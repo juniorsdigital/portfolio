@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { findCover } from "@/lib/hero-covers";
 import {
   BUDGET_OPTIONS,
+  COVER_COUNT_OPTIONS,
   SERVICE_NEEDS,
   SERVICE_OPTIONS,
   TIMELINE_OPTIONS,
@@ -56,7 +58,7 @@ const allNeeds = Array.from(
 export async function POST(req: Request) {
   if (rateLimited(clientIp(req))) {
     return NextResponse.json(
-      { error: "Too many messages. Email me directly." },
+      { error: "Too many messages in the last hour." },
       { status: 429 },
     );
   }
@@ -81,6 +83,19 @@ export async function POST(req: Request) {
   const timeline = asString(body.timeline, 40);
   const budget = asString(body.budget, 40);
   const links = asString(body.links, 2000);
+  const coverCountRaw = asString(body.coverCount, 20);
+  const coverCount = (COVER_COUNT_OPTIONS as readonly string[]).includes(coverCountRaw)
+    ? coverCountRaw
+    : "";
+  const refCover = findCover(asString(body.ref, 80));
+  const utm =
+    body.utm && typeof body.utm === "object"
+      ? Object.entries(body.utm as Record<string, unknown>)
+          .filter(([k]) => /^utm_(source|medium|campaign|content)$/.test(k))
+          .map(([k, v]) => `${k}=${asString(v, 80)}`)
+          .filter((pair) => !pair.endsWith("="))
+          .join(" · ")
+      : "";
   const needs = Array.isArray(body.needs)
     ? body.needs
         .filter((n): n is string => typeof n === "string")
@@ -124,7 +139,7 @@ export async function POST(req: Request) {
   if (!key) {
     console.error("RESEND_API_KEY is not set");
     return NextResponse.json(
-      { error: "Mail is not configured yet. Email me directly." },
+      { error: "Mail isn't set up on this server yet." },
       { status: 503 },
     );
   }
@@ -136,10 +151,13 @@ export async function POST(req: Request) {
     ["Phone", phone || "—"],
     ["Service", serviceLabel],
     ["Specifics", needs.length ? needs.join(", ") : "—"],
+    ...(service === "covers" ? [["How many covers", coverCount || "—"]] : []),
+    ...(refCover ? [["Reference cover", refCover.title]] : []),
     ["Brand / project", brand || "—"],
     ["Timeline", timeline || "—"],
     ["Budget", budget || "—"],
     ["Links", links || "—"],
+    ...(utm ? [["Source", utm]] : []),
   ];
 
   const htmlRows = rows
@@ -188,7 +206,7 @@ export async function POST(req: Request) {
   if (error) {
     console.error("Resend error:", error);
     return NextResponse.json(
-      { error: "Could not send. Email me directly." },
+      { error: "Could not send." },
       { status: 500 },
     );
   }

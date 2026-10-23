@@ -3,7 +3,15 @@ import Link from "next/link";
 import { Offerings } from "@/components/Offerings";
 import { CoverStackHero } from "@/components/CoverStackHero";
 import { WorkGrid } from "@/components/WorkGrid";
-import { SITE } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
+import { DESCRIPTIONS, SITE } from "@/lib/site";
+
+export const metadata = pageMeta({
+  title: `${SITE.name} — Design, Video, Marketing`,
+  absoluteTitle: true,
+  description: DESCRIPTIONS.home,
+  path: "/",
+});
 
 export default function HomePage() {
   return (
@@ -37,10 +45,8 @@ export default function HomePage() {
           <div>
             <p className="label-kicker">About</p>
             <h2 className="mt-4 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
-              Made in{" "}
-              <em className="font-serif font-normal text-gilt">
-                {SITE.location}.
-              </em>
+              Made to{" "}
+              <em className="font-serif font-normal text-gilt">ship.</em>
             </h2>
             <p className="mt-6 max-w-md text-base leading-relaxed text-muted">
               I design, edit, and run the marketing that has to ship. Tight
@@ -56,7 +62,8 @@ export default function HomePage() {
           <div className="clip-shard hairline overflow-hidden">
             <Image
               src="/images/about-portrait.png"
-              alt={`${SITE.name} in ${SITE.location}`}
+              alt={`Portrait of ${SITE.name}`}
+              sizes="(max-width: 1024px) 100vw, 560px"
               className="h-full w-full object-cover"
               width={800}
               height={1000}

@@ -1,25 +1,44 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { jsonLd, pageMeta } from "@/lib/seo";
+import { DESCRIPTIONS, SITE, SITE_URL } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "About",
-  description: `About ${SITE.name} — designer, editor, and marketer in ${SITE.location}.`,
-};
+  description: DESCRIPTIONS.about,
+  path: "/about",
+});
 
 const tools = [
   "Photoshop",
   "Illustrator",
+  "InDesign",
   "Premiere Pro",
   "After Effects",
+  "DaVinci Resolve",
   "Blender",
-  "Figma",
+  "Monday.com",
 ];
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: SITE.name,
+  url: SITE_URL,
+  image: `${SITE_URL}/images/about-portrait.png`,
+  jobTitle: "Freelance graphic designer, video editor, and marketer",
+  knowsAbout: ["Pack cover design", "Graphic design", "Video editing", "Marketing"],
+  makesOffer: [
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pack and product covers", url: `${SITE_URL}/covers` } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Video editing" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Marketing" } },
+  ],
+};
 
 export default function AboutPage() {
   return (
     <div className="section-pad pt-28">
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(person)} />
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
         <div>
           <p className="label-kicker">{SITE.location}</p>
@@ -29,7 +48,7 @@ export default function AboutPage() {
           <div className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-muted">
             <p>
               I&apos;m {SITE.name} — a freelance designer, editor, and marketer
-              working out of {SITE.location}. Graphic design, video, and the
+              {` based in ${SITE.location}`}. Graphic design, video, and the
               marketing that has to live after the files leave my machine.
             </p>
             <p>
@@ -39,7 +58,14 @@ export default function AboutPage() {
               it clean.
             </p>
             <p>
-              I take product covers, digital art, posters, and ads. I cut social
+              I take{" "}
+              <Link
+                href="/covers"
+                className="text-bone underline decoration-gilt/50 underline-offset-4 hover:text-volt"
+              >
+                product covers
+              </Link>
+              , digital art, posters, and ads. I cut social
               and advertising video. I build and run Google Business pages and
               social accounts for people who need that handled without a
               twelve-person team.
@@ -66,6 +92,7 @@ export default function AboutPage() {
           <Image
             src="/images/about-portrait.png"
             alt={`${SITE.name}, freelance designer in ${SITE.location}`}
+            sizes="(max-width: 1024px) 100vw, 480px"
             className="h-full w-full object-cover"
             width={800}
             height={1000}

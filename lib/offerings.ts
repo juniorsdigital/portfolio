@@ -26,6 +26,7 @@ export const OFFERINGS = [
 ] as const;
 
 export const SERVICE_OPTIONS = [
+  { value: "covers", label: "Pack / product covers" },
   { value: "graphic-design", label: "Graphic Design" },
   { value: "video-editing", label: "Video Editing" },
   { value: "marketing", label: "Marketing" },
@@ -34,7 +35,17 @@ export const SERVICE_OPTIONS = [
 
 export type ServiceValue = (typeof SERVICE_OPTIONS)[number]["value"];
 
+export function isServiceValue(value: string | null | undefined): value is ServiceValue {
+  return SERVICE_OPTIONS.some((s) => s.value === value);
+}
+
 export const SERVICE_NEEDS: Record<ServiceValue, string[]> = {
+  covers: [
+    "Store cover",
+    "Side panel",
+    "Series of volumes",
+    "Other assets",
+  ],
   "graphic-design": [
     "Product covers",
     "Digital art",
@@ -68,9 +79,18 @@ export const TIMELINE_OPTIONS = [
 ] as const;
 
 export const BUDGET_OPTIONS = [
-  "Under $500",
+  "Under $150",
+  "$150–500",
   "$500–1.5k",
   "$1.5k–5k",
   "$5k+",
   "Not sure yet",
 ] as const;
+
+/** Shown only when "Pack / product covers" is selected. */
+export const COVER_COUNT_OPTIONS = ["1", "2–5", "6+", "Ongoing series"] as const;
+
+/** Offering items that have their own page. */
+export const OFFERING_LINKS: Partial<Record<string, string>> = {
+  "Product covers": "/covers",
+};

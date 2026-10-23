@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { PLACE_LABEL, SITE } from "@/lib/site";
 
 const links = [
   { href: "/work", label: "Work" },
+  { href: "/covers", label: "Covers" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -16,7 +17,7 @@ export function Footer() {
             {SITE.name}
           </p>
           <p className="mt-1 text-xs tracking-[0.16em] text-muted uppercase">
-            {SITE.location}
+            {PLACE_LABEL}
           </p>
           <p className="mt-3 text-[0.65rem] tracking-[0.16em] text-faint uppercase">
             © {new Date().getFullYear()} {SITE.name}

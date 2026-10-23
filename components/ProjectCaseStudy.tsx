@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Project } from "@/lib/projects";
+import { isPlaceholder } from "@/lib/site";
 
-function youtubeSrc(id: string, start?: number) {
+function youtubeSrc(id: string, start?: number, autoplay = true) {
   const params = new URLSearchParams({
-    autoplay: "1",
+    autoplay: autoplay ? "1" : "0",
     rel: "0",
     modestbranding: "1",
   });
@@ -16,11 +18,18 @@ export function ProjectCaseStudy({
   titleId,
   play = true,
   showMedia = true,
+  as: Heading = "h3",
+  showPageLink = false,
+  autoplay = true,
 }: {
   project: Project;
   titleId?: string;
   play?: boolean;
   showMedia?: boolean;
+  as?: "h1" | "h3";
+  /** Shows a link to the project's own shareable page (used inside the modal). */
+  showPageLink?: boolean;
+  autoplay?: boolean;
 }) {
   const media = project.media[0];
   const showVideo = showMedia && play && media.type === "video";
@@ -31,7 +40,8 @@ export function ProjectCaseStudy({
         <div className="aspect-video shrink-0 bg-black">
           <iframe
             title={media.title}
-            src={youtubeSrc(media.id, media.start)}
+            src={youtubeSrc(media.id, media.start, autoplay)}
+            loading={autoplay ? undefined : "lazy"}
             className="h-full w-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -43,6 +53,7 @@ export function ProjectCaseStudy({
           alt={media.type === "image" ? media.alt : project.thumbnail.alt}
           width={1200}
           height={750}
+          sizes="(max-width: 800px) 100vw, 768px"
           className="h-auto w-full shrink-0"
         />
       ) : null}
@@ -51,9 +62,9 @@ export function ProjectCaseStudy({
           {project.categories.join(" · ")}
         </p>
         <p className="label-kicker mt-3">{project.client}</p>
-        <h3 id={titleId} className="mt-2 font-display text-2xl font-extrabold">
+        <Heading id={titleId} className="mt-2 font-display text-2xl font-extrabold">
           {project.title}
-        </h3>
+        </Heading>
         <p className="mt-3 text-sm leading-relaxed text-muted">
           {project.description}
         </p>
@@ -72,6 +83,19 @@ export function ProjectCaseStudy({
             </span>
           ) : null}
         </div>
+        {project.result && !isPlaceholder(project.resultNote) ? (
+          <p className="mt-2 text-xs text-muted">
+            {project.result} — {project.resultNote}
+          </p>
+        ) : null}
+        {showPageLink ? (
+          <Link
+            href={`/work/${project.id}`}
+            className="mt-5 inline-block text-[0.68rem] tracking-[0.16em] text-volt uppercase hover:text-bone"
+          >
+            Open project page →
+          </Link>
+        ) : null}
       </div>
     </>
   );
