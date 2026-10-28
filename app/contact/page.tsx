@@ -4,7 +4,7 @@ import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Start a project with ${SITE.name} at ${SITE.brand}. Design, video, and marketing.`,
+  description: `Start a project with ${SITE.name}. Design, video, and marketing.`,
 };
 
 const steps = [

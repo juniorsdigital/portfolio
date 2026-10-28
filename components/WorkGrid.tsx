@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import { Dialog } from "@/components/Dialog";
 import { ProjectCaseStudy } from "@/components/ProjectCaseStudy";
@@ -48,14 +49,12 @@ function ProjectCard({
 }) {
   const video = isVideo(project);
 
-  return (
-    <button
-      type="button"
-      onClick={() => onOpen(project)}
-      className={`group flex h-full w-full cursor-pointer flex-col overflow-hidden border border-line bg-ink-2 text-left transition-colors hover:border-stone ${
-        wide ? "lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]" : ""
-      }`}
-    >
+  const className = `group flex h-full w-full cursor-pointer flex-col overflow-hidden border border-line bg-ink-2 text-left transition-colors hover:border-stone ${
+    wide ? "lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]" : ""
+  }`;
+
+  const body = (
+    <>
       <span
         className={`relative block w-full overflow-hidden ${
           wide ? "aspect-[16/10] lg:aspect-auto lg:h-full lg:min-h-[26rem]" : "aspect-[16/10]"
@@ -106,7 +105,26 @@ function ProjectCard({
             </span>
           </span>
         ) : null}
+        {project.href ? (
+          <span className="mt-auto inline-flex items-center gap-2 pt-8 text-lg font-semibold text-paper underline decoration-1 underline-offset-[0.3em] group-hover:decoration-signal group-hover:decoration-2">
+            Read the case study <span aria-hidden="true">→</span>
+          </span>
+        ) : null}
       </span>
+    </>
+  );
+
+  if (project.href) {
+    return (
+      <Link href={project.href} className={className}>
+        {body}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" onClick={() => onOpen(project)} className={className}>
+      {body}
     </button>
   );
 }

@@ -1,12 +1,14 @@
 export const SITE = {
-  brand: "juniors.digital",
+  brand: "John Swanson",
+  /** The mark: initials, used for the favicon and small spaces. */
+  mark: "jrs.",
   name: "John Swanson",
-  byline: "The independent studio of John Swanson.",
+  byline: "Freelance design, video and marketing.",
   email: "johnreidswanson@gmail.com",
   location: "Philadelphia",
-  url: "https://juniors.digital",
+  url: "https://www.johnswanson.co",
   description:
-    "juniors.digital is the independent studio of John Swanson — graphic design, video editing, and marketing in Philadelphia.",
+    "John Swanson — freelance graphic design, video editing, and marketing in Philadelphia.",
   fromEmail: "John Swanson <hello@juniors.digital>",
 } as const;
 

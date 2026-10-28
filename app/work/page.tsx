@@ -6,7 +6,7 @@ import { PROJECTS } from "@/lib/projects";
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Selected graphic design, video editing, and marketing by John Swanson at juniors.digital.",
+    "Selected graphic design, video editing, and marketing by John Swanson.",
 };
 
 export default function WorkPage() {

@@ -42,7 +42,7 @@ export function Nav() {
             href="/"
             onClick={() => setOpen(false)}
             className="text-[1.625rem]"
-            aria-label={`${SITE.brand} — home`}
+            aria-label={`${SITE.name} — home`}
           >
             <Wordmark />
           </Link>

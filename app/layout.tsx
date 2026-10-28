@@ -25,8 +25,8 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.brand} — ${SITE.name}: design, video & marketing`,
-    template: `%s — ${SITE.brand}`,
+    default: `${SITE.name} — Design, video & marketing in ${SITE.location}`,
+    template: `%s — ${SITE.name}`,
   },
   description: SITE.description,
   icons: {

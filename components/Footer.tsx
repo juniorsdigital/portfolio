@@ -8,13 +8,13 @@ export function Footer() {
       <div className="wrap pt-18 pb-12">
         <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
           <div>
-            <Link href="/" className="text-[2.5rem]" aria-label={`${SITE.brand} — home`}>
+            <Link href="/" className="text-[2.5rem]" aria-label={`${SITE.name} — home`}>
               <Wordmark />
             </Link>
             <p className="mt-4 max-w-sm text-stone">
               {SITE.byline}
               <br />
-              Design, video and marketing — {SITE.location}.
+              Based in {SITE.location}, working everywhere.
             </p>
           </div>
           <nav aria-label="Footer">
@@ -32,6 +32,11 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/brand" className="hover:underline">
+                  Brand system
+                </Link>
+              </li>
             </ul>
           </nav>
           <div>
