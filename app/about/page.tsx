@@ -6,8 +6,9 @@ import { OFFERINGS } from "@/lib/offerings";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About",
-  description: `About ${SITE.name} — designer, editor, and marketer in ${SITE.location}.`,
+  title: `About — freelance designer in ${SITE.location}`,
+  description: `${SITE.name} is a freelance graphic designer, video editor and marketer in ${SITE.location}. One person from brief to final files.`,
+  alternates: { canonical: "/about" },
 };
 
 const tools = [
@@ -21,8 +22,8 @@ const tools = [
 
 export default function AboutPage() {
   return (
-    <div className="on-paper bg-paper text-ink">
-      <section className="pt-16 pb-24 sm:pt-24 sm:pb-28">
+    <div className="bg-paper text-ink">
+      <section className="on-paper pt-16 pb-24 sm:pt-24 sm:pb-28">
         <div className="wrap grid items-start gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-20">
           <div>
             <p className="kicker text-slate">About / {SITE.location}</p>
@@ -73,7 +74,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-rule py-20 sm:py-24" aria-labelledby="lanes-title">
+      <section className="on-paper border-t border-rule py-20 sm:py-24" aria-labelledby="lanes-title">
         <div className="wrap">
           <h2 id="lanes-title" className="kicker text-slate">
             What I take on
@@ -110,9 +111,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-ink py-20 text-paper sm:py-24">
+      <section className="bg-ink py-20 text-paper sm:py-24" aria-labelledby="about-cta-title">
         <div className="wrap flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-          <h2 className="display display-lg">
+          <h2 id="about-cta-title" className="display display-lg">
             Have work? <span className="text-signal">Send it.</span>
           </h2>
           <Link href="/contact" className="btn btn-signal min-h-14 px-8 text-lg">

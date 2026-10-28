@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   agentRules: false,
+  images: {
+    // AVIF first (~20% smaller than WebP), WebP for older browsers.
+    formats: ["image/avif", "image/webp"],
+  },
   async redirects() {
     return [
       {

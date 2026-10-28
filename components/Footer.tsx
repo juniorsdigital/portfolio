@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/Wordmark";
+import { CASE_STUDIES, projectHref } from "@/lib/projects";
 import { NAV_LINKS, SITE } from "@/lib/site";
 
 export function Footer() {
   return (
     <footer className="border-t border-line bg-ink text-paper">
       <div className="wrap pt-18 pb-12">
-        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
-          <div>
+        <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-[1.5fr_0.8fr_1.2fr_1.5fr]">
+          <div className="md:col-span-3 lg:col-span-1">
             <Link href="/" className="text-[2.5rem]" aria-label={`${SITE.name} — home`}>
               <Wordmark />
             </Link>
@@ -37,6 +38,18 @@ export function Footer() {
                   Brand system
                 </Link>
               </li>
+            </ul>
+          </nav>
+          <nav aria-label="Case studies">
+            <p className="kicker text-stone">Case studies</p>
+            <ul className="mt-4 space-y-3">
+              {CASE_STUDIES.map((p) => (
+                <li key={p.id}>
+                  <Link href={projectHref(p)} className="hover:underline">
+                    {p.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
           <div>

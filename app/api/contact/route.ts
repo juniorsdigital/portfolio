@@ -146,8 +146,8 @@ export async function POST(req: Request) {
     .map(
       ([label, value]) => `
         <tr>
-          <td style="padding:8px 0;color:#8a8680;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;width:160px;vertical-align:top;">${escapeHtml(label)}</td>
-          <td style="padding:8px 0;color:#e6e1d6;font-size:15px;white-space:pre-wrap;">${escapeHtml(value)}</td>
+          <td style="padding:10px 0;border-bottom:1px solid #e8e4da;color:#55534d;font-family:Menlo,Consolas,monospace;font-size:13px;width:150px;vertical-align:top;">${escapeHtml(label)}</td>
+          <td style="padding:10px 0;border-bottom:1px solid #e8e4da;color:#0f0f0d;font-size:16px;white-space:pre-wrap;">${escapeHtml(value)}</td>
         </tr>`,
     )
     .join("");
@@ -158,19 +158,20 @@ export async function POST(req: Request) {
     replyTo: email,
     subject: `New brief — ${brand || name} (${serviceLabel})`,
     html: `
-      <div style="margin:0;background:#070809;padding:32px 16px;font-family:Arial,sans-serif;">
-        <table role="presentation" style="max-width:640px;margin:0 auto;background:#101114;border:1px solid rgba(196,163,90,0.35);">
+      <div style="margin:0;background:#f3f0e9;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
+        <table role="presentation" style="width:100%;max-width:640px;margin:0 auto;border-collapse:collapse;background:#ffffff;border:1px solid #d3cec2;">
           <tr>
-            <td style="padding:24px 28px;border-bottom:1px solid rgba(196,163,90,0.25);">
-              <div style="color:#c4a35a;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;">John Swanson</div>
-              <div style="color:#e6e1d6;font-size:22px;font-weight:800;margin-top:8px;">New project brief</div>
+            <td style="padding:24px 28px;background:#0f0f0d;">
+              <div style="color:#f3f0e9;font-size:20px;font-weight:800;letter-spacing:-0.01em;">John Swanson<span style="color:#ff5a1f;">.</span></div>
+              <div style="color:#a9a59c;font-family:Menlo,Consolas,monospace;font-size:13px;margin-top:6px;">New project brief · ${escapeHtml(serviceLabel)}</div>
             </td>
           </tr>
           <tr>
             <td style="padding:24px 28px;">
               <table role="presentation" style="width:100%;border-collapse:collapse;">${htmlRows}</table>
-              <p style="margin:24px 0 8px;color:#8a8680;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">Brief</p>
-              <p style="margin:0;color:#e6e1d6;font-size:15px;line-height:1.7;white-space:pre-wrap;">${escapeHtml(brief)}</p>
+              <p style="margin:28px 0 8px;color:#55534d;font-family:Menlo,Consolas,monospace;font-size:13px;">Brief</p>
+              <p style="margin:0;color:#3a3934;font-size:16px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(brief)}</p>
+              <p style="margin:28px 0 0;"><a href="mailto:${escapeHtml(email)}" style="display:inline-block;background:#ff5a1f;color:#0f0f0d;font-weight:700;font-size:16px;text-decoration:none;padding:14px 22px;">Reply to ${escapeHtml(name)} →</a></p>
             </td>
           </tr>
         </table>

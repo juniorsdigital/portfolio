@@ -3,8 +3,9 @@ import { ContactForm } from "@/components/ContactForm";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: `Start a project with ${SITE.name}. Design, video, and marketing.`,
+  title: "Contact — start a project",
+  description: `Start a design, video or marketing project with ${SITE.name}. Send a brief and get a scope back by email.`,
+  alternates: { canonical: "/contact" },
 };
 
 const steps = [

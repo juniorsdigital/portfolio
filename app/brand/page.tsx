@@ -7,6 +7,12 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Brand system — case study",
   description: `How ${SITE.name} rebuilt his own brand as a system: wordmark, color, type and components, applied across his portfolio.`,
+  alternates: { canonical: "/brand" },
+  openGraph: {
+    type: "article",
+    url: "/brand",
+    images: [{ url: "/images/brand/og.jpg", width: 1200, height: 630 }],
+  },
 };
 
 const PROBLEMS = [

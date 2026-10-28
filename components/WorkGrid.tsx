@@ -2,19 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useState } from "react";
-import { Dialog } from "@/components/Dialog";
-import { ProjectCaseStudy } from "@/components/ProjectCaseStudy";
+import { useState } from "react";
 import {
   PROJECTS,
   WORK_FILTERS,
+  projectHref,
   type Project,
   type WorkCategory,
 } from "@/lib/projects";
-
-function isVideo(project: Project) {
-  return project.media[0]?.type === "video";
-}
 
 function categoryLabel(project: Project) {
   return project.categories
@@ -40,14 +35,13 @@ function ProjectCard({
   project,
   detailed,
   wide,
-  onOpen,
+  eager,
 }: {
   project: Project;
   detailed: boolean;
   wide: boolean;
-  onOpen: (p: Project) => void;
+  eager: boolean;
 }) {
-  const video = isVideo(project);
 
   const className = `group flex h-full w-full cursor-pointer flex-col overflow-hidden border border-line bg-ink-2 text-left transition-colors hover:border-stone ${
     wide ? "lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]" : ""
@@ -64,10 +58,11 @@ function ProjectCard({
           src={project.thumbnail.src}
           alt={project.thumbnail.alt}
           fill
+          loading={eager ? "eager" : undefined}
           sizes={wide ? "(max-width: 1024px) 100vw, 760px" : "(max-width: 640px) 100vw, 620px"}
           className="zoom-img pointer-events-none object-cover"
         />
-        {video ? <PlayTag /> : null}
+        {project.video ? <PlayTag /> : null}
       </span>
       <span className={`flex flex-1 flex-col ${wide ? "p-7 sm:p-11" : "p-7 sm:p-8"}`}>
         <span className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 font-mono text-sm text-stone">
@@ -105,27 +100,17 @@ function ProjectCard({
             </span>
           </span>
         ) : null}
-        {project.href ? (
-          <span className="mt-auto inline-flex items-center gap-2 pt-8 text-lg font-semibold text-paper underline decoration-1 underline-offset-[0.3em] group-hover:decoration-signal group-hover:decoration-2">
+        <span className="mt-auto inline-flex items-center gap-2 pt-8 text-lg font-semibold text-paper underline decoration-1 underline-offset-[0.3em] group-hover:decoration-signal group-hover:decoration-2">
             Read the case study <span aria-hidden="true">→</span>
           </span>
-        ) : null}
       </span>
     </>
   );
 
-  if (project.href) {
-    return (
-      <Link href={project.href} className={className}>
-        {body}
-      </Link>
-    );
-  }
-
   return (
-    <button type="button" onClick={() => onOpen(project)} className={className}>
+    <Link href={projectHref(project)} className={className}>
       {body}
-    </button>
+    </Link>
   );
 }
 
@@ -133,14 +118,15 @@ export function WorkGrid({
   projects = PROJECTS,
   showFilters = false,
   detailed = false,
+  eagerFirst = false,
 }: {
   projects?: Project[];
   showFilters?: boolean;
   detailed?: boolean;
+  /** Load the first card's image eagerly when the grid sits near the top of the page. */
+  eagerFirst?: boolean;
 }) {
   const [filter, setFilter] = useState<"all" | WorkCategory>("all");
-  const [active, setActive] = useState<Project | null>(null);
-  const close = useCallback(() => setActive(null), []);
 
   const visible =
     filter === "all"
@@ -184,7 +170,7 @@ export function WorkGrid({
       ) : null}
 
       <ul className="grid gap-6 md:grid-cols-2">
-        {visible.map((project) => {
+        {visible.map((project, i) => {
           const wide = Boolean(project.featured) && filter === "all";
           return (
             <li key={project.id} className={wide ? "md:col-span-2" : ""}>
@@ -192,7 +178,7 @@ export function WorkGrid({
                 project={project}
                 detailed={detailed}
                 wide={wide}
-                onOpen={setActive}
+                eager={eagerFirst && i === 0}
               />
             </li>
           );
@@ -201,12 +187,6 @@ export function WorkGrid({
 
       {visible.length === 0 ? (
         <p className="text-stone">Nothing in this lane yet.</p>
-      ) : null}
-
-      {active ? (
-        <Dialog onClose={close} label={active.title}>
-          {(titleId) => <ProjectCaseStudy project={active} titleId={titleId} />}
-        </Dialog>
       ) : null}
     </>
   );
