@@ -1,19 +1,20 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Monogram, Wordmark } from "@/components/Wordmark";
+import { pageMetadata } from "@/lib/seo";
+import { contactHref } from "@/lib/services";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Brand system — case study",
+export const metadata = pageMetadata({
+  title: "Brand system — identity & design system case study",
   description: `How ${SITE.name} rebuilt his own brand as a system: wordmark, color, type and components, applied across his portfolio.`,
-  alternates: { canonical: "/brand" },
-  openGraph: {
-    type: "article",
-    url: "/brand",
-    images: [{ url: "/images/brand/og.jpg", width: 1200, height: 630 }],
+  path: "/brand",
+  type: "article",
+  image: {
+    url: "/images/brand/og.jpg",
+    alt: "Brand system board: the wordmark on ink and paper, color swatches and condensed type",
   },
-};
+});
 
 const PROBLEMS = [
   {
@@ -126,7 +127,7 @@ export default function BrandCaseStudyPage() {
           <p className="kicker text-stone">
             Case study / Brand system
           </p>
-          <h1 id="brand-title" className="display display-xl mt-4 max-w-[14ch]">
+          <h1 id="brand-title" className="display display-xl mt-4 max-w-[6.71em]">
             One system. <span className="text-signal">Every surface.</span>
           </h1>
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
@@ -447,8 +448,11 @@ export default function BrandCaseStudyPage() {
             </p>
           </div>
           <div className="flex flex-col items-start gap-4">
-            <Link href="/contact" className="btn btn-ink min-h-14 px-8 text-lg">
+            <Link href={contactHref("graphic-design")} className="btn btn-ink min-h-14 px-8 text-lg">
               Start a brand project <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/services/graphic-design" className="link text-lg">
+              See graphic design pricing
             </Link>
             <Link href="/work" className="link text-lg">
               See the rest of the work

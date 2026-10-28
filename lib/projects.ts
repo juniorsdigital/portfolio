@@ -1,3 +1,5 @@
+import type { ServiceSlug } from "@/lib/services";
+
 export type WorkCategory = "design" | "video" | "marketing";
 
 export type WorkImage = {
@@ -42,6 +44,8 @@ export type Project = {
   /** Short name for breadcrumbs and footer links. */
   name: string;
   categories: WorkCategory[];
+  /** The service page this project is proof for; its pitch links there. */
+  service: ServiceSlug;
   client: string;
   title: string;
   description: string;
@@ -98,6 +102,7 @@ export const PROJECTS: Project[] = [
     name: "RyzaGrow",
     featured: true,
     categories: ["design", "marketing"],
+    service: "marketing",
     client: "Ryza, LLC.",
     title: "RyzaGrow — DTC campaign",
     description:
@@ -195,6 +200,7 @@ export const PROJECTS: Project[] = [
     id: "ovani",
     name: "OvaniSound",
     categories: ["design"],
+    service: "graphic-design",
     client: "OvaniSound",
     title: "75+ music pack covers",
     description:
@@ -317,6 +323,7 @@ export const PROJECTS: Project[] = [
     id: "bgcb",
     name: "Boys & Girls Club of Boston",
     categories: ["design"],
+    service: "graphic-design",
     client: "Boys & Girls Club of Boston",
     title: "Teen registration campaign",
     description:
@@ -413,6 +420,7 @@ export const PROJECTS: Project[] = [
     name: "She Who Flies",
     video: true,
     categories: ["video"],
+    service: "video-editing",
     client: "Red Bull (concept)",
     title: "She Who Flies — documentary trailer",
     description:
@@ -494,6 +502,7 @@ export const PROJECTS: Project[] = [
     name: "Winter Heroes",
     video: true,
     categories: ["video"],
+    service: "video-editing",
     client: "Red Bull (concept)",
     title: "Winter Heroes — multi-format video",
     description:
@@ -577,6 +586,7 @@ export const PROJECTS: Project[] = [
     featured: true,
     href: "/brand",
     categories: ["design"],
+    service: "graphic-design",
     client: "Self-initiated",
     title: "Brand system — case study",
     description:

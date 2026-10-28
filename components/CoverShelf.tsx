@@ -36,8 +36,10 @@ export function CoverShelf() {
               src={cover.src}
               alt=""
               fill
-              preload={index === 0 || index >= HERO_COVERS.length - 2}
-              sizes="(max-width: 768px) 40vw, 260px"
+              // The headline is the LCP on every viewport, so the covers load lazily
+              // instead of competing with the CSS and fonts. Widths follow .shelf's
+              // --cover-w: clamp(141px, 14.86vw, 215px).
+              sizes="(max-width: 952px) 142px, (max-width: 1448px) 15vw, 216px"
               className="pointer-events-none object-contain object-left"
             />
           </button>

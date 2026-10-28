@@ -37,17 +37,17 @@ export function CoverStory({
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-soft">{cover.process}</p>
             <div className="mt-auto flex flex-wrap gap-3 pt-8">
+              <Link href={cover.contactHref} className="btn btn-sm btn-signal">
+                Get covers like this <span aria-hidden="true">→</span>
+              </Link>
               <a
                 href={cover.storeHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm btn-signal"
+                className="btn btn-sm btn-ghost"
               >
                 See it in the Ovani store <span aria-hidden="true">↗</span>
               </a>
-              <Link href={cover.contactHref} className="btn btn-sm btn-ghost">
-                Want covers like this?
-              </Link>
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Nav } from "@/components/Nav";
+import { SERVICES, serviceHref, startingPrice } from "@/lib/services";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -14,6 +15,19 @@ const archivo = Archivo({
   variable: "--font-archivo",
   axes: ["wdth"],
   display: "swap",
+});
+
+// The same font file again, for the condensed .display / .wordmark styles. Its
+// fallback is Arial Bold scaled to Archivo's 72% width (see globals.css), so the
+// headlines wrap the same before and after the font swaps in.
+const archivoDisplay = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo-display",
+  axes: ["wdth"],
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  fallback: ["Archivo Display Fallback", "sans-serif"],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -74,6 +88,7 @@ const siteJsonLd = {
         "Product cover design",
         "Video editing",
         "Social media marketing",
+        "Google Business Profile management",
         "Campaign management",
         "Brand identity",
       ],
@@ -95,7 +110,26 @@ const siteJsonLd = {
         addressRegion: "PA",
         addressCountry: "US",
       },
-      serviceType: ["Graphic design", "Video editing", "Marketing"],
+      serviceType: SERVICES.map((s) => s.name),
+      priceRange: `$${Math.min(...SERVICES.map(startingPrice))}+`,
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Services",
+        itemListElement: SERVICES.map((s) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            "@id": `${SITE.url}${serviceHref(s)}#service`,
+            name: s.name,
+            url: `${SITE.url}${serviceHref(s)}`,
+          },
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            minPrice: startingPrice(s),
+            priceCurrency: "USD",
+          },
+        })),
+      },
     },
     {
       "@type": "WebSite",
@@ -120,7 +154,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${plexMono.variable} h-full bg-ink`}
+      data-scroll-behavior="smooth"
+      className={`${archivo.variable} ${archivoDisplay.variable} ${plexMono.variable} h-full bg-ink`}
     >
       <body className="flex min-h-full flex-col bg-ink text-paper antialiased">
         <a

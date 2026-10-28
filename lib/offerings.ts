@@ -1,69 +1,18 @@
-export const OFFERINGS = [
-  {
-    num: "01",
-    title: "Graphic design",
-    summary:
-      "Covers, posters and ads built to sell the thing — on the shelf or in the feed.",
-    items: [
-      "Product covers",
-      "Digital art",
-      "Poster designs",
-      "Digital advertising",
-    ],
-  },
-  {
-    num: "02",
-    title: "Video editing",
-    summary:
-      "Social cuts and video ads, recut from long-form and sized for every channel.",
-    items: ["Social media edits", "Video advertising"],
-  },
-  {
-    num: "03",
-    title: "Marketing",
-    summary:
-      "Google Business pages and social accounts, set up and run without a twelve-person team.",
-    items: [
-      "Google Business page management",
-      "Google Business page creation",
-      "Social media management",
-    ],
-  },
-] as const;
+import { SERVICES, type ServiceSlug } from "@/lib/services";
 
-export const SERVICE_OPTIONS = [
-  { value: "graphic-design", label: "Graphic design" },
-  { value: "video-editing", label: "Video editing" },
-  { value: "marketing", label: "Marketing" },
+export type ServiceValue = ServiceSlug | "multiple";
+
+export const SERVICE_OPTIONS: { value: ServiceValue; label: string }[] = [
+  ...SERVICES.map((s) => ({ value: s.slug, label: s.name })),
   { value: "multiple", label: "More than one" },
-] as const;
+];
 
-export type ServiceValue = (typeof SERVICE_OPTIONS)[number]["value"];
-
+/** The form's "Specifics" chips are the packages on each service page. */
 export const SERVICE_NEEDS: Record<ServiceValue, string[]> = {
-  "graphic-design": [
-    "Product covers",
-    "Digital art",
-    "Poster designs",
-    "Digital advertising",
-  ],
-  "video-editing": ["Social media edits", "Video advertising"],
-  marketing: [
-    "Google Business page management",
-    "Google Business page creation",
-    "Social media management",
-  ],
-  multiple: [
-    "Product covers",
-    "Digital art",
-    "Poster designs",
-    "Digital advertising",
-    "Social media edits",
-    "Video advertising",
-    "Google Business page management",
-    "Google Business page creation",
-    "Social media management",
-  ],
+  ...(Object.fromEntries(
+    SERVICES.map((s) => [s.slug, s.packages.map((p) => p.name)]),
+  ) as Record<ServiceSlug, string[]>),
+  multiple: SERVICES.flatMap((s) => s.packages.map((p) => p.name)),
 };
 
 export const TIMELINE_OPTIONS = [

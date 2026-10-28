@@ -1,14 +1,16 @@
-import type { Metadata } from "next";
 import { SectionHeader } from "@/components/SectionHeader";
 import { WorkGrid } from "@/components/WorkGrid";
+import Link from "next/link";
 import { PROJECTS } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
+import { SERVICES, serviceHref } from "@/lib/services";
 
-export const metadata: Metadata = {
-  title: "Work — design, video & marketing case studies",
+export const metadata = pageMetadata({
+  title: "Portfolio — design, video & marketing case studies",
   description:
-    "Case studies in product cover design, campaign marketing and video editing by John Swanson: what was made, for whom, and what it did.",
-  alternates: { canonical: "/work" },
-};
+    "Portfolio of John Swanson: case studies in product cover design, campaign marketing and video editing — what was made, for whom, and what it did.",
+  path: "/work",
+});
 
 export default function WorkPage() {
   return (
@@ -27,6 +29,22 @@ export default function WorkPage() {
         />
         <div className="mt-14">
           <WorkGrid showFilters detailed eagerFirst />
+        </div>
+        <div className="mt-20 flex flex-col gap-6 border-t border-line pt-10 md:flex-row md:items-center md:justify-between">
+          <p className="max-w-[40ch] text-xl leading-relaxed text-soft">
+            Want results like these? See what each service includes and what it
+            costs.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {SERVICES.map((s) => (
+              <Link key={s.slug} href={serviceHref(s)} className="btn btn-ghost">
+                {s.name}
+              </Link>
+            ))}
+            <Link href="/contact" className="btn btn-signal">
+              Get a quote <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
