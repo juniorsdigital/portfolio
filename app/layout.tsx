@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Nav } from "@/components/Nav";
+import { SERVICES, serviceHref, startingPrice } from "@/lib/services";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -74,6 +75,7 @@ const siteJsonLd = {
         "Product cover design",
         "Video editing",
         "Social media marketing",
+        "Google Business Profile management",
         "Campaign management",
         "Brand identity",
       ],
@@ -95,7 +97,26 @@ const siteJsonLd = {
         addressRegion: "PA",
         addressCountry: "US",
       },
-      serviceType: ["Graphic design", "Video editing", "Marketing"],
+      serviceType: SERVICES.map((s) => s.name),
+      priceRange: `$${Math.min(...SERVICES.map(startingPrice))}+`,
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Services",
+        itemListElement: SERVICES.map((s) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            "@id": `${SITE.url}${serviceHref(s)}#service`,
+            name: s.name,
+            url: `${SITE.url}${serviceHref(s)}`,
+          },
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            minPrice: startingPrice(s),
+            priceCurrency: "USD",
+          },
+        })),
+      },
     },
     {
       "@type": "WebSite",

@@ -10,7 +10,7 @@ export function Hero() {
         <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] lg:gap-14">
           <div>
             <p className="kicker mb-6 text-stone">
-              Freelance designer, editor &amp; marketer — {SITE.location}
+              Freelance graphic designer, video editor &amp; marketer — {SITE.location}
             </p>
             <h1 id="hero-title" className="display display-xl text-[clamp(3.25rem,6.8vw,6.75rem)]">
               Design, video &amp; marketing that{" "}
@@ -19,16 +19,16 @@ export function Hero() {
           </div>
           <div className="lg:pb-2">
             <p className="max-w-[34ch] text-xl leading-relaxed text-soft">
-              Product covers, campaigns, social video and the marketing that
-              keeps them moving. Tight briefs, hard effort, files you can
-              actually use.
+              Product covers, social video, campaigns and the marketing that
+              keeps them moving. Clear prices, fast turnarounds and files you
+              can actually use.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/contact" className="btn btn-signal">
                 Start a project <span aria-hidden="true">→</span>
               </Link>
-              <Link href="#work" className="btn btn-ghost">
-                See the work
+              <Link href="/services" className="btn btn-ghost">
+                Services &amp; pricing
               </Link>
             </div>
           </div>

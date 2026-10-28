@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
   BUDGET_OPTIONS,
@@ -23,8 +24,40 @@ const initial = {
   company_website: "",
 };
 
-export function ContactForm() {
-  const [form, setForm] = useState(initial);
+function isService(value: string | null): value is ServiceValue {
+  return SERVICE_OPTIONS.some((s) => s.value === value);
+}
+
+/**
+ * Reads ?service= and ?need= so "Get a quote" links on service pages land on
+ * a form that already knows what the client wants. Wrap in <Suspense>.
+ */
+export function ContactFormFromParams() {
+  const params = useSearchParams();
+  const service = params.get("service");
+  const need = params.get("need");
+  if (!isService(service)) return <ContactForm />;
+  return (
+    <ContactForm
+      key={`${service}-${need}`}
+      defaultService={service}
+      defaultNeed={need && SERVICE_NEEDS[service].includes(need) ? need : undefined}
+    />
+  );
+}
+
+export function ContactForm({
+  defaultService,
+  defaultNeed,
+}: {
+  defaultService?: ServiceValue;
+  defaultNeed?: string;
+} = {}) {
+  const [form, setForm] = useState(() => ({
+    ...initial,
+    service: defaultService ?? initial.service,
+    needs: defaultNeed ? [defaultNeed] : initial.needs,
+  }));
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
@@ -276,7 +309,7 @@ export function ContactForm() {
         <textarea
           rows={3}
           className={`${field} resize-y`}
-          placeholder="Drive folder, references, an existing Google Business page…"
+          placeholder="Drive folder, references, an existing Google Business Profile…"
           value={form.links}
           onChange={(e) => update("links", e.target.value)}
         />

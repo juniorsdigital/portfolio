@@ -97,8 +97,8 @@ export default function HomePage() {
               Send it.
             </h2>
             <p className="mt-6 max-w-[44ch] text-xl leading-relaxed">
-              Tell me what you need. I&apos;ll reply with a scope — or a no, if
-              I&apos;m not the right person.
+              Tell me what you need. I&apos;ll reply with a scope and a fixed
+              price — or a no, if I&apos;m not the right person.
             </p>
           </div>
           <div className="flex flex-col items-start gap-4">

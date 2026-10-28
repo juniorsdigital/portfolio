@@ -1,18 +1,15 @@
-import type { Metadata } from "next";
-import { ContactForm } from "@/components/ContactForm";
+import Link from "next/link";
+import { Suspense } from "react";
+import { ContactForm, ContactFormFromParams } from "@/components/ContactForm";
+import { pageMetadata } from "@/lib/seo";
+import { PROCESS } from "@/lib/services";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contact — start a project",
-  description: `Start a design, video or marketing project with ${SITE.name}. Send a brief and get a scope back by email.`,
-  alternates: { canonical: "/contact" },
-};
-
-const steps = [
-  "Send the brief.",
-  "I reply to your email with a scope — or a no, if I'm not the right person.",
-  "We agree it, and I start.",
-];
+export const metadata = pageMetadata({
+  title: "Contact — get a quote",
+  description: `Get a fixed quote for graphic design, video editing or marketing from ${SITE.name}, a freelancer in ${SITE.location}. Send a brief and get a scope back by email.`,
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -22,22 +19,32 @@ export default function ContactPage() {
           <p className="kicker text-slate">Contact</p>
           <h1 className="display display-xl mt-4">Brief me.</h1>
           <p className="mt-7 max-w-[34ch] text-xl leading-relaxed text-body">
-            What you need, when you need it, and enough context to quote.
+            What you need, when you need it, and enough context to quote. You
+            get a fixed price before any work starts.
           </p>
           <ol className="mt-10 border-t border-rule">
-            {steps.map((step, i) => (
+            {PROCESS.map((step, i) => (
               <li
-                key={step}
+                key={step.title}
                 className="flex gap-5 border-b border-rule py-4.5 leading-normal"
               >
                 <span className="pt-0.5 font-mono text-sm text-signal-ink">
                   0{i + 1}
                 </span>
-                {step}
+                <span>
+                  <span className="font-semibold">{step.title}.</span>{" "}
+                  <span className="text-slate">{step.body}</span>
+                </span>
               </li>
             ))}
           </ol>
           <p className="mt-8 leading-relaxed text-slate">
+            Want a ballpark first?{" "}
+            <Link href="/services" className="link text-ink">
+              See services &amp; pricing
+            </Link>
+          </p>
+          <p className="mt-4 leading-relaxed text-slate">
             Prefer a straight email?
             <br />
             <a href={`mailto:${SITE.email}`} className="link text-ink">
@@ -45,7 +52,9 @@ export default function ContactPage() {
             </a>
           </p>
         </div>
-        <ContactForm />
+        <Suspense fallback={<ContactForm />}>
+          <ContactFormFromParams />
+        </Suspense>
       </div>
     </div>
   );

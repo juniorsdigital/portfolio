@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Monogram } from "@/components/Wordmark";
-import { OFFERINGS } from "@/lib/offerings";
+import { pageMetadata } from "@/lib/seo";
+import { SERVICES, fromPrice, serviceHref, startingPrice } from "@/lib/services";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: `About — freelance designer in ${SITE.location}`,
-  description: `${SITE.name} is a freelance graphic designer, video editor and marketer in ${SITE.location}. One person from brief to final files.`,
-  alternates: { canonical: "/about" },
-};
+export const metadata = pageMetadata({
+  title: `About ${SITE.name} — freelance designer & video editor, ${SITE.location}`,
+  description: `${SITE.name} is a freelance graphic designer, video editor and marketer in ${SITE.location}. 75+ product covers, a campaign that doubled sales, one person from brief to final files.`,
+  path: "/about",
+  absoluteTitle: true,
+});
 
 const tools = [
   "Photoshop",
@@ -44,10 +45,26 @@ export default function AboutPage() {
                 leave it clean.
               </p>
               <p>
-                I take product covers, digital art, posters and ads. I cut
-                social and advertising video. I build and run Google Business
-                pages and social accounts for people who need that handled
-                without a twelve-person team.
+                I take on{" "}
+                <Link href="/services/graphic-design" className="link text-ink">
+                  graphic design
+                </Link>{" "}
+                — product covers, digital art, posters and ads. I do{" "}
+                <Link href="/services/video-editing" className="link text-ink">
+                  video editing
+                </Link>{" "}
+                for social and advertising. And I handle{" "}
+                <Link href="/services/marketing" className="link text-ink">
+                  marketing
+                </Link>{" "}
+                — setting up and running Google Business Profiles and social
+                accounts for people who need that handled without a
+                twelve-person team.
+              </p>
+              <p>
+                The track record so far: 75+ product covers for OvaniSound, a
+                direct-to-consumer campaign that doubled RyzaGrow&apos;s sales,
+                and a trailer recut that found 7.7K views with no ad spend.
               </p>
               <p>
                 You&apos;ll see{" "}
@@ -80,9 +97,9 @@ export default function AboutPage() {
             What I take on
           </h2>
           <div className="mt-8 grid lg:grid-cols-3">
-            {OFFERINGS.map((offering, i) => (
+            {SERVICES.map((service, i) => (
               <div
-                key={offering.num}
+                key={service.slug}
                 className={`py-7 ${
                   i > 0
                     ? "border-t border-rule lg:border-t-0 lg:border-l lg:pl-8"
@@ -90,9 +107,18 @@ export default function AboutPage() {
                 }`}
               >
                 <h3 className="text-[1.75rem] font-bold tracking-tight">
-                  {offering.title}
+                  {service.name}
                 </h3>
-                <p className="mt-3 text-slate">{offering.items.join(" · ")}</p>
+                <p className="mt-3 text-slate">
+                  {service.packages.map((p) => p.name).join(" · ")}
+                </p>
+                <Link
+                  href={serviceHref(service)}
+                  className="link mt-4 inline-flex min-h-11 items-center"
+                >
+                  {fromPrice(startingPrice(service))} — see pricing{" "}
+                  <span aria-hidden="true">&nbsp;→</span>
+                </Link>
               </div>
             ))}
           </div>
@@ -116,9 +142,14 @@ export default function AboutPage() {
           <h2 id="about-cta-title" className="display display-lg">
             Have work? <span className="text-signal">Send it.</span>
           </h2>
-          <Link href="/contact" className="btn btn-signal min-h-14 px-8 text-lg">
-            Start a project <span aria-hidden="true">→</span>
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/contact" className="btn btn-signal min-h-14 px-8 text-lg">
+              Start a project <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/services" className="btn btn-ghost min-h-14 px-8 text-lg">
+              Services &amp; pricing
+            </Link>
+          </div>
         </div>
       </section>
     </div>

@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
 import { VideoFacade } from "@/components/VideoFacade";
 import { CASE_STUDIES, projectHref } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
+import { contactHref, getService, serviceHref } from "@/lib/services";
 import { SITE } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -24,20 +26,13 @@ export async function generateMetadata({
   const project = find(slug);
   if (!project) return {};
   const { seoTitle, seoDescription } = project.caseStudy;
-  const og = `/images/work/${project.id}-og.jpg`;
-  return {
+  return pageMetadata({
     title: seoTitle,
     description: seoDescription,
-    alternates: { canonical: `/work/${project.id}` },
-    openGraph: {
-      type: "article",
-      title: seoTitle,
-      description: seoDescription,
-      url: `/work/${project.id}`,
-      images: [{ url: og, width: 1200, height: 630, alt: project.thumbnail.alt }],
-    },
-    twitter: { card: "summary_large_image", title: seoTitle, description: seoDescription, images: [og] },
-  };
+    path: `/work/${project.id}`,
+    type: "article",
+    image: { url: `/images/work/${project.id}-og.jpg`, alt: project.thumbnail.alt },
+  });
 }
 
 function categoryLabel(categories: string[]) {
@@ -54,6 +49,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]"
   const next = CASE_STUDIES[(index + 1) % CASE_STUDIES.length];
   const url = `${SITE.url}/work/${project.id}`;
   const video = "video" in cs.hero ? cs.hero.video : null;
+  const service = getService(project.service);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -302,9 +298,14 @@ export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]"
             <p className="mt-6 max-w-[48ch] text-xl leading-relaxed">{cs.pitch.body}</p>
           </div>
           <div className="flex flex-col items-start gap-4">
-            <Link href="/contact" className="btn btn-ink min-h-14 px-8 text-lg">
+            <Link href={contactHref(project.service)} className="btn btn-ink min-h-14 px-8 text-lg">
               {cs.pitch.cta} <span aria-hidden="true">→</span>
             </Link>
+            {service ? (
+              <Link href={serviceHref(service)} className="link text-lg">
+                See {service.name.toLowerCase()} packages &amp; pricing
+              </Link>
+            ) : null}
             <Link href="/work" className="link text-lg">
               See the rest of the work
             </Link>
