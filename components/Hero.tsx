@@ -38,7 +38,7 @@ export function Hero() {
           <CoverShelf />
         </div>
         <div className="mt-5 flex flex-wrap justify-between gap-x-6 gap-y-2 border-t border-line pt-4 font-mono text-sm text-stone">
-          <span>OvaniSound — music pack covers, 2D + 3D</span>
+          <span>OvaniSound — 75+ music pack covers across 32+ genres, since 2025</span>
           <span>Pick a box to see how it was made</span>
         </div>
       </div>

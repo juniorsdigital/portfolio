@@ -88,6 +88,6 @@ export const HERO_COVERS: HeroCover[] = [
   }),
   cover(11, {
     title: "Spooky",
-    process: "My first submission for Spooky came back with: \"This is great, but we were thinking something more goofy.\" So goofy it became: skeletons dancing on their graves, jack-o'-lanterns in witch hats, cats hanging out with brooms, and ghosts in sunglasses. This cover has a special place in my heart because it shows what good feedback can do. I didn't treat the revision as a setback. I used it to get closer to what the client actually wanted, and the result is better than the version I first turned in.",
+    process: "Spooky shows how cover work really happens: I often design alongside the sound designers while the pack is still being written, so the art has to follow the music as it changes. My first take leaned eerie. Once the tracks were finalized, the note came back: \"This is great, but we were thinking something more goofy.\" So goofy it became: skeletons dancing on their graves, jack-o'-lanterns in witch hats, cats hanging out with brooms, and ghosts in sunglasses. With two separate pieces of art on every box, one or two rounds of revisions is a really good result, and this one landed the cover on the music the client actually shipped. It has a special place in my heart.",
   }),
 ];
