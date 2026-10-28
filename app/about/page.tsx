@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: `About ${SITE.name} — freelance designer & video editor, ${SITE.location}`,
-  description: `${SITE.name} is a freelance graphic designer, video editor and marketer in ${SITE.location}. 75+ product covers, a campaign that doubled sales, one person from brief to final files.`,
+  description: `Freelance graphic designer, video editor and marketer in ${SITE.location}. 75+ product covers shipped, a campaign that doubled sales, one person brief to files.`,
   path: "/about",
   absoluteTitle: true,
 });

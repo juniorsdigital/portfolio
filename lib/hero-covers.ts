@@ -1,3 +1,4 @@
+import { contactHref as quoteHref } from "@/lib/services";
 export const OVANI_STORE_URL = "https://ovanisound.com";
 
 /** Pixel sizes of the art files — CSS and the dialog derive their aspect ratios from these. */
@@ -30,7 +31,7 @@ type PackCopy = {
 function cover(n: number, {
   title,
   process,
-  contactHref = "/contact",
+  contactHref = quoteHref("graphic-design", "Product cover design"),
   storeHref = OVANI_STORE_URL,
 }: PackCopy): HeroCover {
   const pad = String(n).padStart(2, "0");

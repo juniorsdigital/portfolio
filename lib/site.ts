@@ -8,7 +8,7 @@ export const SITE = {
   location: "Philadelphia",
   url: "https://www.johnswanson.co",
   description:
-    "John Swanson is a freelance graphic designer, video editor and marketer in Philadelphia — product covers, campaigns, social video and the marketing that ships them.",
+    "John Swanson is a freelance graphic designer, video editor and marketer in Philadelphia: product covers, social video, campaigns and Google Business Profiles.",
   /** Sends from the johnswanson.co domain verified in Resend. */
   fromEmail: "John Swanson <hello@johnswanson.co>",
 } as const;

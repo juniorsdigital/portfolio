@@ -14,7 +14,7 @@ import { RESULTS, SITE } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Services & pricing — design, video & marketing",
-  description: `Freelance graphic design, video editing and marketing services from ${SITE.name} in ${SITE.location}. Clear starting prices, fixed quotes, one person from brief to files.`,
+  description: `Freelance graphic design, video editing and marketing in ${SITE.location}. Clear starting prices, a fixed quote for every project, one person from brief to files.`,
   path: "/services",
 });
 
