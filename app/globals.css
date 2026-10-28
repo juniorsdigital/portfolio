@@ -41,6 +41,22 @@
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
+/* Stands in for Archivo at 72% width / 800 until the font loads: Arial Bold (or a
+ * metric twin) shrunk to the same advance widths, so display type doesn't rewrap
+ * on swap. line-height is set in em, so the glyph scale doesn't change line boxes.
+ * The ascent/descent overrides restore Archivo's text box height (0.878 / 0.21 em,
+ * divided by size-adjust, plus a few percent). Without them the fallback text box
+ * is smaller, and the swap gets counted as a new, later LCP. */
+@font-face {
+  font-family: "Archivo Display Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"),
+    local("LiberationSans-Bold"), local("Roboto Bold"), local("Roboto-Bold");
+  font-weight: 800;
+  size-adjust: 79%;
+  ascent-override: 115%;
+  descent-override: 28%;
+}
+
 @layer base {
 html {
   scroll-behavior: smooth;
@@ -99,7 +115,7 @@ body {
 
 /* Condensed display: Archivo at 72% width, heavy, caps */
 .display {
-  font-family: var(--font-sans);
+  font-family: var(--font-archivo-display);
   font-stretch: 72%;
   font-weight: 800;
   line-height: 0.92;
@@ -127,7 +143,7 @@ body {
 }
 
 .wordmark {
-  font-family: var(--font-sans);
+  font-family: var(--font-archivo-display);
   font-stretch: 75%;
   font-weight: 800;
   letter-spacing: -0.01em;

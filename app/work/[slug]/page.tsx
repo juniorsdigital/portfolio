@@ -106,7 +106,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]"
               <li aria-current="page">{project.name}</li>
             </ol>
           </nav>
-          <h1 id="cs-title" className="display display-xl mt-4 max-w-[15ch]">
+          <h1 id="cs-title" className="display display-xl mt-4 max-w-[7.19em]">
             {cs.headline.lead}{" "}
             <span className="text-signal">{cs.headline.accent}</span>
           </h1>

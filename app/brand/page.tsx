@@ -126,7 +126,7 @@ export default function BrandCaseStudyPage() {
           <p className="kicker text-stone">
             Case study / Brand system
           </p>
-          <h1 id="brand-title" className="display display-xl mt-4 max-w-[14ch]">
+          <h1 id="brand-title" className="display display-xl mt-4 max-w-[6.71em]">
             One system. <span className="text-signal">Every surface.</span>
           </h1>
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
