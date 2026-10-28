@@ -203,9 +203,11 @@ body {
 /* --- Cover shelf (hero) --- */
 
 .shelf {
+  /* --count and --cover-ratio are set inline from lib/hero-covers.ts */
   --count: 11;
+  --cover-ratio: 0.7074;
   --cover-h: clamp(12.5rem, 21vw, 19rem);
-  --cover-w: calc(var(--cover-h) * 0.7074);
+  --cover-w: calc(var(--cover-h) * var(--cover-ratio));
   --peek: calc(var(--cover-w) * 0.38);
   display: flex;
   align-items: flex-end;

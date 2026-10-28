@@ -346,7 +346,7 @@ export default function BrandCaseStudyPage() {
                   <span className="text-signal">30 in 1 week</span>
                 </p>
                 <p className="mt-3 text-[1.75rem] leading-tight font-bold tracking-tight">
-                  60+ e-commerce product covers
+                  75+ music pack covers
                 </p>
               </div>
             </div>

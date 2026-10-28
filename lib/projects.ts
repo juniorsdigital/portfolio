@@ -196,9 +196,9 @@ export const PROJECTS: Project[] = [
     name: "OvaniSound",
     categories: ["design"],
     client: "OvaniSound",
-    title: "60+ e-commerce product covers",
+    title: "75+ music pack covers",
     description:
-      "2D and 3D product cover designs for a sound-design catalog. Thirty distinct covers in one week.",
+      "2D and 3D covers for a sound-design catalog: five projects since 2025 and 32+ genres, from pirate and chiptune to Japanese and comedy. Thirty distinct covers in one week, and a move from AI art to original, hand-made covers.",
     tags: ["Product Covers", "3D"],
     result: "30 in 1 week",
     thumbnail: OVANI_COVER,
