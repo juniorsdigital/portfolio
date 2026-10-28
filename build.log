@@ -1,0 +1,59 @@
+
+> john-swanson-portfolio@1.0.0 build
+> next build
+
+▲ Next.js 16.3.4 (Turbopack)
+✓ Running next.config.ts took 3.7s
+
+  Creating an optimized production build ...
+Turbopack build encountered 2 warnings:
+[next]/internal/font/google/archivo_d462d458.module.css
+Warning: Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/archivo_d462d458.module.css
+    [next]/internal/font/google/archivo_d462d458.js
+    ./app/layout.tsx
+
+
+[next]/internal/font/google/ibm_plex_mono_bdb4b585.module.css
+Warning: Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/ibm_plex_mono_bdb4b585.module.css
+    [next]/internal/font/google/ibm_plex_mono_bdb4b585.js
+    ./app/layout.tsx
+
+
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+[next]/internal/font/google/archivo_d462d458.module.css
+Error: next/font: error:
+Failed to fetch Archivo from Google Fonts.
+If you are offline or behind a proxy, self-host the font with next/font/local, or set HTTP_PROXY/HTTPS_PROXY so Next.js can reach fonts.googleapis.com.
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/archivo_d462d458.module.css
+    [next]/internal/font/google/archivo_d462d458.js
+    ./app/layout.tsx
+
+
+[next]/internal/font/google/ibm_plex_mono_bdb4b585.module.css
+Error: next/font: error:
+Failed to fetch IBM Plex Mono from Google Fonts.
+If you are offline or behind a proxy, self-host the font with next/font/local, or set HTTP_PROXY/HTTPS_PROXY so Next.js can reach fonts.googleapis.com.
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/ibm_plex_mono_bdb4b585.module.css
+    [next]/internal/font/google/ibm_plex_mono_bdb4b585.js
+    ./app/layout.tsx
+
+
+    at ignore-listed frames

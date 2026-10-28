@@ -14,6 +14,8 @@ export type Project = {
   result?: string;
   /** Shown full-width at the top of the grid. */
   featured?: boolean;
+  /** Links to a full case-study page instead of opening the quick-view dialog. */
+  href?: string;
   thumbnail: { src: string; alt: string; width: number; height: number };
   media: WorkMedia[];
 };
@@ -133,6 +135,30 @@ export const PROJECTS: Project[] = [
         id: "Go_kBKhxUrc",
         start: 7,
         title: "Winter Heroes — Documentary",
+      },
+    ],
+  },
+  {
+    id: "brand-system",
+    featured: true,
+    href: "/brand",
+    categories: ["design"],
+    client: "Own studio",
+    title: "Brand system — case study",
+    description:
+      "A wordmark, six color tokens, one type family and a set of components, rebuilt from a busy site into one system that every page is made from.",
+    tags: ["Identity", "Design system", "Web"],
+    thumbnail: {
+      src: "/images/brand/thumb.webp",
+      alt: "Brand system board: the wordmark on ink and paper, color swatches and condensed type",
+      width: 1440,
+      height: 900,
+    },
+    media: [
+      {
+        type: "image",
+        src: "/images/brand/thumb.webp",
+        alt: "Brand system board: the wordmark on ink and paper, color swatches and condensed type",
       },
     ],
   },

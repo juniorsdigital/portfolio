@@ -32,6 +32,11 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/brand" className="hover:underline">
+                  Brand system
+                </Link>
+              </li>
             </ul>
           </nav>
           <div>
