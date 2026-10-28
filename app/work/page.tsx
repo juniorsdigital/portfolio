@@ -4,9 +4,10 @@ import { WorkGrid } from "@/components/WorkGrid";
 import { PROJECTS } from "@/lib/projects";
 
 export const metadata: Metadata = {
-  title: "Work",
+  title: "Work — design, video & marketing case studies",
   description:
-    "Selected graphic design, video editing, and marketing by John Swanson.",
+    "Case studies in product cover design, campaign marketing and video editing by John Swanson: what was made, for whom, and what it did.",
+  alternates: { canonical: "/work" },
 };
 
 export default function WorkPage() {
@@ -20,12 +21,12 @@ export default function WorkPage() {
           aside={
             <p className="text-xl leading-relaxed text-soft">
               Covers, cuts and campaigns. Each one lists what was made, for
-              whom, and what it did. Pick one to open it.
+              whom, and what it did. Pick one for the full case study.
             </p>
           }
         />
         <div className="mt-14">
-          <WorkGrid showFilters detailed />
+          <WorkGrid showFilters detailed eagerFirst />
         </div>
       </div>
     </div>

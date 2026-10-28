@@ -4,6 +4,7 @@ import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/Footer";
+import { JsonLd } from "@/components/JsonLd";
 import { Nav } from "@/components/Nav";
 import { SITE } from "@/lib/site";
 import "./globals.css";
@@ -29,13 +30,82 @@ export const metadata: Metadata = {
     template: `%s — ${SITE.name}`,
   },
   description: SITE.description,
+  applicationName: SITE.name,
+  authors: [{ name: SITE.name, url: SITE.url }],
+  creator: SITE.name,
+  alternates: { canonical: "/" },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },
   openGraph: {
     siteName: SITE.brand,
     type: "website",
+    locale: "en_US",
+    url: "/",
   },
+  twitter: { card: "summary_large_image" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
+  formatDetection: { telephone: false },
+};
+
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE.url}/#person`,
+      name: SITE.name,
+      url: SITE.url,
+      image: `${SITE.url}/images/about-portrait.png`,
+      jobTitle: "Freelance graphic designer, video editor and marketer",
+      email: `mailto:${SITE.email}`,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: SITE.location,
+        addressRegion: "PA",
+        addressCountry: "US",
+      },
+      knowsAbout: [
+        "Graphic design",
+        "Product cover design",
+        "Video editing",
+        "Social media marketing",
+        "Campaign management",
+        "Brand identity",
+      ],
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${SITE.url}/#service`,
+      name: SITE.name,
+      url: SITE.url,
+      description: SITE.description,
+      founder: { "@id": `${SITE.url}/#person` },
+      areaServed: [
+        { "@type": "City", name: SITE.location },
+        { "@type": "Country", name: "United States" },
+      ],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: SITE.location,
+        addressRegion: "PA",
+        addressCountry: "US",
+      },
+      serviceType: ["Graphic design", "Video editing", "Marketing"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE.url}/#website`,
+      name: SITE.name,
+      url: SITE.url,
+      inLanguage: "en-US",
+      publisher: { "@id": `${SITE.url}/#person` },
+    },
+  ],
 };
 
 export const viewport: Viewport = {
@@ -59,6 +129,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <JsonLd data={siteJsonLd} />
         <Nav />
         <main id="main" className="flex-1">
           {children}
