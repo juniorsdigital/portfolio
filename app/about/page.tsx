@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Monogram } from "@/components/Wordmark";
 import { OFFERINGS } from "@/lib/offerings";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `About ${SITE.name} — designer, editor, and marketer in ${SITE.location}, and the studio behind ${SITE.brand}.`,
+  description: `About ${SITE.name} — designer, editor, and marketer in ${SITE.location}.`,
 };
 
 const tools = [
@@ -27,8 +28,8 @@ export default function AboutPage() {
             <p className="kicker text-slate">About / {SITE.location}</p>
             <h1 className="display display-xl mt-4">{SITE.name}.</h1>
             <p className="mt-10 max-w-[32ch] text-[1.625rem] leading-snug font-medium">
-              A freelance designer, editor and marketer — and the whole of{" "}
-              {SITE.brand}.
+              A freelance designer, editor and marketer — and the only person
+              you&apos;ll work with, from brief to final files.
             </p>
             <div className="mt-8 max-w-[60ch] space-y-5 text-lg leading-relaxed text-body sm:text-[1.1875rem]">
               <p>
@@ -46,6 +47,12 @@ export default function AboutPage() {
                 social and advertising video. I build and run Google Business
                 pages and social accounts for people who need that handled
                 without a twelve-person team.
+              </p>
+              <p>
+                You&apos;ll see{" "}
+                <Monogram className="text-[1.1em] text-ink" /> on my files and
+                profiles. It&apos;s my initials, and it&apos;s how I sign the
+                work.
               </p>
             </div>
           </div>

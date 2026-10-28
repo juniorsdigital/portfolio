@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Wordmark } from "@/components/Wordmark";
+import { Monogram, Wordmark } from "@/components/Wordmark";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Brand system — case study",
-  description: `How ${SITE.name} rebuilt his own brand as a system: wordmark, color, type and components, applied across ${SITE.brand}.`,
+  description: `How ${SITE.name} rebuilt his own brand as a system: wordmark, color, type and components, applied across his portfolio.`,
 };
 
 const PROBLEMS = [
@@ -104,7 +104,7 @@ const TYPE = [
 ];
 
 const DELIVERABLES = [
-  "Wordmark and favicon",
+  "Wordmark, jrs. mark and favicon",
   "Color tokens with contrast ratios",
   "Type scale",
   "Buttons, filters, cards and forms",
@@ -125,7 +125,7 @@ export default function BrandCaseStudyPage() {
           </h1>
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
             <p className="max-w-[46ch] text-xl leading-relaxed text-soft sm:text-[1.375rem]">
-              This is the brand system I use for my own studio. I rebuilt it
+              This is the brand system I use for my own work. I rebuilt it
               from a site that looked busy and read badly into a small kit — one
               wordmark, six colors, one type family and a handful of
               components — that every page, file and post is built from.
@@ -133,7 +133,7 @@ export default function BrandCaseStudyPage() {
             <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-line pt-6 text-[0.9375rem]">
               <div>
                 <dt className="kicker text-stone">Client</dt>
-                <dd className="mt-1.5">My own studio</dd>
+                <dd className="mt-1.5">Self-initiated</dd>
               </div>
               <div>
                 <dt className="kicker text-stone">Year</dt>
@@ -251,26 +251,30 @@ export default function BrandCaseStudyPage() {
             Small enough to remember.
           </h2>
 
-          <h3 className="mt-16 text-2xl font-bold tracking-tight">Wordmark &amp; mark</h3>
+          <h3 className="mt-16 text-2xl font-bold tracking-tight">Name &amp; mark</h3>
           <div className="mt-6 grid gap-4 md:grid-cols-[2fr_2fr_1fr]">
             <div className="grid min-h-56 place-items-center bg-ink px-6 text-paper">
-              <Wordmark className="text-[clamp(2.5rem,5vw,4.5rem)]" />
+              <Wordmark className="text-[clamp(2.25rem,4.2vw,4rem)]" />
             </div>
             <div className="grid min-h-56 place-items-center border border-rule bg-card px-6">
-              <Wordmark className="text-[clamp(2.5rem,5vw,4.5rem)]" />
+              <Monogram className="text-[clamp(3.5rem,7vw,6.5rem)]" />
             </div>
             <div className="flex min-h-56 items-center justify-center gap-6 border border-rule bg-card">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.svg" alt="Favicon mark" width={96} height={96} />
+              <img src="/icon.svg" alt="Favicon: jrs. in ink on signal orange" width={96} height={96} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/icon.svg" alt="" width={32} height={32} />
             </div>
           </div>
           <p className="mt-5 max-w-[70ch] text-slate">
-            Lowercase Archivo Condensed. The orange dot is the brand&apos;s only
-            device: it shows up in the wordmark, the favicon, active navigation
-            and numbered sections, so the brand is recognizable even where the
-            name isn&apos;t.
+            The wordmark is my name, set in Archivo Condensed and closed with
+            the orange dot. It matches johnswanson.co, and it&apos;s what
+            clients search for and pass on. My initials, jrs., are the mark:
+            the favicon, profile images and the signature on files. I tried a
+            studio name built from those initials first and dropped it — people
+            hire a person, and a name that looks like a web address has to be
+            one you own. The dot carries across all of it, plus active
+            navigation and numbered sections.
           </p>
 
           <h3 className="mt-16 text-2xl font-bold tracking-tight">Color</h3>

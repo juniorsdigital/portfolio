@@ -15,7 +15,7 @@ export default function HomePage() {
           <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] lg:gap-14">
             <div>
               <p className="kicker mb-6 text-stone">
-                {SITE.name} — independent studio, {SITE.location}
+                Freelance designer, editor &amp; marketer — {SITE.location}
               </p>
               <h1 id="hero-title" className="display display-xl text-[clamp(3.25rem,6.8vw,6.75rem)]">
                 Design, video &amp; marketing that{" "}

@@ -143,7 +143,7 @@ export const PROJECTS: Project[] = [
     featured: true,
     href: "/brand",
     categories: ["design"],
-    client: "Own studio",
+    client: "Self-initiated",
     title: "Brand system — case study",
     description:
       "A wordmark, six color tokens, one type family and a set of components, rebuilt from a busy site into one system that every page is made from.",
