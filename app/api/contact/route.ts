@@ -7,41 +7,15 @@ import {
   TIMELINE_OPTIONS,
   type ServiceValue,
 } from "@/lib/offerings";
+import { escapeHtml } from "@/lib/email/layout";
+import { briefReceipt } from "@/lib/email/receipt";
+import { clientIp, rateLimiter } from "@/lib/rate-limit";
 import { SITE } from "@/lib/site";
 
 export const runtime = "nodejs";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const hits = new Map<string, number[]>();
-
-function clientIp(req: Request) {
-  return (
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "unknown"
-  );
-}
-
-function rateLimited(ip: string) {
-  const now = Date.now();
-  const windowMs = 60 * 60 * 1000;
-  const recent = (hits.get(ip) || []).filter((t) => now - t < windowMs);
-  if (recent.length >= 5) {
-    hits.set(ip, recent);
-    return true;
-  }
-  recent.push(now);
-  hits.set(ip, recent);
-  return false;
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+const rateLimited = rateLimiter({ limit: 5, windowMs: 60 * 60 * 1000 });
 
 function asString(value: unknown, max = 4000) {
   if (typeof value !== "string") return "";
@@ -130,7 +104,7 @@ export async function POST(req: Request) {
   }
 
   const resend = new Resend(key);
-  const rows = [
+  const rows: [string, string][] = [
     ["Name", name],
     ["Email", email],
     ["Phone", phone || "—"],
@@ -193,6 +167,25 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
+
+  // The brief is already in my inbox, so a failed receipt is logged, not
+  // reported. Links stay out of it: this goes to whatever address was typed.
+  const receipt = briefReceipt({
+    name,
+    service: service as ServiceValue,
+    serviceLabel,
+    summary: rows.filter(([label]) => label !== "Email" && label !== "Links"),
+    brief,
+  });
+  const { error: receiptError } = await resend.emails.send({
+    from: SITE.fromEmail,
+    to: [email],
+    replyTo: SITE.email,
+    subject: receipt.subject,
+    html: receipt.html,
+    text: receipt.text,
+  });
+  if (receiptError) console.error("Receipt not sent:", receiptError);
 
   return NextResponse.json({ success: true });
 }

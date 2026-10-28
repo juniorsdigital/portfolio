@@ -21,7 +21,7 @@ export const NAV_LINKS = [
 ] as const;
 
 /** Routes whose top of page sits on the paper ground. */
-export const PAPER_ROUTES = ["/about", "/contact"] as const;
+export const PAPER_ROUTES = ["/about", "/contact", "/newsletter"] as const;
 
 /** Headline results pulled from the project list, shown on the home page. */
 export const RESULTS = [

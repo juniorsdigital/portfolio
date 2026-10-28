@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { route: "/brand", priority: 0.8 },
     { route: "/about", priority: 0.7 },
     { route: "/contact", priority: 0.7 },
+    { route: "/newsletter", priority: 0.5 },
   ];
   return pages.map(({ route, priority }) => ({
     url: `${SITE.url}${route}`,

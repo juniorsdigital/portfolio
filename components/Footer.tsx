@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { Wordmark } from "@/components/Wordmark";
 import { CASE_STUDIES, projectHref } from "@/lib/projects";
 import { SERVICES, serviceHref } from "@/lib/services";
@@ -86,6 +87,18 @@ export function Footer() {
               </li>
             </ul>
           </div>
+        </div>
+        <div className="mt-14 grid gap-8 border-t border-line pt-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+          <div>
+            <p className="kicker text-stone">Stay in the loop</p>
+            <p className="mt-3 max-w-[30ch] text-2xl leading-snug font-bold">
+              New work every other week, and a heads-up when I open for projects.
+            </p>
+            <Link href="/newsletter" className="link mt-4 inline-block text-stone">
+              What you&apos;ll get
+            </Link>
+          </div>
+          <SubscribeForm tone="ink" />
         </div>
         <p className="kicker mt-14 border-t border-line pt-6 font-normal text-stone">
           © {new Date().getFullYear()} {SITE.name}
