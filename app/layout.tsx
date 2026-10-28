@@ -17,6 +17,19 @@ const archivo = Archivo({
   display: "swap",
 });
 
+// The same font file again, for the condensed .display / .wordmark styles. Its
+// fallback is Arial Bold scaled to Archivo's 72% width (see globals.css), so the
+// headlines wrap the same before and after the font swaps in.
+const archivoDisplay = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo-display",
+  axes: ["wdth"],
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  fallback: ["Archivo Display Fallback", "sans-serif"],
+});
+
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-plex-mono",
@@ -142,7 +155,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${archivo.variable} ${plexMono.variable} h-full bg-ink`}
+      className={`${archivo.variable} ${archivoDisplay.variable} ${plexMono.variable} h-full bg-ink`}
     >
       <body className="flex min-h-full flex-col bg-ink text-paper antialiased">
         <a
