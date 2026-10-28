@@ -205,12 +205,12 @@ export const PROJECTS: Project[] = [
     caseStudy: {
       seoTitle: "OvaniSound music pack covers & 3D packaging",
       seoDescription:
-        "60+ e-commerce product covers for OvaniSound's music and sound-effect packs: cover art, 3D box renders and side-panel illustration — 30 covers in one week.",
-      headline: { lead: "60 covers.", accent: "One shelf." },
-      lede: "OvaniSound sells music and sound-effect packs for game developers and creators. Every pack needs a cover that sells a sound you can't hear yet. I've designed more than 60 of them — 2D cover art, 3D box renders and the illustrated side-panels that make the store read as a collection.",
+        "75+ e-commerce product covers for OvaniSound's music and sound-effect packs across 32+ genres: cover art, 3D box renders and side-panels — 30 in one week.",
+      headline: { lead: "75 covers.", accent: "One shelf." },
+      lede: "OvaniSound sells music and sound-effect packs for game developers and creators. Every pack needs a cover that sells a sound you can't hear yet. Since 2025 I've designed more than 75 of them across 32+ genres, from pirate and chiptune to Japanese and comedy — 2D cover art, 3D box renders and the illustrated side-panels that make the store read as a collection.",
       role: "Product cover design, 3D renders, packaging art",
       delivered: [
-        "60+ product covers",
+        "75+ product covers",
         "3D box renders",
         "Side-panel illustration",
         "Volume stickers",
@@ -300,7 +300,7 @@ export const PROJECTS: Project[] = [
         title: "A store that reads like a collection.",
         body: "Every box is different, and every box is clearly Ovani. The covers hold together across genres and volumes, the side-panels give fans something to collect, and the catalog no longer depends on AI imagery.",
         stats: [
-          { value: "60+", label: "product covers across the catalog" },
+          { value: "75+", label: "product covers across 32+ genres" },
           { value: "30", label: "distinct covers shipped in a single week" },
           { value: "2D+3D", label: "cover art, box renders and stickers for every pack" },
         ],
