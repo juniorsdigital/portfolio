@@ -4,7 +4,7 @@ export const SITE = {
   byline: "The independent studio of John Swanson.",
   email: "johnreidswanson@gmail.com",
   location: "Philadelphia",
-  url: "https://juniors.digital",
+  url: "https://www.johnswanson.co",
   description:
     "juniors.digital is the independent studio of John Swanson — graphic design, video editing, and marketing in Philadelphia.",
   fromEmail: "John Swanson <hello@juniors.digital>",
