@@ -106,7 +106,7 @@ export const SERVICES: Service[] = [
     stats: [
       { value: "75+", label: "product covers shipped across 32+ genres" },
       { value: "30", label: "distinct covers delivered in a single week" },
-      { value: "2D+3D", label: "cover art, box renders and stickers" },
+      { value: "3D", label: "box renders for store pages, plus 2D volume stickers" },
     ],
     proof: ["ovani", "bgcb", "brand-system"],
     fit: [
@@ -203,7 +203,7 @@ export const SERVICES: Service[] = [
     stats: [
       { value: "7.7K", label: "organic views on the She Who Flies trailer recut" },
       { value: "$0", label: "spent on paid promotion to get them" },
-      { value: "1→Many", label: "one documentary recut into a run of social clips" },
+      { value: "2", label: "documentaries recut — one trailer, one set of social clips" },
     ],
     proof: ["she-who-flies", "winter-heroes"],
     fit: [

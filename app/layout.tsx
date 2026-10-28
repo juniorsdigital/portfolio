@@ -141,6 +141,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${archivo.variable} ${plexMono.variable} h-full bg-ink`}
     >
       <body className="flex min-h-full flex-col bg-ink text-paper antialiased">

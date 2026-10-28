@@ -14,15 +14,23 @@ export const metadata = pageMetadata({
 export default function ContactPage() {
   return (
     <div className="on-paper bg-paper pt-16 pb-28 text-ink sm:pt-24">
-      <div className="wrap grid items-start gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
-        <div className="lg:sticky lg:top-28">
+      {/* On phones the form comes straight after the heading; the process sits below it. */}
+      <div className="wrap grid items-start gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:grid-rows-[auto_1fr] lg:gap-x-20 lg:gap-y-0">
+        <div className="lg:col-start-1 lg:row-start-1">
           <p className="kicker text-slate">Contact</p>
           <h1 className="display display-xl mt-4">Brief me.</h1>
           <p className="mt-7 max-w-[34ch] text-xl leading-relaxed text-body">
             What you need, when you need it, and enough context to quote. You
             get a fixed price before any work starts.
           </p>
-          <ol className="mt-10 border-t border-rule">
+        </div>
+        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <Suspense fallback={<ContactForm />}>
+            <ContactFormFromParams />
+          </Suspense>
+        </div>
+        <div className="lg:sticky lg:top-28 lg:col-start-1 lg:row-start-2 lg:pt-10">
+          <ol className="border-t border-rule">
             {PROCESS.map((step, i) => (
               <li
                 key={step.title}
@@ -52,9 +60,6 @@ export default function ContactPage() {
             </a>
           </p>
         </div>
-        <Suspense fallback={<ContactForm />}>
-          <ContactFormFromParams />
-        </Suspense>
       </div>
     </div>
   );

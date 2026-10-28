@@ -134,7 +134,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
                 </Link>
               </div>
             </div>
-            <dl className="grid content-start gap-y-6 border-t border-line pt-6 text-[0.9375rem]">
+            <dl className="grid content-start gap-y-4 border-t border-line pt-6 text-[0.9375rem] sm:gap-y-6">
               {facts.map((f) => (
                 <div key={f.term}>
                   <dt className="kicker text-stone">{f.term}</dt>
@@ -144,14 +144,14 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
             </dl>
           </div>
 
-          <ul className="mt-16 grid border-y border-line sm:grid-cols-3">
+          <ul className="mt-12 grid grid-cols-3 border-y border-line sm:mt-16">
             {service.stats.map((r, i) => (
               <li
                 key={r.label}
-                className={`py-9 ${i > 0 ? "border-t border-line sm:border-t-0 sm:border-l sm:pl-8" : "sm:pr-8"}`}
+                className={`py-6 sm:py-9 ${i > 0 ? "border-l border-line pl-3 sm:pl-8" : "pr-3 sm:pr-8"}`}
               >
-                <p className="display text-[4.5rem] leading-none text-signal">{r.value}</p>
-                <p className="mt-3 max-w-[30ch] text-soft">{r.label}</p>
+                <p className="display text-[2.25rem] leading-none text-signal sm:text-[4.5rem]">{r.value}</p>
+                <p className="mt-2 max-w-[30ch] text-[0.8125rem] leading-snug text-soft sm:mt-3 sm:text-base">{r.label}</p>
               </li>
             ))}
           </ul>

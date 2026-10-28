@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@vercel/analytics";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
@@ -86,6 +87,17 @@ export function ContactForm({
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const missing = [
+      form.name.trim().length < 2 && "your name",
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()) && "a valid email",
+      !form.service && "what you need",
+      form.brief.trim().length < 10 && "a line or two of brief",
+    ].filter(Boolean);
+    if (missing.length) {
+      setStatus("error");
+      setError(`Please add ${missing.join(", ").replace(/, ([^,]*)$/, " and $1")}.`);
+      return;
+    }
     setError("");
     setStatus("sending");
     try {
@@ -100,6 +112,7 @@ export function ContactForm({
         setError(data.error || "Could not send. Try email instead.");
         return;
       }
+      track("Brief sent", { service: form.service, budget: form.budget || "none" });
       setStatus("sent");
       setForm(initial);
     } catch {
