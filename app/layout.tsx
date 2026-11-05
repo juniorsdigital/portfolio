@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/Footer";
@@ -160,6 +159,23 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${archivo.variable} ${archivoDisplay.variable} ${plexMono.variable} h-full bg-ink`}
     >
+      <head>
+        {/* Google tag (gtag.js). Plain tags in <head>, not next/script, so the
+            snippet is in the server HTML where Google's tag checker looks for it. */}
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', '${GA_MEASUREMENT_ID}');`,
+          }}
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-ink text-paper antialiased">
         <a
           href="#main"
@@ -175,20 +191,6 @@ export default function RootLayout({
         <Footer />
         <Analytics />
         <SpeedInsights />
-        {/* Google tag (gtag.js) */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', '${GA_MEASUREMENT_ID}');
-          `}
-        </Script>
       </body>
     </html>
   );
