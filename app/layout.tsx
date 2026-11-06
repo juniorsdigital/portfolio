@@ -37,7 +37,7 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const GA_MEASUREMENT_ID = "G-PEFZHCZTGQ";
+const GTM_CONTAINER_ID = "GTM-PZJNX6GQ";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -160,19 +160,17 @@ export default function RootLayout({
       className={`${archivo.variable} ${archivoDisplay.variable} ${plexMono.variable} h-full bg-ink`}
     >
       <head>
-        {/* Google tag (gtag.js). Plain tags in <head>, not next/script, so the
+        {/* Google Tag Manager (gtm.js). Plain tags in <head>, not next/script, so the
             snippet is in the server HTML where Google's tag checker looks for it. */}
         <script
           async
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          src={`https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`}
         />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-
-gtag('config', '${GA_MEASUREMENT_ID}');`,
+gtag('js', new Date());`,
           }}
         />
       </head>
