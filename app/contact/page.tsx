@@ -3,11 +3,11 @@ import { Suspense } from "react";
 import { ContactForm, ContactFormFromParams } from "@/components/ContactForm";
 import { pageMetadata } from "@/lib/seo";
 import { PROCESS } from "@/lib/services";
-import { SITE } from "@/lib/site";
+import { SITE, TERMS } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Contact — get a quote",
-  description: `Get a fixed quote for graphic design, video editing or marketing from ${SITE.name}, a freelancer in ${SITE.location}. Send a brief and get a scope back by email.`,
+  description: `Get a fixed quote for cover art, graphic design, video editing or marketing from ${SITE.name}, a freelancer in ${SITE.location}. Reply within ${SITE.replyTime}.`,
   path: "/contact",
 });
 
@@ -20,8 +20,8 @@ export default function ContactPage() {
           <p className="kicker text-slate">Contact</p>
           <h1 className="display display-xl mt-4">Brief me.</h1>
           <p className="mt-7 max-w-[34ch] text-xl leading-relaxed text-body">
-            What you need, when you need it, and enough context to quote. You
-            get a fixed price before any work starts.
+            What you need, when you need it, and enough context to quote.
+            You&apos;ll hear back within {SITE.replyTime} with a fixed price.
           </p>
         </div>
         <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
@@ -46,6 +46,11 @@ export default function ContactPage() {
               </li>
             ))}
           </ol>
+          <h2 className="kicker mt-10 text-slate">Terms</h2>
+          <ul className="mt-4 space-y-3 leading-relaxed text-slate">
+            <li>{TERMS.payment}</li>
+            <li>{TERMS.rights}</li>
+          </ul>
           <p className="mt-8 leading-relaxed text-slate">
             Want a ballpark first?{" "}
             <Link href="/services" className="link text-ink">

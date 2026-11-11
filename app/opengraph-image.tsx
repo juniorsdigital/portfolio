@@ -1,12 +1,12 @@
 import { ImageResponse } from "next/og";
 import { SITE } from "@/lib/site";
 
-export const alt = `${SITE.name} — design, video & marketing that ships`;
+export const alt = `${SITE.name} — ${SITE.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const HEADLINE = "Design, video & marketing that ships.";
-const FOOTER = [`Freelance · ${SITE.location}`, "johnswanson.co"];
+const HEADLINE = SITE.tagline;
+const FOOTER = [`Cover art · 3D packaging · trailers — ${SITE.location}`, "johnswanson.co"];
 
 /**
  * Condensed Archivo 800, subset to the glyphs on the card. Built once at

@@ -14,11 +14,12 @@ export function Offerings() {
           tone="paper"
           kicker="01 / Services"
           id="services-title"
-          title="Three lanes. One person."
+          title="Covers first. Then the launch."
           aside={
             <p className="text-lg text-slate">
-              Hire one lane or all three. Either way you deal with the person
-              doing the work — and you see the price before it starts.
+              Cover art is the specialty. Trailers, ads and marketing are there
+              when the release needs them, and every job gets a fixed price
+              before it starts.
             </p>
           }
         />
@@ -41,17 +42,6 @@ export function Offerings() {
                 </Link>
               </h3>
               <p className="mt-3 text-slate">{service.summary}</p>
-              <ul className="mt-7 space-y-2.5 border-t border-rule-soft pt-5">
-                {service.packages.map((p) => (
-                  <li key={p.name} className="flex items-baseline gap-3">
-                    <span
-                      className="h-1.5 w-1.5 shrink-0 translate-y-[-0.15em] bg-signal"
-                      aria-hidden="true"
-                    />
-                    {p.name}
-                  </li>
-                ))}
-              </ul>
               <span
                 className="mt-auto inline-flex items-center gap-2 pt-8 text-lg font-semibold underline decoration-1 underline-offset-[0.3em] group-hover:decoration-signal group-hover:decoration-2"
                 aria-hidden="true"
@@ -62,13 +52,13 @@ export function Offerings() {
           ))}
         </div>
         <p className="mt-8 text-slate">
-          Need more than one lane?{" "}
+          Selling music, sample or sound packs?{" "}
+          <Link href="/cover-art" className="link text-ink">
+            See cover art for packs
+          </Link>
+          . Need more than one service?{" "}
           <Link href={contactHref("multiple")} className="link text-ink">
             Send one brief
-          </Link>{" "}
-          and I&apos;ll scope it together. Or{" "}
-          <Link href="/services" className="link text-ink">
-            compare all services
           </Link>
           .
         </p>

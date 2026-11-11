@@ -73,7 +73,7 @@ export function Nav() {
                 href="/contact"
                 className={`btn btn-sm ${paper ? "btn-ink" : "btn-signal"}`}
               >
-                Start a project
+                Get a quote
               </Link>
             )}
           </nav>
@@ -131,7 +131,7 @@ export function Nav() {
               onClick={() => setOpen(false)}
               className="btn btn-signal"
             >
-              Start a project <span aria-hidden="true">→</span>
+              Get a quote <span aria-hidden="true">→</span>
             </Link>
             <a href={`mailto:${SITE.email}`} className="link font-mono text-sm font-normal text-stone">
               {SITE.email}

@@ -34,7 +34,9 @@ export function CoverShelf() {
           >
             <Image
               src={cover.src}
-              alt=""
+              // The button's label names the action; the alt text describes the art
+              // for image search.
+              alt={`${cover.title} — music pack cover art for OvaniSound`}
               fill
               // The headline is the LCP on every viewport, so the covers load lazily
               // instead of competing with the CSS and fonts. Widths follow .shelf's

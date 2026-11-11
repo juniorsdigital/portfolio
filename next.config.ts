@@ -12,6 +12,25 @@ const nextConfig: NextConfig = {
     // AVIF first (~20% smaller than WebP), WebP for older browsers.
     formats: ["image/avif", "image/webp"],
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          // No full CSP: GTM and the YouTube embeds load scripts from hosts that
+          // change. frame-ancestors alone stops other sites framing the pages.
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

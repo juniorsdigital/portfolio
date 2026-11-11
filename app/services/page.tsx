@@ -10,11 +10,11 @@ import {
   serviceHref,
   startingPrice,
 } from "@/lib/services";
-import { RESULTS, SITE } from "@/lib/site";
+import { SITE } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Services & pricing — design, video & marketing",
-  description: `Freelance graphic design, video editing and marketing in ${SITE.location}. Clear starting prices, a fixed quote for every project, one person from brief to files.`,
+  description: `Cover art and graphic design, video editing and marketing from a freelancer in ${SITE.location}. Starting prices listed, a fixed quote within ${SITE.replyTime}.`,
   path: "/services",
 });
 
@@ -51,7 +51,7 @@ export default function ServicesPage() {
           <SectionHeader
             as="h1"
             id="services-title"
-            kicker={`Services / ${SERVICES.length} lanes, one person`}
+            kicker={`Services / ${SERVICES.length} services`}
             title={
               <>
                 Services <span className="text-signal">&amp; pricing.</span>
@@ -59,27 +59,20 @@ export default function ServicesPage() {
             }
             aside={
               <p className="text-xl leading-relaxed text-soft">
-                Graphic design, video editing and marketing for brands that need
-                work shipped, not pitched. Starting prices are listed; every
-                project gets a fixed quote.
+                Cover art and graphic design, video editing and marketing.
+                Starting prices are listed; every project gets a fixed quote
+                before it starts. Selling packs?{" "}
+                <Link href="/cover-art" className="link text-paper">
+                  See cover art for packs
+                </Link>
+                .
               </p>
             }
           />
-          <ul className="mt-16 grid border-y border-line sm:grid-cols-3">
-            {RESULTS.map((r, i) => (
-              <li
-                key={r.value}
-                className={`py-9 ${i > 0 ? "border-t border-line sm:border-t-0 sm:border-l sm:pl-8" : "sm:pr-8"}`}
-              >
-                <p className="display text-[4.5rem] leading-none text-signal">{r.value}</p>
-                <p className="mt-3 max-w-[30ch] text-soft">{r.label}</p>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
-      <section className="section on-paper bg-paper text-ink" aria-label="Service lanes">
+      <section className="section on-paper bg-paper text-ink" aria-label="Services">
         <div className="wrap space-y-6">
           {SERVICES.map((service) => (
             <article
@@ -97,7 +90,7 @@ export default function ServicesPage() {
                 </h2>
                 <p className="mt-4 max-w-[40ch] text-lg text-slate">{service.summary}</p>
                 <p className="mt-6 font-mono text-[0.9375rem]">
-                  {fromPrice(startingPrice(service))} · ${service.hourly}/hr one-offs
+                  {fromPrice(startingPrice(service))} · fixed quote on every job
                 </p>
                 <div className="mt-auto flex flex-wrap gap-3 pt-8">
                   <Link href={serviceHref(service)} className="btn btn-ink">
@@ -127,7 +120,7 @@ export default function ServicesPage() {
             </article>
           ))}
           <p className="pt-2 text-slate">
-            Need more than one lane?{" "}
+            Need more than one service?{" "}
             <Link href={contactHref("multiple")} className="link text-ink">
               Send one brief
             </Link>{" "}
@@ -138,7 +131,7 @@ export default function ServicesPage() {
 
       <section className="section" aria-labelledby="process-title">
         <div className="wrap">
-          <SectionHeader kicker="How it works" id="process-title" title="Brief to files." />
+          <SectionHeader kicker="How it works" id="process-title" title="Three steps to a start date." />
           <ol className="mt-14 grid gap-px bg-line sm:grid-cols-3">
             {PROCESS.map((step, i) => (
               <li key={step.title} className="bg-ink p-8 sm:p-10">
@@ -155,17 +148,17 @@ export default function ServicesPage() {
         <div className="wrap flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 id="services-cta-title" className="display display-xl">
-              Have work?
+              Get a fixed
               <br />
-              Send it.
+              quote.
             </h2>
             <p className="mt-6 max-w-[44ch] text-xl leading-relaxed">
-              Tell me what you need. I&apos;ll reply with a scope and a fixed
-              price — or a no, if I&apos;m not the right person.
+              Send the brief. Within {SITE.replyTime} you&apos;ll have a scope
+              and a price — or a no, if I&apos;m not the right person.
             </p>
           </div>
           <Link href="/contact" className="btn btn-ink min-h-14 px-8 text-lg">
-            Start a project <span aria-hidden="true">→</span>
+            Send the brief <span aria-hidden="true">→</span>
           </Link>
         </div>
       </section>

@@ -23,7 +23,7 @@ export function pageMetadata({
   absoluteTitle?: boolean;
 }): Metadata {
   // Defaults to the generated card in app/opengraph-image.tsx.
-  const card = image ?? { url: "/opengraph-image", alt: `${SITE.name} — design, video & marketing that ships` };
+  const card = image ?? { url: "/opengraph-image", alt: `${SITE.name} — ${SITE.tagline}` };
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,

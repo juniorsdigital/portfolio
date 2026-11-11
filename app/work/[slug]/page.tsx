@@ -254,7 +254,12 @@ export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]"
             </h2>
             <p className="max-w-[46ch] text-lg text-soft">{cs.outcome.body}</p>
           </div>
-          <ul className="mt-14 grid border-y border-line sm:grid-cols-3">
+          {cs.outcome.stats.length > 0 ? (
+          <ul
+            className={`mt-14 grid border-y border-line ${
+              cs.outcome.stats.length === 3 ? "sm:grid-cols-3" : cs.outcome.stats.length === 2 ? "sm:grid-cols-2" : ""
+            }`}
+          >
             {cs.outcome.stats.map((r, i) => (
               <li
                 key={r.label}
@@ -265,6 +270,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]"
               </li>
             ))}
           </ul>
+          ) : null}
           {cs.external ? (
             <a
               href={cs.external.href}

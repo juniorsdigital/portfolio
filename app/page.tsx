@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Hero } from "@/components/Hero";
 import { Offerings } from "@/components/Offerings";
 import { SectionHeader } from "@/components/SectionHeader";
+import { Testimonials } from "@/components/Testimonials";
 import { WorkGrid } from "@/components/WorkGrid";
 import { PROJECTS } from "@/lib/projects";
 import { RESULTS, SITE } from "@/lib/site";
@@ -39,7 +40,7 @@ export default function HomePage() {
           <SectionHeader
             kicker="02 / Selected work"
             id="work-title"
-            title="Proof, not pitch."
+            title="Selected work."
             aside={
               <Link href="/work" className="link inline-flex min-h-11 items-center text-lg">
                 All work ({PROJECTS.length}) <span aria-hidden="true">&nbsp;→</span>
@@ -72,14 +73,14 @@ export default function HomePage() {
               Made in {SITE.location}.
             </h2>
             <p className="mt-8 max-w-[36ch] text-[1.375rem] leading-normal">
-              I&apos;m {SITE.name}. I design, edit and run the marketing that
-              has to ship — and I&apos;m the one you talk to from brief to final
-              files.
+              I&apos;m {SITE.name}. I make covers, cut trailers and run
+              launches for people who sell online — and I answer every message
+              myself.
             </p>
             <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-slate">
-              Sport has been in the background since 2019 — first on the
-              water, now racing bikes. It doesn&apos;t show up as a theme. It
-              shows up as how I work: show up, go hard, leave it clean.
+              I work best with small teams that release often: sound libraries,
+              music and game-audio publishers, and brands selling direct. If
+              you have a release schedule, I&apos;ll keep to it.
             </p>
             <Link href="/about" className="link mt-7 inline-flex min-h-11 items-center text-lg">
               More about me <span aria-hidden="true">&nbsp;→</span>
@@ -87,6 +88,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <Testimonials tone="ink" />
 
       <section className="on-paper bg-signal py-24 text-ink sm:py-28" aria-labelledby="cta-title">
         <div className="wrap flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
@@ -97,13 +100,14 @@ export default function HomePage() {
               Send it.
             </h2>
             <p className="mt-6 max-w-[44ch] text-xl leading-relaxed">
-              Tell me what you need. I&apos;ll reply with a scope and a fixed
-              price — or a no, if I&apos;m not the right person.
+              Tell me what you need. Within {SITE.replyTime} you&apos;ll get a
+              scope and a fixed price — or a no, if I&apos;m not the right
+              person.
             </p>
           </div>
           <div className="flex flex-col items-start gap-4">
             <Link href="/contact" className="btn btn-ink min-h-14 px-8 text-lg">
-              Start a project <span aria-hidden="true">→</span>
+              Get a quote <span aria-hidden="true">→</span>
             </Link>
             <a href={`mailto:${SITE.email}`} className="link font-mono text-[0.9375rem] font-normal">
               {SITE.email}

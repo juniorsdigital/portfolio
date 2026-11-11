@@ -10,6 +10,7 @@ import {
   TIMELINE_OPTIONS,
   type ServiceValue,
 } from "@/lib/offerings";
+import { SITE } from "@/lib/site";
 
 const initial = {
   name: "",
@@ -127,8 +128,8 @@ export function ContactForm({
         <p className="kicker text-signal-ink">Sent</p>
         <h2 className="mt-3 text-4xl font-bold tracking-tight">I have it.</h2>
         <p className="mt-3 max-w-md text-lg leading-relaxed text-slate">
-          I&apos;ll read the brief and get back to you. If it&apos;s urgent,
-          email me directly.
+          I&apos;ll read the brief and reply within {SITE.replyTime}. If
+          it&apos;s urgent, email me directly.
         </p>
         <button
           type="button"
@@ -344,7 +345,7 @@ export function ContactForm({
           <span aria-hidden="true">→</span>
         </button>
         <span className="text-[0.9375rem] text-slate">
-          I reply to the email you leave here.
+          Reply within {SITE.replyTime}, to the email you leave here.
         </span>
       </div>
     </form>

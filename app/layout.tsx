@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Nav } from "@/components/Nav";
 import { SERVICES, serviceHref, startingPrice } from "@/lib/services";
-import { SITE } from "@/lib/site";
+import { SITE, SOCIAL_LINKS } from "@/lib/site";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -42,7 +42,7 @@ const GTM_CONTAINER_ID = "GTM-PZJNX6GQ";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — Design, video & marketing in ${SITE.location}`,
+    default: `Cover art for music, sample & sound packs — ${SITE.name}`,
     template: `%s — ${SITE.name}`,
   },
   description: SITE.description,
@@ -77,7 +77,8 @@ const siteJsonLd = {
       name: SITE.name,
       url: SITE.url,
       image: `${SITE.url}/images/about-portrait.png`,
-      jobTitle: "Freelance graphic designer, video editor and marketer",
+      jobTitle: "Freelance cover artist, graphic designer and video editor",
+      ...(SOCIAL_LINKS.length > 0 ? { sameAs: SOCIAL_LINKS.map((l) => l.href) } : {}),
       email: `mailto:${SITE.email}`,
       address: {
         "@type": "PostalAddress",
@@ -86,8 +87,13 @@ const siteJsonLd = {
         addressCountry: "US",
       },
       knowsAbout: [
+        "Cover art",
+        "Music pack cover design",
+        "Sample pack cover art",
+        "3D packaging renders",
         "Graphic design",
         "Product cover design",
+        "Trailer editing",
         "Video editing",
         "Social media marketing",
         "Google Business Profile management",
@@ -160,21 +166,31 @@ export default function RootLayout({
       className={`${archivo.variable} ${archivoDisplay.variable} ${plexMono.variable} h-full bg-ink`}
     >
       <head>
-        {/* Google Tag Manager (gtm.js). Plain tags in <head>, not next/script, so the
-            snippet is in the server HTML where Google's tag checker looks for it. */}
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`}
-        />
+        {/* Google Tag Manager — Google's own container snippet, as a plain tag in <head>
+            so it is in the server HTML where Tag Assistant looks for it. The
+            `gtm.start` / `gtm.js` push is what fires the container's All Pages and
+            Initialization triggers; without it, page-view tags never run. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());`,
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_CONTAINER_ID}');`,
           }}
         />
       </head>
       <body className="flex min-h-full flex-col bg-ink text-paper antialiased">
+        {/* Google Tag Manager (noscript), straight after <body> as Google specifies. */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+            title="Google Tag Manager"
+          />
+        </noscript>
         <a
           href="#main"
           className="btn btn-sm btn-signal sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]"

@@ -11,9 +11,11 @@ import {
   contactHref,
   fromPrice,
   getService,
+  serviceFaqs,
   serviceHref,
   startingPrice,
 } from "@/lib/services";
+import { Testimonials } from "@/components/Testimonials";
 import { SITE } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -45,6 +47,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
     .map((id) => PROJECTS.find((p) => p.id === id))
     .filter((p) => p !== undefined);
   const others = SERVICES.filter((s) => s.slug !== service.slug);
+  const faqs = serviceFaqs(service);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -75,7 +78,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
       },
       {
         "@type": "FAQPage",
-        mainEntity: service.faqs.map((f) => ({
+        mainEntity: faqs.map((f) => ({
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -94,7 +97,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
 
   const facts = [
     { term: "Starting at", value: fromPrice(startingPrice(service)) },
-    { term: "Hourly", value: `$${service.hourly}/hr for one-off tasks` },
+    { term: "Reply", value: `Fixed quote within ${SITE.replyTime}` },
     { term: "Based in", value: `${SITE.location} — working with clients anywhere` },
   ];
 
@@ -144,7 +147,11 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
             </dl>
           </div>
 
-          <ul className="mt-12 grid grid-cols-3 border-y border-line sm:mt-16">
+          <ul
+            className={`mt-12 grid border-y border-line sm:mt-16 ${
+              service.stats.length === 3 ? "grid-cols-3" : service.stats.length === 2 ? "grid-cols-2" : ""
+            }`}
+          >
             {service.stats.map((r, i) => (
               <li
                 key={r.label}
@@ -209,13 +216,21 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
             ))}
           </ul>
           <p className="mt-8 text-slate">
-            Something that doesn&apos;t fit a package? One-off tasks run $
-            {service.hourly}/hr.{" "}
+            Something that doesn&apos;t fit a package?{" "}
             <Link href={contactHref(service.slug)} className="link text-ink">
               Send the brief
             </Link>{" "}
-            and I&apos;ll quote it.
+            and I&apos;ll quote it as a fixed price.
           </p>
+          {service.slug === "graphic-design" ? (
+            <p className="mt-3 text-slate">
+              Selling music, sample or sound packs?{" "}
+              <Link href="/cover-art" className="link text-ink">
+                See cover art for packs
+              </Link>
+              .
+            </p>
+          ) : null}
         </div>
       </section>
 
@@ -259,7 +274,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           </div>
           <div>
             <p className="kicker text-slate">04 / How it works</p>
-            <h2 className="display display-lg mt-4">Brief to files.</h2>
+            <h2 className="display display-lg mt-4">Three steps to a start date.</h2>
             <ol className="mt-10 border-t border-rule">
               {PROCESS.map((step, i) => (
                 <li key={step.title} className="flex gap-5 border-b border-rule py-5">
@@ -285,7 +300,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
             </h2>
           </div>
           <div className="border-t border-line">
-            {service.faqs.map((f) => (
+            {faqs.map((f) => (
               <details key={f.q} className="faq group border-b border-line">
                 <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-6 py-6 text-xl font-bold tracking-tight">
                   {f.q}
@@ -303,6 +318,8 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         </div>
       </section>
 
+      <Testimonials service={service.slug} />
+
       {/* CTA */}
       <section className="on-paper bg-signal py-24 text-ink sm:py-28" aria-labelledby="service-cta-title">
         <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end">
@@ -311,8 +328,8 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
               Get a fixed quote.
             </h2>
             <p className="mt-6 max-w-[48ch] text-xl leading-relaxed">
-              Send the brief and I&apos;ll reply with a scope and a price. No
-              calls required, no obligation.
+              Send the brief and I&apos;ll reply within {SITE.replyTime} with a
+              scope and a price. No calls required, no obligation.
             </p>
           </div>
           <div className="flex flex-col items-start gap-4">

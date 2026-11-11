@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 import { SERVICES, serviceHref } from "@/lib/services";
 
 export const metadata = pageMetadata({
-  title: "Portfolio — design, video & marketing case studies",
+  title: "Portfolio — cover art, video & marketing case studies",
   description:
     "Portfolio of John Swanson: case studies in product cover design, campaign marketing and video editing — what was made, for whom, and what it did.",
   path: "/work",

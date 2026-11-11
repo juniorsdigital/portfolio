@@ -34,6 +34,7 @@ export type CaseStudy = {
   brief: { title: string; body: string; points: { title: string; body: string }[] };
   approach: { title: string; intro: string; steps: { title: string; body: string }[] };
   gallery?: { title: string; intro?: string; images: WorkImage[] };
+  /** Only real, measured results go in `stats`; leave it empty rather than pad it. */
   outcome: { title: string; body: string; stats: { value: string; label: string }[] };
   pitch: { title: string; body: string; cta: string };
   external?: { href: string; label: string };
@@ -98,111 +99,13 @@ const WH_COVER = {
 
 export const PROJECTS: Project[] = [
   {
-    id: "ryzagrow",
-    name: "RyzaGrow",
-    featured: true,
-    categories: ["design", "marketing"],
-    service: "marketing",
-    client: "Ryza, LLC.",
-    title: "RyzaGrow — DTC campaign",
-    description:
-      "Campaign management, content, and social direction for a direct-to-consumer mushroom grow kit. Owned media across product and web.",
-    tags: ["Graphic Design", "Social", "Campaign"],
-    result: "2× sales",
-    thumbnail: RYZA_COVER,
-    caseStudy: {
-      seoTitle: "RyzaGrow DTC campaign — grow kit marketing",
-      seoDescription:
-        "How a direct-to-consumer campaign for RyzaGrow's mushroom grow kits doubled sales: campaign management, product content and social media across web and social.",
-      headline: { lead: "Two pods.", accent: "Twice the sales." },
-      lede: "Ryza sells mushroom grow kits straight to the people who use them. I ran the direct-to-consumer campaign end to end — the plan, the content and the social direction — and managed the owned media that carried it across the product pages and the feed. Sales doubled.",
-      role: "Campaign management, content creation, social media direction",
-      delivered: [
-        "Campaign plan",
-        "Product content for web and social",
-        "Social media direction",
-        "Owned media management",
-      ],
-      hero: RYZA_COVER,
-      brief: {
-        title: "A grow kit is a hard sell in a scroll.",
-        body: "Most people have never grown a mushroom. A grow kit asks them to picture the harvest before they've seen it — and to pick the right kit for the species they want. The campaign had to make two products easy to tell apart and easy to want, on a product page and in a two-second scroll.",
-        points: [
-          {
-            title: "Two pods, one jar",
-            body: "The RyzaPod comes in two versions: one for manure-loving species, one for wood-loving ones. Same jar, different substrate — and buyers had to know which was which at a glance.",
-          },
-          {
-            title: "No shelf to lean on",
-            body: "No retailer, no store display, no sales rep. Every sale started on owned media, so the content had to do the selling on its own.",
-          },
-          {
-            title: "Web and social at once",
-            body: "The same assets had to work as product imagery on the site and as posts in the feed, without reading as two different campaigns.",
-          },
-        ],
-      },
-      approach: {
-        title: "Let the substrate tell the story.",
-        intro:
-          "The difference between the pods is what the mushrooms grow on. So that became the creative: each pod gets the world it belongs to.",
-        steps: [
-          {
-            title: "Give each pod its own world",
-            body: "Manure-loving gets terracotta, wheat and river stone. Wood-loving gets cream, birch and moss. The set tells you which pod you need before you read the label.",
-          },
-          {
-            title: "One system, every channel",
-            body: "The same split layout, color pairing and product framing run across product pages and social posts, so every touchpoint reads as one campaign.",
-          },
-          {
-            title: "Run the channels directly",
-            body: "I managed the owned media myself — planning, posting and adjusting — so what worked in the feed fed straight back into the next round of content.",
-          },
-        ],
-      },
-      gallery: {
-        title: "Two looks, one brand.",
-        images: [
-          {
-            src: "/images/work/ryzagrow-manure.webp",
-            alt: "RyzaPod for manure-loving mushrooms on terracotta with wheat stalks and river stones",
-            width: 474,
-            height: 610,
-            caption: "Manure-loving — terracotta, wheat and stone.",
-          },
-          {
-            src: "/images/work/ryzagrow-wood.webp",
-            alt: "RyzaPod for wood-loving mushrooms on cream with birch logs and moss",
-            width: 473,
-            height: 610,
-            caption: "Wood-loving — cream, birch and moss.",
-          },
-        ],
-      },
-      outcome: {
-        title: "Sales doubled.",
-        body: "The campaign doubled RyzaGrow's sales. Just as useful: Ryza now has a campaign look it can keep using. New species, new pods and new posts slot into the same system instead of starting from scratch.",
-        stats: [
-          { value: "2×", label: "sales after the direct-to-consumer campaign" },
-          { value: "2", label: "product lines, each with a look you can read at a glance" },
-          { value: "1", label: "campaign system across product pages and social" },
-        ],
-      },
-      pitch: {
-        title: "Selling direct?",
-        body: "I'll plan the campaign, make the content and run the channels — one person, accountable for the number.",
-        cta: "Start a campaign",
-      },
-    },
-  },
-  {
     id: "ovani",
     name: "OvaniSound",
+    featured: true,
     categories: ["design"],
     service: "graphic-design",
     client: "OvaniSound",
-    title: "75+ music pack covers",
+    title: "75+ music pack covers & 3D boxes",
     description:
       "2D and 3D covers for a sound-design catalog: five projects since 2025 and 32+ genres, from pirate and chiptune to Japanese and comedy. Thirty distinct covers in one week, and a move from AI art to original, hand-made covers.",
     tags: ["Product Covers", "3D"],
@@ -320,12 +223,108 @@ export const PROJECTS: Project[] = [
     },
   },
   {
+    id: "ryzagrow",
+    name: "RyzaGrow",
+    categories: ["design", "marketing"],
+    service: "marketing",
+    client: "Ryza, LLC.",
+    title: "RyzaGrow — DTC campaign",
+    description:
+      "Campaign management, content, and social direction for a direct-to-consumer mushroom grow kit. Owned media across product and web.",
+    tags: ["Graphic Design", "Social", "Campaign"],
+    result: "2× sales",
+    thumbnail: RYZA_COVER,
+    caseStudy: {
+      seoTitle: "RyzaGrow DTC campaign — grow kit marketing",
+      seoDescription:
+        "How a direct-to-consumer campaign for RyzaGrow's mushroom grow kits doubled sales: campaign management, product content and social media across web and social.",
+      headline: { lead: "Two pods.", accent: "Twice the sales." },
+      lede: "Ryza sells mushroom grow kits straight to the people who use them. I ran the direct-to-consumer campaign end to end — the plan, the content and the social direction — and managed the owned media that carried it across the product pages and the feed. Sales doubled.",
+      role: "Campaign management, content creation, social media direction",
+      delivered: [
+        "Campaign plan",
+        "Product content for web and social",
+        "Social media direction",
+        "Owned media management",
+      ],
+      hero: RYZA_COVER,
+      brief: {
+        title: "A grow kit is a hard sell in a scroll.",
+        body: "Most people have never grown a mushroom. A grow kit asks them to picture the harvest before they've seen it — and to pick the right kit for the species they want. The campaign had to make two products easy to tell apart and easy to want, on a product page and in a two-second scroll.",
+        points: [
+          {
+            title: "Two pods, one jar",
+            body: "The RyzaPod comes in two versions: one for manure-loving species, one for wood-loving ones. Same jar, different substrate — and buyers had to know which was which at a glance.",
+          },
+          {
+            title: "No shelf to lean on",
+            body: "No retailer, no store display, no sales rep. Every sale started on owned media, so the content had to do the selling on its own.",
+          },
+          {
+            title: "Web and social at once",
+            body: "The same assets had to work as product imagery on the site and as posts in the feed, without reading as two different campaigns.",
+          },
+        ],
+      },
+      approach: {
+        title: "Let the substrate tell the story.",
+        intro:
+          "The difference between the pods is what the mushrooms grow on. So that became the creative: each pod gets the world it belongs to.",
+        steps: [
+          {
+            title: "Give each pod its own world",
+            body: "Manure-loving gets terracotta, wheat and river stone. Wood-loving gets cream, birch and moss. The set tells you which pod you need before you read the label.",
+          },
+          {
+            title: "One system, every channel",
+            body: "The same split layout, color pairing and product framing run across product pages and social posts, so every touchpoint reads as one campaign.",
+          },
+          {
+            title: "Run the channels directly",
+            body: "I managed the owned media myself — planning, posting and adjusting — so what worked in the feed fed straight back into the next round of content.",
+          },
+        ],
+      },
+      gallery: {
+        title: "Two looks, one brand.",
+        images: [
+          {
+            src: "/images/work/ryzagrow-manure.webp",
+            alt: "RyzaPod for manure-loving mushrooms on terracotta with wheat stalks and river stones",
+            width: 474,
+            height: 610,
+            caption: "Manure-loving — terracotta, wheat and stone.",
+          },
+          {
+            src: "/images/work/ryzagrow-wood.webp",
+            alt: "RyzaPod for wood-loving mushrooms on cream with birch logs and moss",
+            width: 473,
+            height: 610,
+            caption: "Wood-loving — cream, birch and moss.",
+          },
+        ],
+      },
+      outcome: {
+        title: "Sales doubled.",
+        body: "The campaign doubled RyzaGrow's sales. Just as useful: Ryza now has a campaign look it can keep using. New species, new pods and new posts slot into the same system instead of starting from scratch.",
+        stats: [
+          { value: "2×", label: "sales after the direct-to-consumer campaign" },
+        ],
+      },
+      pitch: {
+        title: "Selling direct?",
+        body: "I'll plan the campaign, make the content and run the channels — one person, accountable for the number.",
+        cta: "Start a campaign",
+      },
+    },
+  },
+  {
     id: "bgcb",
     name: "Boys & Girls Club of Boston",
     categories: ["design"],
     service: "graphic-design",
     client: "Boys & Girls Club of Boston",
-    title: "Teen registration campaign",
+    title: "Teen registration campaign (internship)",
     description:
       "OOH, print, and digital assets for a teen registration push. One campaign, coordinated across formats.",
     tags: ["Campaign", "OOH"],
@@ -402,11 +401,7 @@ export const PROJECTS: Project[] = [
       outcome: {
         title: "A campaign that scales.",
         body: "The Club gets a campaign it can run at any size — one board or a citywide run — with a voice teens will actually stop for, and a registration path built into every piece.",
-        stats: [
-          { value: "1", label: "campaign idea carried across every format" },
-          { value: "3", label: "channels — out-of-home, print and digital" },
-          { value: "QR", label: "a direct path from the street to registration" },
-        ],
+        stats: [],
       },
       pitch: {
         title: "Running a nonprofit campaign?",
@@ -421,10 +416,10 @@ export const PROJECTS: Project[] = [
     video: true,
     categories: ["video"],
     service: "video-editing",
-    client: "Red Bull (concept)",
-    title: "She Who Flies — documentary trailer",
+    client: "Spec · Red Bull footage",
+    title: "She Who Flies — trailer recut",
     description:
-      "Re-edited documentary trailer with custom title treatment. Cinematic cut, no paid promotion.",
+      "A self-initiated recut of a Red Bull documentary trailer, with a custom title treatment. 7.7K organic views, no paid promotion.",
     tags: ["Video Edit", "Trailer"],
     result: "7.7K views",
     thumbnail: SWF_COVER,
@@ -503,10 +498,10 @@ export const PROJECTS: Project[] = [
     video: true,
     categories: ["video"],
     service: "video-editing",
-    client: "Red Bull (concept)",
-    title: "Winter Heroes — multi-format video",
+    client: "Spec · Red Bull footage",
+    title: "Winter Heroes — long-form to social cuts",
     description:
-      "Long-form documentary recut for short-form social. One source, several channels.",
+      "A self-initiated documentary edit from Red Bull Media House footage, recut into short-form social clips.",
     tags: ["Video Edit", "Social Cuts"],
     thumbnail: WH_COVER,
     caseStudy: {
@@ -567,36 +562,13 @@ export const PROJECTS: Project[] = [
       outcome: {
         title: "The cheapest content you'll ever make.",
         body: "It's already shot. Recutting long-form for social turns one upload into a run of posts, each one pointing back to the full film — no new shoot, no new budget line.",
-        stats: [
-          { value: "1", label: "source documentary, edited and directed end to end" },
-          { value: "0", label: "new shoots — every cut comes from the original footage" },
-          { value: "Many", label: "short-form social cuts from one long-form film" },
-        ],
+        stats: [],
       },
       pitch: {
         title: "Sitting on long-form footage?",
         body: "I'll recut it into short-form social video that works in the feed — and sends people back to the full piece.",
         cta: "Start a video project",
       },
-    },
-  },
-  {
-    id: "brand-system",
-    name: "Brand system",
-    featured: true,
-    href: "/brand",
-    categories: ["design"],
-    service: "graphic-design",
-    client: "Self-initiated",
-    title: "Brand system — case study",
-    description:
-      "A wordmark, six color tokens, one type family and a set of components, rebuilt from a busy site into one system that every page is made from.",
-    tags: ["Identity", "Design system", "Web"],
-    thumbnail: {
-      src: "/images/brand/thumb.webp",
-      alt: "Brand system board: the wordmark on ink and paper, color swatches and condensed type",
-      width: 1440,
-      height: 900,
     },
   },
 ];

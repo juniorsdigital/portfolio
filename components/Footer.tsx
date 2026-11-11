@@ -2,48 +2,51 @@ import Link from "next/link";
 import { Wordmark } from "@/components/Wordmark";
 import { CASE_STUDIES, projectHref } from "@/lib/projects";
 import { SERVICES, serviceHref } from "@/lib/services";
-import { NAV_LINKS, SITE } from "@/lib/site";
+import { SITE, SOCIAL_LINKS } from "@/lib/site";
 
 export function Footer() {
   return (
     <footer className="border-t border-line bg-ink text-paper">
       <div className="wrap pt-18 pb-12">
-        <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.4fr_0.7fr_1fr_1.1fr_1.3fr]">
-          <div className="sm:col-span-2 md:col-span-4 lg:col-span-1">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
+          <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="text-[2.5rem]" aria-label={`${SITE.name} — home`}>
               <Wordmark />
             </Link>
-            <p className="mt-4 max-w-sm text-stone">
-              {SITE.byline}
-              <br />
-              Based in {SITE.location}, working everywhere.
-            </p>
-          </div>
-          <nav aria-label="Footer">
-            <p className="kicker text-stone">Site</p>
-            <ul className="mt-4 space-y-3">
+            <p className="mt-4 max-w-sm text-stone">{SITE.byline}</p>
+            <ul className="mt-6 space-y-3">
               <li>
-                <Link href="/" className="hover:underline">
-                  Home
-                </Link>
+                <a href={`mailto:${SITE.email}`} className="break-all hover:underline">
+                  {SITE.email}
+                </a>
               </li>
-              {NAV_LINKS.filter((link) => link.href !== "/services").map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="hover:underline">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              <li className="text-stone">{SITE.location}, PA — working worldwide</li>
               <li>
-                <Link href="/brand" className="hover:underline">
-                  Brand system
+                <Link href="/contact" className="link">
+                  Get a quote <span aria-hidden="true">→</span>
                 </Link>
               </li>
             </ul>
-          </nav>
+            {SOCIAL_LINKS.length > 0 ? (
+              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2" aria-label="Profiles">
+                {SOCIAL_LINKS.map((s) => (
+                  <li key={s.href}>
+                    <a href={s.href} rel="me noopener" target="_blank" className="hover:underline">
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
           <nav aria-label="Services">
             <p className="kicker text-stone">Services</p>
             <ul className="mt-4 space-y-3">
+              <li>
+                <Link href="/cover-art" className="hover:underline">
+                  Cover art for packs
+                </Link>
+              </li>
               {SERVICES.map((s) => (
                 <li key={s.slug}>
                   <Link href={serviceHref(s)} className="hover:underline">
@@ -53,13 +56,13 @@ export function Footer() {
               ))}
               <li>
                 <Link href="/services" className="hover:underline">
-                  Pricing
+                  All services &amp; pricing
                 </Link>
               </li>
             </ul>
           </nav>
-          <nav aria-label="Case studies">
-            <p className="kicker text-stone">Case studies</p>
+          <nav aria-label="Work">
+            <p className="kicker text-stone">Work</p>
             <ul className="mt-4 space-y-3">
               {CASE_STUDIES.map((p) => (
                 <li key={p.id}>
@@ -68,24 +71,13 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-            </ul>
-          </nav>
-          <div>
-            <p className="kicker text-stone">Contact</p>
-            <ul className="mt-4 space-y-3">
               <li>
-                <a href={`mailto:${SITE.email}`} className="break-all hover:underline">
-                  {SITE.email}
-                </a>
-              </li>
-              <li className="text-stone">{SITE.location}, PA</li>
-              <li>
-                <Link href="/contact" className="link">
-                  Get a quote <span aria-hidden="true">→</span>
+                <Link href="/about" className="hover:underline">
+                  About
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
         </div>
         <p className="kicker mt-14 border-t border-line pt-6 font-normal text-stone">
           © {new Date().getFullYear()} {SITE.name}

@@ -1,3 +1,5 @@
+import { TERMS } from "@/lib/site";
+
 export type ServiceSlug = "graphic-design" | "video-editing" | "marketing";
 
 export type ServicePackage = {
@@ -24,8 +26,6 @@ export type Service = {
   lede: string;
   /** One line for service cards on the home page and the hub. */
   summary: string;
-  /** Hourly rate for work that doesn't fit a package. */
-  hourly: number;
   packages: ServicePackage[];
   stats: { value: string; label: string }[];
   /** Project ids from lib/projects.ts shown as proof. */
@@ -41,20 +41,19 @@ export const SERVICES: Service[] = [
     slug: "graphic-design",
     num: "01",
     name: "Graphic design",
-    seoTitle: "Freelance graphic designer — covers, ads & posters",
+    seoTitle: "Freelance cover designer — covers, 3D box art & ads",
     seoDescription:
-      "Freelance graphic design in Philadelphia: product cover design, digital ads, posters and campaign graphics. 75+ covers shipped, from $120 per cover.",
+      "Freelance cover design for music, sound and digital products: cover art, 3D box renders, ads and posters. 75+ covers shipped for OvaniSound, from $120.",
     headline: { lead: "Graphic design", accent: "that sells the thing." },
-    lede: "Product covers, digital ads, posters and campaign graphics for brands that sell online, on a shelf or on a street corner. I've shipped 75+ e-commerce covers for OvaniSound — 30 of them in a single week — and a full out-of-home campaign for the Boys & Girls Club of Boston.",
+    lede: "Product covers first: cover art and 3D box renders for music packs, sample packs, sound libraries and other digital products, plus the ads and posters that launch them. I've shipped 75+ covers for OvaniSound — 30 of them in a single week — and a full out-of-home campaign for the Boys & Girls Club of Boston.",
     summary:
-      "Product covers, digital ads, posters and campaign graphics built to sell — on the shelf or in the feed.",
-    hourly: 35,
+      "Cover art and 3D box renders for music, sound and digital products — plus the ads and posters that launch them.",
     packages: [
       {
         name: "Product cover design",
         price: 120,
         unit: "per cover",
-        body: "Cover art for e-commerce, music, game and digital products — built to read as a thumbnail in a crowded store grid.",
+        body: "Cover art for music packs, sample packs, sound libraries and other digital products — built to read as a thumbnail in a crowded store grid.",
         includes: [
           "Original 2D cover art",
           "Two rounds of revisions",
@@ -108,7 +107,7 @@ export const SERVICES: Service[] = [
       { value: "30", label: "distinct covers delivered in a single week" },
       { value: "3D", label: "box renders for store pages, plus 2D volume stickers" },
     ],
-    proof: ["ovani", "bgcb", "brand-system"],
+    proof: ["ovani", "bgcb"],
     fit: [
       "You sell digital or physical products and need covers that work as thumbnails.",
       "You have a launch or release schedule and need designs at volume, on time.",
@@ -117,7 +116,7 @@ export const SERVICES: Service[] = [
     faqs: [
       {
         q: "What does a product cover cost?",
-        a: "Covers start at $120 each, with a 3D box render for $60 more. Series and catalogs of five or more are quoted together, so the per-cover price comes down.",
+        a: "Covers start at $120 each, with a 3D box render for $60 more. Catalogs of 5+ covers are quoted together at a lower per-cover rate.",
       },
       {
         q: "Can you work inside my existing brand?",
@@ -132,20 +131,19 @@ export const SERVICES: Service[] = [
         a: "Final files at every size you need — PNG, JPG or print-ready PDF — plus editable source files on request.",
       },
     ],
-    serviceTypes: ["Graphic design", "Product cover design", "Advertising design", "Poster design"],
+    serviceTypes: ["Product cover design", "Music pack cover art", "3D packaging renders", "Advertising design", "Poster design"],
   },
   {
     slug: "video-editing",
     num: "02",
     name: "Video editing",
-    seoTitle: "Freelance video editor — social video, ads & trailers",
+    seoTitle: "Freelance video editor — trailers, promos & social video",
     seoDescription:
-      "Freelance video editing: short-form social video, video ads, trailers and long-form recuts for Reels, TikTok and YouTube. From $60 per clip.",
+      "Freelance video editing: product and pack trailers, video ads, short-form social video and long-form recuts for Reels, TikTok and YouTube. From $60 per clip.",
     headline: { lead: "Video editing", accent: "built to be watched." },
-    lede: "Short-form social video, video ads, trailers and recuts of footage you already have. My She Who Flies trailer recut pulled 7.7K organic views with $0 in paid promotion — because it was cut to make people press play and stay to the end.",
+    lede: "Trailers and promos for launches, video ads, short-form social video and recuts of footage you already have. My spec recut of the She Who Flies trailer pulled 7.7K organic views with $0 in paid promotion — because it was cut to make people press play and stay to the end.",
     summary:
-      "Short-form social edits, video ads and trailers — cut for pace and sized for every channel.",
-    hourly: 35,
+      "Launch trailers, video ads and short-form social edits — cut for pace and sized for every channel.",
     packages: [
       {
         name: "Short-form social edit",
@@ -190,7 +188,7 @@ export const SERVICES: Service[] = [
         name: "Trailer or promo edit",
         price: 400,
         unit: "per edit",
-        body: "A one-to-three-minute trailer or brand promo with real story structure, music-led cutting and a custom title.",
+        body: "A one-to-three-minute launch trailer, pack preview or brand promo with real story structure, music-led cutting and a custom title.",
         includes: [
           "1–3 minute edit",
           "Custom title treatment",
@@ -203,7 +201,6 @@ export const SERVICES: Service[] = [
     stats: [
       { value: "7.7K", label: "organic views on the She Who Flies trailer recut" },
       { value: "$0", label: "spent on paid promotion to get them" },
-      { value: "2", label: "documentaries recut — one trailer, one set of social clips" },
     ],
     proof: ["she-who-flies", "winter-heroes"],
     fit: [
@@ -229,20 +226,19 @@ export const SERVICES: Service[] = [
         a: "I'll cut to royalty-free tracks or music you've licensed, so nothing gets muted or claimed after it goes live.",
       },
     ],
-    serviceTypes: ["Video editing", "Social media video", "Video advertising", "Trailer editing"],
+    serviceTypes: ["Video editing", "Trailer editing", "Video advertising", "Social media video"],
   },
   {
     slug: "marketing",
     num: "03",
     name: "Marketing",
-    seoTitle: "Social media & Google Business Profile management",
+    seoTitle: "Google Business Profile management, Philadelphia",
     seoDescription:
       "Social media management, Google Business Profile setup and DTC campaign management for small businesses in Philadelphia and beyond. Doubled RyzaGrow's sales.",
-    headline: { lead: "Marketing", accent: "without a twelve-person team." },
+    headline: { lead: "Marketing", accent: "that keeps running." },
     lede: "Google Business Profile setup and management, social media management and direct-to-consumer campaigns for small businesses. I ran the RyzaGrow campaign end to end — plan, content and channels — and sales doubled.",
     summary:
       "Google Business Profiles, social accounts and DTC campaigns — set up and run by one accountable person.",
-    hourly: 35,
     packages: [
       {
         name: "Google Business Profile setup",
@@ -299,8 +295,6 @@ export const SERVICES: Service[] = [
     ],
     stats: [
       { value: "2×", label: "sales for RyzaGrow after the DTC campaign" },
-      { value: "1", label: "campaign system across product pages and social" },
-      { value: "3", label: "channels coordinated for the Boys & Girls Club of Boston" },
     ],
     proof: ["ryzagrow", "bgcb"],
     fit: [
@@ -335,6 +329,18 @@ export const SERVICES: Service[] = [
   },
 ];
 
+/** Working terms, answered on every service page after its own questions. */
+export const COMMON_FAQS = [
+  { q: "How fast do you reply?", a: TERMS.reply },
+  { q: "How does payment work?", a: TERMS.payment },
+  { q: "Who owns the finished work?", a: TERMS.rights },
+] as const;
+
+/** A service's own questions followed by the shared ones. */
+export function serviceFaqs(service: Service) {
+  return [...service.faqs, ...COMMON_FAQS];
+}
+
 export function serviceHref(service: Pick<Service, "slug">) {
   return `/services/${service.slug}`;
 }
@@ -368,10 +374,10 @@ export const PROCESS = [
   },
   {
     title: "Get a fixed quote",
-    body: "I reply by email with a scope and a fixed price — or a straight no, if I'm not the right person for it.",
+    body: "Within one business day I reply with a scope and a fixed price — or a straight no, if I'm not the right person for it.",
   },
   {
     title: "Approve and start",
-    body: "You sign off on the scope and I start. You deal with me from the brief to the final files.",
+    body: "You approve the scope, pay half up front and I start. The rest is due on delivery, and the files are yours.",
   },
 ] as const;

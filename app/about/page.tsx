@@ -6,8 +6,8 @@ import { SERVICES, fromPrice, serviceHref, startingPrice } from "@/lib/services"
 import { SITE } from "@/lib/site";
 
 export const metadata = pageMetadata({
-  title: `About ${SITE.name} — freelance designer & video editor, ${SITE.location}`,
-  description: `Freelance graphic designer, video editor and marketer in ${SITE.location}. 75+ product covers shipped, a campaign that doubled sales, one person brief to files.`,
+  title: `About ${SITE.name} — freelance cover artist & video editor, ${SITE.location}`,
+  description: `Freelance cover artist, video editor and marketer in ${SITE.location}. 75+ covers shipped for OvaniSound, a campaign that doubled sales, and one person on every message.`,
   path: "/about",
   absoluteTitle: true,
 });
@@ -30,13 +30,15 @@ export default function AboutPage() {
             <p className="kicker text-slate">About / {SITE.location}</p>
             <h1 className="display display-xl mt-4">{SITE.name}.</h1>
             <p className="mt-10 max-w-[32ch] text-[1.625rem] leading-snug font-medium">
-              A freelance designer, editor and marketer — and the only person
-              you&apos;ll work with, from brief to final files.
+              A freelance cover artist, video editor and marketer — and the
+              only person you&apos;ll deal with on the job.
             </p>
             <div className="mt-8 max-w-[60ch] space-y-5 text-lg leading-relaxed text-body sm:text-[1.1875rem]">
               <p>
-                I work out of {SITE.location} on graphic design, video, and the
-                marketing that has to live after the files leave my machine.
+                I work out of {SITE.location} for clients anywhere. Most of my
+                work is cover art: the image that has to sell a music pack, a
+                sound library or a digital product from a thumbnail in a store
+                grid.
               </p>
               <p>
                 Sport has been in the background since 2019. I started on the
@@ -46,31 +48,43 @@ export default function AboutPage() {
               </p>
               <p>
                 I take on{" "}
+                <Link href="/cover-art" className="link text-ink">
+                  cover art
+                </Link>{" "}
+                and{" "}
                 <Link href="/services/graphic-design" className="link text-ink">
                   graphic design
                 </Link>{" "}
-                — product covers, digital art, posters and ads. I do{" "}
+                — product covers, 3D box renders, posters and ads. I do{" "}
                 <Link href="/services/video-editing" className="link text-ink">
                   video editing
                 </Link>{" "}
-                for social and advertising. And I handle{" "}
+                for launches, ads and social. And I handle{" "}
                 <Link href="/services/marketing" className="link text-ink">
                   marketing
                 </Link>{" "}
-                — setting up and running Google Business Profiles and social
-                accounts for people who need that handled without a
-                twelve-person team.
+                — Google Business Profiles, social accounts and direct-to-consumer
+                campaigns for small businesses.
               </p>
               <p>
                 The track record so far: 75+ product covers for OvaniSound, a
                 direct-to-consumer campaign that doubled RyzaGrow&apos;s sales,
-                and a trailer recut that found 7.7K views with no ad spend.
+                and a spec trailer recut that found 7.7K views with no ad spend.
+              </p>
+              <p>
+                I work best with small teams that release often — sound
+                libraries, music and game-audio publishers, and brands selling
+                direct — where a cover or a cut has a date attached.
               </p>
               <p>
                 You&apos;ll see{" "}
                 <Monogram className="text-[1.1em] text-ink" /> on my files and
                 profiles. It&apos;s my initials, and it&apos;s how I sign the
-                work.
+                work. The whole identity is written up as a{" "}
+                <Link href="/brand" className="link text-ink">
+                  brand system case study
+                </Link>
+                .
               </p>
             </div>
           </div>
@@ -140,11 +154,11 @@ export default function AboutPage() {
       <section className="bg-ink py-20 text-paper sm:py-24" aria-labelledby="about-cta-title">
         <div className="wrap flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <h2 id="about-cta-title" className="display display-lg">
-            Have work? <span className="text-signal">Send it.</span>
+            Got a release coming? <span className="text-signal">Let&apos;s talk.</span>
           </h2>
           <div className="flex flex-wrap gap-3">
             <Link href="/contact" className="btn btn-signal min-h-14 px-8 text-lg">
-              Start a project <span aria-hidden="true">→</span>
+              Get a quote <span aria-hidden="true">→</span>
             </Link>
             <Link href="/services" className="btn btn-ghost min-h-14 px-8 text-lg">
               Services &amp; pricing
